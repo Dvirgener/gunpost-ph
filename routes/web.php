@@ -6,8 +6,10 @@ Route::get('/', function () {
     return view('pages.home.index');
 })->name('home');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::middleware(['auth','verified'])->group(function () {
+
+    Route::livewire('dashboard', 'pages::admin.dashboard.index')->name('dashboard');
+
+});
 
 require __DIR__.'/settings.php';
