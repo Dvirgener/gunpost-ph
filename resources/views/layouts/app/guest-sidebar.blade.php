@@ -4,7 +4,7 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+        <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 pb-7">
             <flux:sidebar.header>
 
                 {{-- This one holds the dark and Light Logo of the App --}}
@@ -19,10 +19,20 @@
             <flux:separator />
 
             <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('')" class="grid">
+                <flux:sidebar.group :heading="__('')" class="grid gap-2">
+
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('home')" wire:navigate>
                         {{ __('Home') }}
                     </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="signpost" :href="route('dashboard')" :current="request()->routeIs('posts')" wire:navigate>
+                        {{ __('Posts') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="badge-question-mark" :href="route('dashboard')" :current="request()->routeIs('posts')" wire:navigate>
+                        {{ __('Help') }}
+                    </flux:sidebar.item>
+
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
