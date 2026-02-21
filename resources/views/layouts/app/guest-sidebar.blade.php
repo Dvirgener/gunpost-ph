@@ -19,7 +19,7 @@
             <flux:separator />
 
             <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('')" class="grid gap-2">
+                <flux:sidebar.group :heading="__('')" class="grid gap-1">
 
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('home')" wire:navigate>
                         {{ __('Home') }}

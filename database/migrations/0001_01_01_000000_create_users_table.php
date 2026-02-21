@@ -15,9 +15,8 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->string('account_type', 20)->default('personal');
-            $table->string('username', 50)->unique();
-            $table->string('first_name', 80)->nullable();
-            $table->string('last_name', 80)->nullable();
+            $table->string('first_name', 80);
+            $table->string('last_name', 80);
             $table->string('company_name', 150)->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
@@ -27,6 +26,7 @@ return new class extends Migration
             $table->bigInteger('post_credits')->default(0);
             $table->string('avatar_path')->nullable();
             $table->string('status', 30)->default('active');
+            $table->boolean('terms_accepted')->default(false);
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();

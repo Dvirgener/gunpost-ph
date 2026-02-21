@@ -22,7 +22,6 @@ class User extends Authenticatable
     protected $fillable = [
         'uuid',
         'account_type',
-        'username',
         'first_name',
         'last_name',
         'company_name',
@@ -32,6 +31,7 @@ class User extends Authenticatable
         'post_credits',
         'avatar_path',
         'status',
+        'terms_accepted',
     ];
 
         /**
@@ -106,7 +106,7 @@ class User extends Authenticatable
 
     public function verification()
     {
-        return $this->hasOne(Verification::class);
+        return $this->hasOne(UserVerification::class);
     }
 
 }
