@@ -58,7 +58,7 @@ class CreateNewUser implements CreatesNewUsers
             'terms_accepted' => ['boolean'],
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'account_type'  => $validated['account_type'],
             'first_name'    => $validated['first_name'] ?? null,
             'last_name'     => $validated['last_name'] ?? null,
@@ -68,5 +68,11 @@ class CreateNewUser implements CreatesNewUsers
             'terms_accepted'=> $validated['terms_accepted'],
             'password'     => Hash::make($validated['password']), // IMPORTANT
         ]);
+
+        $user->verification()->create([
+            'kyc_status' => 'pending',
+        ]);
+
+        return $user;
     }
 }

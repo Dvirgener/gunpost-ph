@@ -37,6 +37,10 @@
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
+            @persist('toast')
+                <flux:toast position="top end" />
+            @endpersist
+
             <flux:spacer />
 
 

@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
 use Livewire\Component;
+use Flux\Flux;
 
 new class extends Component {
     use ProfileValidationRules, WithFileUploads;
@@ -22,7 +24,37 @@ new class extends Component {
     public string $email = '';
     public ?string $phone = null;
     public ?string $avatar_path = null;
+
+    // File Variables
     public $picture = null; // temporary property for Livewire file upload
+    public $logo = null;
+    public $dti_sec_reg = null;
+    public $business_permit = null;
+
+    // Address Fields
+    public $region = '';
+    public $province = '';
+    public $city = '';
+
+    public $filteredProvinces = [];
+    public $filteredCities = [];
+
+    public $regions = [];
+    public $provinces = [];
+    public $cities = [];
+
+    public function updatedRegion($value)
+    {
+        $this->filteredProvinces = collect($this->provinces)->where('region', $value)->values()->all();
+        $this->province = ''; // Reset selected province
+        $this->filteredCities = []; // Reset cities when region changes
+    }
+
+    public function updatedProvince($value)
+    {
+        $this->filteredCities = collect($this->cities)->where('province', $value)->values()->all();
+        $this->city = ''; // Reset selected city
+    }
 
     // personal_profiles fields
     public array $personal = [
@@ -57,6 +89,7 @@ new class extends Component {
         'business_permit_path' => null,
     ];
 
+    #[On('profile-updated')]
     public function mount(): void
     {
         /** @var User $user */
@@ -72,6 +105,10 @@ new class extends Component {
         $this->phone = $user->phone;
         $this->avatar_path = $user->avatar_path;
 
+        $this->regions = json_decode(file_get_contents(base_path('data/regions.json')), true);
+        $this->provinces = json_decode(file_get_contents(base_path('data/provinces.json')), true);
+        $this->cities = json_decode(file_get_contents(base_path('data/cities.json')), true);
+
         if ($this->isPersonalAccount) {
             $profile = $user->personalProfile;
 
@@ -86,9 +123,20 @@ new class extends Component {
                     'province'       => $profile->province,
                     'region'         => $profile->region,
                     'country'        => $profile->country ?: 'Philippines',
-
                 ]);
             }
+
+            if($this->personal['region']){
+
+                $this->region = $this->personal['region'];
+                $this->province = $this->personal['province'];
+                $this->city = $this->personal['city'];
+
+                $this->filteredProvinces = collect($this->provinces)->where('region', $profile->region)->values()->all();
+                $this->filteredCities = collect($this->cities)->where('province', $profile->province)->values()->all();
+            }
+
+
         }
 
         if ($this->isCorporateAccount) {
@@ -112,6 +160,17 @@ new class extends Component {
                     'dti_sec_reg_path'     => $profile->dti_sec_reg_path,
                     'business_permit_path' => $profile->business_permit_path,
                 ]);
+
+                if($this->corporate['region']){
+
+                $this->region = $this->corporate['region'];
+                $this->province = $this->corporate['province'];
+                $this->city = $this->corporate['city'];
+
+                $this->filteredProvinces = collect($this->provinces)->where('region', $profile->region)->values()->all();
+                $this->filteredCities = collect($this->cities)->where('province', $profile->province)->values()->all();
+            }
+
             } else {
                 // keep the users.company_name visible as default
                 $this->corporate['company_name'] = $this->company_name;
@@ -142,12 +201,39 @@ new class extends Component {
                 // if user already has a picture, we can optionally delete the old one here
                 Storage::disk('public')->delete($user->avatar_path);
             }
-
             $user->avatar_path = $this->uploadFiles($this->picture, 'avatar');
+        }
 
+        if($this->logo){
+            $rules['logo'] = ['image', 'max:2048'];
+            if($user->corporateProfile?->logo_path){
+                Storage::disk('public')->delete($user->corporateProfile->logo_path);
+            }
+            $this->corporate['logo_path'] = $this->uploadFiles($this->logo, 'logo_path');
+        }
+
+        if($this->dti_sec_reg){
+            $rules['dti_sec_reg'] = ['image', 'max:2048'];
+            if($user->corporateProfile?->dti_sec_reg_path){
+                Storage::disk('public')->delete($user->corporateProfile->dti_sec_reg_path);
+            }
+            $this->corporate['dti_sec_reg_path'] = $this->uploadFiles($this->dti_sec_reg, 'dti_sec_reg_path');
+        }
+
+        if($this->business_permit){
+            $rules['business_permit'] = ['image', 'max:2048'];
+            if($user->corporateProfile?->business_permit_path){
+                Storage::disk('public')->delete($user->corporateProfile->business_permit_path);
+            }
+            $this->corporate['business_permit_path'] = $this->uploadFiles($this->business_permit, 'business_permit_path');
         }
 
         if ($this->isCorporateAccount) {
+
+            $this->corporate['region'] = $this->region ? $this->region : null; // set to null if empty
+            $this->corporate['province'] = $this->province ? $this->province : null;
+            $this->corporate['city'] = $this->city ? $this->city : null;
+
             $rules = array_merge($rules, [
                 // Corporate must have a company name (both in users + corporate_profiles)
                 'company_name'               => ['required', 'string', 'max:150'],
@@ -169,6 +255,11 @@ new class extends Component {
         }
 
         if ($this->isPersonalAccount) {
+
+            $this->personal['region'] = $this->region ? $this->region : null; // set to null if empty
+            $this->personal['province'] = $this->province ? $this->province : null;
+            $this->personal['city'] = $this->city ? $this->city : null;
+
             $rules = array_merge($rules, [
                 'personal.date_of_birth'    => ['nullable', 'date'],
                 'personal.gender'           => ['nullable', 'string', 'max:20'],
@@ -199,6 +290,10 @@ new class extends Component {
             $user->email_verified_at = null;
         }
         $this->picture = null; // reset the temporary picture property after upload
+        $this->logo = null;
+        $this->dti_sec_reg = null;
+        $this->business_permit = null;
+
         $user->save();
 
         // Update the correct profile table
@@ -240,6 +335,9 @@ new class extends Component {
                     'business_email' => $validated['corporate']['business_email'] ?? null,
                     'business_phone' => $validated['corporate']['business_phone'] ?? null,
                     'website'        => $validated['corporate']['website'] ?? null,
+                    'logo_path'      => $this->corporate['logo_path'] ?? null,
+                    'dti_sec_reg_path' => $this->corporate['dti_sec_reg_path'] ?? null,
+                    'business_permit_path' => $this->corporate['business_permit_path'] ?? null,
                 ]
             );
 
@@ -252,6 +350,8 @@ new class extends Component {
 
         // Use first_name + last_name for the toast/event
         $this->dispatch('profile-updated', name: trim($user->first_name.' '.$user->last_name));
+        Flux::toast(variant:'success', text:'Your changes have been saved.');
+
     }
 
 
@@ -278,6 +378,49 @@ new class extends Component {
         }
 
         return $path;
+
+    }
+
+    public function deletePicture($field): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        switch($field){
+
+            case 'avatar':
+                if($user->avatar_path){
+                    Storage::disk('public')->delete($user->avatar_path);
+                    $user->avatar_path = null;
+                    $user->save();
+                }
+                break;
+
+            case 'logo_path':
+                if($user->corporateProfile?->logo_path){
+                    Storage::disk('public')->delete($user->corporateProfile->logo_path);
+                    $user->corporateProfile->logo_path = null;
+                }
+                break;
+
+            case 'dti_sec_reg_path':
+                if($user->corporateProfile?->dti_sec_reg_path){
+                    Storage::disk('public')->delete($user->corporateProfile->dti_sec_reg_path);
+                    $user->corporateProfile->dti_sec_reg_path = null;
+                }
+                break;
+
+            case 'business_permit_path':
+                if($user->corporateProfile?->business_permit_path){
+                    Storage::disk('public')->delete($user->corporateProfile->business_permit_path);
+                    $user->corporateProfile->business_permit_path = null;
+                }
+                break;
+
+        }
+        $user->corporateProfile?->save();
+        $this->dispatch('profile-updated');
+        Flux::toast(variant: 'success', text: 'Image Deleted.');
 
     }
 
@@ -411,13 +554,30 @@ new class extends Component {
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <flux:input wire:model="personal.city" :label="__('City')" type="text" />
-                        <flux:input wire:model="personal.province" :label="__('Province')" type="text" />
+
+                        <flux:input wire:model="personal.country" :label="__('Country')" type="text" />
+
+                        <flux:select wire:model.live="region" placeholder="Choose Region..." label="Region">
+                            @foreach ($regions as $region)
+                            <flux:select.option value="{{ $region['key'] }}">{{ $region['name'] }}</flux:select.option>
+                            @endforeach
+                        </flux:select>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <flux:input wire:model="personal.region" :label="__('Region')" type="text" />
-                        <flux:input wire:model="personal.country" :label="__('Country')" type="text" />
+
+                        <flux:select wire:model.live="province" placeholder="Choose Province..." label="Province" class="">
+                            @foreach ($this->filteredProvinces as $province)
+                            <flux:select.option value="{{ $province['key'] }}">{{ $province['name'] }}</flux:select.option>
+                            @endforeach
+                        </flux:select>
+
+                        <flux:select wire:model="city" placeholder="Choose a City..." label="City">
+                            @foreach ($this->filteredCities as $city)
+                            <flux:select.option value="{{ $city['name'] }}">{{ $city['name'] }}</flux:select.option>
+                            @endforeach
+                        </flux:select>
+
                     </div>
                 </div>
             @endif
@@ -453,27 +613,95 @@ new class extends Component {
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <flux:input wire:model="corporate.city" :label="__('City')" type="text" />
-                        <flux:input wire:model="corporate.province" :label="__('Province')" type="text" />
+
+                        <flux:input wire:model="personal.country" :label="__('Country')" type="text" />
+
+                        <flux:select wire:model.live="region" placeholder="Choose Region..." label="Region">
+                            @foreach ($regions as $region)
+                            <flux:select.option value="{{ $region['key'] }}">{{ $region['name'] }}</flux:select.option>
+                            @endforeach
+                        </flux:select>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <flux:input wire:model="corporate.region" :label="__('Region')" type="text" />
-                        <flux:input wire:model="corporate.country" :label="__('Country')" type="text" />
+
+                        <flux:select wire:model.live="province" placeholder="Choose Province..." label="Province" class="">
+                            @foreach ($this->filteredProvinces as $province)
+                            <flux:select.option value="{{ $province['key'] }}">{{ $province['name'] }}</flux:select.option>
+                            @endforeach
+                        </flux:select>
+
+                        <flux:select wire:model="city" placeholder="Choose a City..." label="City">
+                            @foreach ($this->filteredCities as $city)
+                            <flux:select.option value="{{ $city['name'] }}">{{ $city['name'] }}</flux:select.option>
+                            @endforeach
+                        </flux:select>
+
                     </div>
 
                     {{-- Document paths (optional / display only for now) --}}
-                    <div class="space-y-4">
-                        <flux:heading size="sm">{{ __('Documents (paths)') }}</flux:heading>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <flux:input wire:model="corporate.logo_path" :label="__('Logo Path')" type="text" disabled />
-                            <flux:input wire:model="corporate.dti_sec_reg_path" :label="__('DTI/SEC Reg Path')" type="text" disabled />
-                            <flux:input wire:model="corporate.business_permit_path" :label="__('Business Permit Path')" type="text" disabled />
-                        </div>
-                        <flux:text class="text-sm opacity-80">
-                            {{ __('Uploads are not implemented in this form yet. We can add Livewire file uploads next (logo, DTI/SEC, permit).') }}
-                        </flux:text>
+                    <div class="w-max space-y-5">
+                        <flux:heading size="md">{{ __('Business Documents') }}</flux:heading>
+
+                            <div class="flex flex-col gap-5 items-start">
+
+                                <flux:input wire:model="logo" :label="__('Corporate Logo')" type="file" autofocus
+                                accept=".jpg,.jpeg,.png" class="" />
+
+                                @if($corporate['logo_path'])
+                                    <div class="relative">
+                                        <img src="{{ url('storage/' . $corporate['logo_path'])}}" alt=""
+                                            class="w-full h-50 rounded-md object-cover">
+
+                                        <button wire:click="deletePicture('logo_path')" type="button" class="absolute top-1 right-1  text-white rounded-full w-6 h-6 flex items-center justify-center">
+                                            <flux:icon name="x-circle" class="w-6 h-6 text-red-500 hover:cursor-pointer" />
+                                        </button>
+                                    </div>
+
+                                @else
+                                    <img src="{{ asset('/nd_available.png') }}" alt="" class="w-full h-50 rounded-md object-cover">
+                                @endif
+                            </div>
+                            <flux:separator />
+                            <div class="flex flex-col gap-5 items-start">
+                                <flux:input wire:model="dti_sec_reg" :label="__('DTI/SEC Registration')" type="file" autofocus
+                                accept=".jpg,.jpeg,.png" class="" />
+
+                                @if($corporate['dti_sec_reg_path'])
+                                    <div class="relative">
+                                        <img src="{{ url('storage/' . $corporate['dti_sec_reg_path'])}}" alt=""
+                                            class="w-full h-50 rounded-md object-cover">
+
+                                        <button wire:click="deletePicture('dti_sec_reg_path')" type="button" class="absolute top-1 right-1  text-white rounded-full w-6 h-6 flex items-center justify-center">
+                                            <flux:icon name="x-circle" class="w-6 h-6 text-red-500 hover:cursor-pointer" />
+                                        </button>
+                                    </div>
+                                @else
+                                    <img src="{{ asset('/nd_available.png') }}" alt="" class="w-full h-50 rounded-md object-cover">
+                                @endif
+                            </div>
+                            <flux:separator />
+                            <div class="flex flex-col gap-5 items-start">
+                                <flux:input wire:model="business_permit" :label="__('Business Permit')" type="file" autofocus
+                                accept=".jpg,.jpeg,.png" class="" />
+
+                                @if($corporate['business_permit_path'])
+                                    <div class="relative">
+                                        <img src="{{ url('storage/' . $corporate['business_permit_path'])}}" alt=""
+                                            class="w-full h-50 rounded-md object-cover">
+
+                                        <button wire:click="deletePicture('business_permit_path')" type="button" class="absolute top-1 right-1  text-white rounded-full w-6 h-6 flex items-center justify-center">
+                                            <flux:icon name="x-circle" class="w-6 h-6 text-red-500 hover:cursor-pointer" />
+                                        </button>
+                                    </div>
+                                @else
+                                    <img src="{{ asset('/nd_available.png') }}" alt="" class="w-full h-50 rounded-md object-cover">
+                                @endif
+                            </div>
+
                     </div>
+
+
                 </div>
             @endif
 

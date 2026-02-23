@@ -39,7 +39,7 @@
 
             {{-- Main Logo --}}
             <div class="w-full flex justify-center">
-                <div class="w-180">
+                <div class="w-200">
                     <x-virg.logo />
                 </div>
             </div>
