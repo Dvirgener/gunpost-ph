@@ -69,6 +69,7 @@
                         <div class="p-0 text-sm font-normal">
                             <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                                 <flux:avatar
+                                    src="{{ url('storage/' . Auth::user()->avatar_path) }}"
                                     :name="auth()->user()->first_name"
                                     :initials="auth()->user()->initials()"
                                 />
