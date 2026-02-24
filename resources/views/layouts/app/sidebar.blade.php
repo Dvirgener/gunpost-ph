@@ -23,15 +23,18 @@
                         {{ __('Home') }}
                     </flux:sidebar.item>
 
+                    {{-- Routes for Admin --}}
+                    @if(auth()->user()->status == 'immune' && auth()->user()->account_type == "TFT_admin")
                     <flux:sidebar.item icon="layout-dashboard" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
+                    @endif
 
-                    <flux:sidebar.item icon="signpost" :href="route('dashboard')" :current="request()->routeIs('posts')" wire:navigate>
+                    <flux:sidebar.item icon="signpost" :href="route('posts')" :current="request()->routeIs('posts')" wire:navigate>
                         {{ __('Posts') }}
                     </flux:sidebar.item>
 
-                    <flux:sidebar.item icon="badge-question-mark" :href="route('dashboard')" :current="request()->routeIs('posts')" wire:navigate>
+                    <flux:sidebar.item icon="badge-question-mark" :href="route('help')" :current="request()->routeIs('help')" wire:navigate>
                         {{ __('Help') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
@@ -69,7 +72,7 @@
                         <div class="p-0 text-sm font-normal">
                             <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                                 <flux:avatar
-                                    src="{{ url('storage/' . Auth::user()->avatar_path) }}"
+                                    src="{{ auth()->user()->avatar_path ? url('storage/' . auth()->user()->avatar_path) : asset('blank_image.png') }}"
                                     :name="auth()->user()->first_name"
                                     :initials="auth()->user()->initials()"
                                 />

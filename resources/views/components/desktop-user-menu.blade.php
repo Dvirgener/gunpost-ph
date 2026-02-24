@@ -2,7 +2,7 @@
     <flux:sidebar.profile
         :name="auth()->user()->name"
         :initials="auth()->user()->initials()"
-        src="{{ url('storage/' . Auth::user()->avatar_path) }}"
+
         icon:trailing="chevrons-up-down"
         data-test="sidebar-menu-button"
     />
@@ -11,7 +11,7 @@
         <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
             <flux:avatar
                 {{-- :name="auth()->user()->name" --}}
-                src="{{ url('storage/' . Auth::user()->avatar_path) }}"
+                src="{{ auth()->user()->avatar_path ? url('storage/' . auth()->user()->avatar_path) : asset('blank_image.png') }}"
                 {{-- :initials="auth()->user()->initials()" --}}
             />
             <div class="grid flex-1 text-start text-sm leading-tight">
