@@ -62,6 +62,16 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
+     * Optional: Route model binding by UUID (nice for /posts/{post:uuid})
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
+
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
