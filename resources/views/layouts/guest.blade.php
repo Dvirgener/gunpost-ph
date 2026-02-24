@@ -1,7 +1,7 @@
 <x-layouts::app.guest-sidebar :title="$title ?? null">
     <flux:main>
         <div class="flex flex-col justify-between h-full">
-            <div>
+            <div class="h-full">
             {{ $slot }}
             </div>
             <x-virg.footer/>

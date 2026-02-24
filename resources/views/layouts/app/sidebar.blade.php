@@ -6,31 +6,52 @@
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
-                <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
+
+                {{-- This one holds the dark and Light Logo of the App --}}
+                <div class="flex justify-center">
+                    <a href="/">
+                    <x-virg.logo/>
+                    </a>
+                </div>
+
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('Platform')" class="grid">
-                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                <flux:sidebar.group :heading="__('')" class="grid gap-1">
+                    <flux:sidebar.item icon="home" :href="route('home')" :current="request()->routeIs('home')" wire:navigate>
+                        {{ __('Home') }}
+                    </flux:sidebar.item>
+
+                    {{-- Routes for Admin --}}
+                    @if(auth()->user()->status == 'immune' && auth()->user()->account_type == "TFT_admin")
+                    <flux:sidebar.item icon="layout-dashboard" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
+                    </flux:sidebar.item>
+                    @endif
+
+                    <flux:sidebar.item icon="signpost" :href="route('posts')" :current="request()->routeIs('posts')" wire:navigate>
+                        {{ __('Posts') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="badge-question-mark" :href="route('help')" :current="request()->routeIs('help')" wire:navigate>
+                        {{ __('Help') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
+            @persist('toast')
+                <flux:toast position="top end" />
+            @endpersist
+
             <flux:spacer />
 
-            <flux:sidebar.nav>
-                <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                    {{ __('Repository') }}
-                </flux:sidebar.item>
 
-                <flux:sidebar.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                    {{ __('Documentation') }}
-                </flux:sidebar.item>
-            </flux:sidebar.nav>
+            <x-desktop-user-menu class="hidden lg:block" :name="auth()->user()->first_name" />
 
-            <x-desktop-user-menu class="hidden lg:block" :name="auth()->user()->name" />
+            <flux:separator />
+            <flux:switch x-data x-model="$flux.dark" label="Dark mode"  />
+
         </flux:sidebar>
 
 
@@ -51,12 +72,13 @@
                         <div class="p-0 text-sm font-normal">
                             <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                                 <flux:avatar
-                                    :name="auth()->user()->name"
+                                    src="{{ auth()->user()->avatar_path ? url('storage/' . auth()->user()->avatar_path) : asset('blank_image.png') }}"
+                                    :name="auth()->user()->first_name"
                                     :initials="auth()->user()->initials()"
                                 />
 
                                 <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <flux:heading class="truncate">{{ auth()->user()->name }}</flux:heading>
+                                    <flux:heading class="truncate">{{ auth()->user()->first_name }}</flux:heading>
                                     <flux:text class="truncate">{{ auth()->user()->email }}</flux:text>
                                 </div>
                             </div>
