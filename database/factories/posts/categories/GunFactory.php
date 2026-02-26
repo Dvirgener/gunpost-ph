@@ -4,31 +4,16 @@ namespace Database\Factories\posts\categories;
 
 use App\Models\posts\categories\Gun;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class GunFactory extends Factory
 {
     protected $model = Gun::class;
 
-    private function picsumImages(string $seedBase, int $w = 1200, int $h = 800): array
-    {
-        $images = [];
-        for ($i = 1; $i <= 10; $i++) {
-            $images["p_{$i}"] = "https://picsum.photos/seed/{$seedBase}-{$i}/{$w}/{$h}";
-        }
-        return $images;
-    }
-
     public function definition(): array
     {
-        $brand = $this->faker->randomElement(['Glock', 'Colt', 'SIG Sauer', 'Smith & Wesson', 'Beretta', 'Ruger']);
-        $model = $this->faker->randomElement(['G19', 'G17', 'P320', 'M&P9', '92FS', 'SR9']) . ' ' . $this->faker->randomNumber(2);
-        $seedBase = Str::slug($brand . '-' . $model . '-' . $this->faker->unique()->numberBetween(1000, 999999));
-
-        return array_merge([
-            // post_id will be injected by PostFactory afterCreating
-            'manufacturer' => $brand,
-            'model' => $model,
+        return [
+            'manufacturer' => $this->faker->randomElement(['Glock', 'Colt', 'SIG Sauer', 'Smith & Wesson', 'Beretta', 'Ruger']),
+            'model' => $this->faker->randomElement(['G19', 'G17', 'P320', 'M&P9', '92FS', 'SR9']) . ' ' . $this->faker->randomNumber(2),
             'variant' => $this->faker->optional()->randomElement(['Gen 3', 'Gen 4', 'Gen 5']),
             'series' => $this->faker->optional()->word(),
             'country_of_origin' => $this->faker->optional()->country(),
@@ -56,6 +41,6 @@ class GunFactory extends Factory
 
             'condition' => $this->faker->optional()->randomElement(['new','like_new','used','refurbished','for_parts']),
             'notes' => $this->faker->optional()->paragraph(),
-        ], $this->picsumImages($seedBase));
+        ];
     }
 }

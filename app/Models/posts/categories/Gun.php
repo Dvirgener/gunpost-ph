@@ -58,16 +58,6 @@ class Gun extends Model
         'included_magazines',
         'included_accessories',
         'notes',
-        'p_1',
-        'p_2',
-        'p_3',
-        'p_4',
-        'p_5',
-        'p_6',
-        'p_7',
-        'p_8',
-        'p_9',
-        'p_10',
     ];
 
     protected $casts = [

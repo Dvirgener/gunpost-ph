@@ -4,36 +4,21 @@ namespace Database\Factories\posts\categories;
 
 use App\Models\posts\categories\Other;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class OtherFactory extends Factory
 {
     protected $model = Other::class;
 
-    private function picsumImages(string $seedBase, int $w = 1200, int $h = 800): array
-    {
-        $images = [];
-        for ($i = 1; $i <= 10; $i++) {
-            $images["p_{$i}"] = "https://picsum.photos/seed/{$seedBase}-{$i}/{$w}/{$h}";
-        }
-        return $images;
-    }
-
     public function definition(): array
     {
-        $weaponType = $this->faker->optional()->randomElement([
-            'knife','sword','machete','axe','tomahawk','baton','stick','tonfa','spear','other'
-        ]);
-
-        $brand = $this->faker->optional()->randomElement(['Cold Steel', 'Gerber', 'Kershaw', 'Ontario', 'CRKT', 'Generic']);
-        $seedBase = Str::slug(($weaponType ?? 'other') . '-' . ($brand ?? 'generic') . '-' . $this->faker->unique()->numberBetween(1000, 999999));
-
-        return array_merge([
-            'weapon_type' => $weaponType,
+        return [
+            'weapon_type' => $this->faker->optional()->randomElement([
+                'knife','sword','machete','axe','tomahawk','baton','stick','tonfa','spear','other'
+            ]),
             'subcategory' => $this->faker->optional()->word(),
             'intended_use' => $this->faker->optional()->randomElement(['utility','training','display','collection','outdoors']),
 
-            'brand' => $brand,
+            'brand' => $this->faker->optional()->randomElement(['Cold Steel', 'Gerber', 'Kershaw', 'Ontario', 'CRKT', 'Generic']),
             'model' => $this->faker->optional()->bothify('Model-###??'),
             'variant' => $this->faker->optional()->randomElement(['Mk I', 'Mk II', 'Pro', 'Lite']),
             'country_of_origin' => $this->faker->optional()->country(),
@@ -71,6 +56,6 @@ class OtherFactory extends Factory
 
             'package_includes' => $this->faker->optional()->sentence(),
             'notes' => $this->faker->optional()->paragraph(),
-        ], $this->picsumImages($seedBase));
+        ];
     }
 }

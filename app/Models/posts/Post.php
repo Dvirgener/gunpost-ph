@@ -20,6 +20,8 @@ class Post extends Model
         'slug',
         'description',
         'price',
+        'buy_min_price',
+        'buy_max_price',
         'is_negotiable',
         'condition',
         'location',
@@ -30,6 +32,16 @@ class Post extends Model
         'is_featured',
         'views',
         'expires_at',
+        'p_1',
+        'p_2',
+        'p_3',
+        'p_4',
+        'p_5',
+        'p_6',
+        'p_7',
+        'p_8',
+        'p_9',
+        'p_10',
     ];
 
     protected $casts = [

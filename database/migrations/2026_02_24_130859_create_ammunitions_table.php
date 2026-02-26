@@ -41,17 +41,6 @@ return new class extends Migration
             $table->boolean('reloads')->default(false);
             $table->text('notes')->nullable();
 
-            $table->text('p_1')->nullable();
-            $table->text('p_2')->nullable();
-            $table->text('p_3')->nullable();
-            $table->text('p_4')->nullable();
-            $table->text('p_5')->nullable();
-            $table->text('p_6')->nullable();
-            $table->text('p_7')->nullable();
-            $table->text('p_8')->nullable();
-            $table->text('p_9')->nullable();
-            $table->text('p_10')->nullable();
-
             $table->timestamps();
 
             $table->index(['brand', 'caliber']);

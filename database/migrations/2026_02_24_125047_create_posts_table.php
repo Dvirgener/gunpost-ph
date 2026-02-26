@@ -44,6 +44,9 @@ return new class extends Migration
 
             // Pricing
             $table->decimal('price', 15, 2)->nullable();
+            $table->decimal('buy_min_price', 15, 2)->nullable();
+            $table->decimal('buy_max_price', 15, 2)->nullable();
+
             $table->boolean('is_negotiable')->default(false);
 
             // Item Details
@@ -77,6 +80,17 @@ return new class extends Migration
 
             // Expiration
             $table->timestamp('expires_at')->nullable();
+
+            $table->text('p_1')->nullable();
+            $table->text('p_2')->nullable();
+            $table->text('p_3')->nullable();
+            $table->text('p_4')->nullable();
+            $table->text('p_5')->nullable();
+            $table->text('p_6')->nullable();
+            $table->text('p_7')->nullable();
+            $table->text('p_8')->nullable();
+            $table->text('p_9')->nullable();
+            $table->text('p_10')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
