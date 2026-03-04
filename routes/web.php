@@ -24,6 +24,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('posts', 'pages::posts.index')->name('posts');
     Route::livewire('posts/create', 'pages::posts.create.index')->name('posts.create.index');
     Route::livewire('posts/create/{category}', 'pages::posts.create.category.index')->name('posts.create.category.index');
+    Route::livewire('posts/{post}/edit/{category}', 'pages::posts.edit.index')->name('posts.edit.category.index');
+    Route::livewire('posts/{post}/view/{category}', 'pages::posts.view.index')->name('posts.view.category.index');
 
 });
 

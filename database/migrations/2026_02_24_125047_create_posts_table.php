@@ -19,22 +19,16 @@ return new class extends Migration
 
             // Owner
             $table->foreignId('user_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
+                ->constrained()
+                ->cascadeOnDelete();
 
             // Category
-            $table->enum('category', [
-                'gun',
-                'ammunition',
-                'airsoft',
-                'accessory',
-                'other',
-            ]);
+            $table->string('category');
 
             // Buy or Sell
             $table->enum('listing_type', [
                 'buy',
-                'sell'
+                'sell',
             ]);
 
             // Basic Listing Info
@@ -61,14 +55,14 @@ return new class extends Migration
                 'pending',
                 'approved',
                 'rejected',
-                'expired'
+                'expired',
             ])->default('pending');
 
             $table->timestamp('approved_at')->nullable();
             $table->foreignId('approved_by')
-                  ->nullable()
-                  ->constrained('users')
-                  ->nullOnDelete();
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
 
             $table->text('rejection_reason')->nullable();
 

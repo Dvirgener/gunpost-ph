@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class Post extends Model
 {
-    use SoftDeletes, HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'uuid',
@@ -77,7 +77,7 @@ class Post extends Model
 
     public function airsoft()
     {
-        return $this->hasOne(\App\Models\Airsoft::class);
+        return $this->hasOne(\App\Models\posts\categories\Airsoft::class);
     }
 
     public function accessory()
@@ -101,7 +101,7 @@ class Post extends Model
                 $post->uuid = (string) Str::uuid();
             }
 
-            if (empty($post->slug) && !empty($post->title)) {
+            if (empty($post->slug) && ! empty($post->title)) {
                 $post->slug = static::generateUniqueSlug($post->title);
             }
         });

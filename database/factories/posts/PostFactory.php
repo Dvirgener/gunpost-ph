@@ -16,7 +16,9 @@ class PostFactory extends Factory
     protected $model = Post::class;
 
     private const CATEGORIES = ['gun', 'ammunition', 'airsoft', 'accessory', 'other'];
+
     private const LISTING_TYPES = ['buy', 'sell'];
+
     private const STATUSES = ['pending', 'approved', 'rejected', 'expired'];
 
     private function picsum(string $seed, int $w = 1200, int $h = 800): string
@@ -28,8 +30,9 @@ class PostFactory extends Factory
     {
         $images = [];
         for ($i = 1; $i <= 10; $i++) {
-            $images["p_{$i}"] = $this->picsum($seedBase . "-{$i}", $w, $h);
+            $images["p_{$i}"] = $this->picsum($seedBase."-{$i}", $w, $h);
         }
+
         return $images;
     }
 
@@ -37,20 +40,37 @@ class PostFactory extends Factory
     {
         $title = rtrim($this->faker->sentence(5), '.');
         $category = $this->faker->randomElement(self::CATEGORIES);
+        $listingType = $this->faker->randomElement(self::LISTING_TYPES);
         $status = $this->faker->randomElement(self::STATUSES);
 
         // stable seed so each post has consistent images
-        $seedBase = Str::slug($title) . '-' . $category . '-' . $this->faker->unique()->numberBetween(1000, 999999);
+        $seedBase = Str::slug($title).'-'.$category.'-'.$this->faker->unique()->numberBetween(1000, 999999);
+
+        // pricing based on listing_type
+        $priceData = [];
+        if ($listingType === 'sell') {
+            $priceData['price'] = $this->faker->boolean(85) ? $this->faker->randomFloat(2, 500, 250000) : null;
+            $priceData['buy_min_price'] = null;
+            $priceData['buy_max_price'] = null;
+        } else {
+            $priceData['price'] = null;
+            $min = $this->faker->randomFloat(2, 100, 500);
+            $max = $this->faker->randomFloat(2, $min, $min * 3);
+            $priceData['buy_min_price'] = $min;
+            $priceData['buy_max_price'] = $max;
+        }
 
         return array_merge([
+            'uuid' => (string) Str::uuid(),
             'user_id' => 1,
             'category' => $category,
-            'listing_type' => $this->faker->randomElement(self::LISTING_TYPES),
+            'listing_type' => $listingType,
 
             'title' => $title,
+            'slug' => Str::slug($title).'-'.Str::random(4),
             'description' => $this->faker->paragraphs(3, true),
 
-            'price' => $this->faker->boolean(85) ? $this->faker->randomFloat(2, 500, 250000) : null,
+        ], $priceData, [
             'is_negotiable' => $this->faker->boolean(35),
 
             'condition' => $this->faker->randomElement(['new', 'like_new', 'used', 'refurbished', 'for_parts']),
