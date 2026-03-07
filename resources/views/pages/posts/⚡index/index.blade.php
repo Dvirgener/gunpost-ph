@@ -91,7 +91,7 @@
     </div>
     <div class="">
         <flux:pagination :paginator="$this->posts" />
-        <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5 p-2 h-140 overflow-y-scroll">
+        <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5 p-2 h-max overflow-y-scroll">
             @foreach ($this->posts as $post)
                 <x-virg.posts.post-card :post="$post" />
             @endforeach

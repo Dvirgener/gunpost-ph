@@ -1,450 +1,9 @@
-<?php
-
-use App\Models\posts\Post;
-use App\Models\posts\categories\Gun;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
-use Livewire\Component;
-use Livewire\WithFileUploads;
-use Livewire\Attributes\Computed;
-use Flux\Flux;
-
-new class extends Component {
-    use WithFileUploads;
-
-    public Post $post;
-
-    public string $category = 'gun';
-
-    // Post (required ones marked in UI with *)
-    public string $listing_type = 'sell'; // * buy|sell
-    public string $title = ''; // *
-    public string $description = ''; // *
-    public ?float $price = null; // * if sell
-    public ?float $buy_min_price = null; // * if buy
-    public ?float $buy_max_price = null; // * if buy
-    public bool $is_negotiable = false;
-    public ?string $post_condition = null;
-    public ?string $location = null;
-    public ?string $expires_at = null;
-
-    /**
-     * File uploads (each maps to posts.p_1..p_10)
-     * NOTE: we keep p_1..p_10 in DB as string paths (set during save).
-     */
-    public $photo_1 = null;
-    public $photo_2 = null;
-    public $photo_3 = null;
-    public $photo_4 = null;
-    public $photo_5 = null;
-    public $photo_6 = null;
-    public $photo_7 = null;
-    public $photo_8 = null;
-    public $photo_9 = null;
-    public $photo_10 = null;
-
-    // Gun
-    public ?string $manufacturer = null;
-    public ?string $model = null;
-    public ?string $variant = null;
-    public ?string $series = null;
-    public ?string $country_of_origin = null;
-
-    public ?string $platform = null;
-    public ?string $type = null;
-    public ?string $action = null;
-
-    public ?string $caliber = null;
-    public ?int $capacity = null;
-    public ?float $barrel_length = null;
-    public ?float $overall_length = null;
-    public ?float $height = null;
-    public ?float $width = null;
-    public ?float $weight = null;
-    public string $weight_unit = 'kg';
-
-    public ?string $frame_material = null;
-    public ?string $slide_material = null;
-    public ?string $barrel_material = null;
-    public ?string $finish = null;
-    public ?string $color = null;
-    public ?string $grip_type = null;
-    public ?string $stock_type = null;
-    public ?string $handguard_type = null;
-    public ?string $rail_type = null;
-
-    public ?string $sight_type = null;
-    public bool $optic_ready = false;
-    public ?string $optic_mount_pattern = null;
-
-    public bool $threaded_barrel = false;
-    public ?string $thread_pitch = null;
-    public bool $muzzle_device_included = false;
-    public ?string $muzzle_device_type = null;
-
-    public ?string $trigger_type = null;
-    public ?float $trigger_pull = null;
-    public string $trigger_pull_unit = 'lb';
-    public bool $has_manual_safety = false;
-    public bool $has_firing_pin_safety = false;
-
-    public ?string $sku = null;
-    public ?string $upc = null;
-
-    public ?string $gun_condition = null;
-    public ?int $round_count_estimate = null;
-    public bool $has_box = false;
-    public bool $has_receipt = false;
-    public bool $has_documents = false;
-    public ?string $document_notes = null;
-
-    public ?int $included_magazines = null;
-    public ?string $included_accessories = null;
-
-    public ?string $notes = null;
-
-    #[Computed]
-    public function platformOptions(): array
-    {
-        return [
-            'handgun' => 'Handgun',
-            'rifle' => 'Rifle',
-            'shotgun' => 'Shotgun',
-            'pcc' => 'PCC',
-            'smg' => 'SMG',
-            'sniper' => 'Sniper',
-            'other' => 'Other',
-        ];
-    }
-
-    #[Computed]
-    public function listingTypeOptions(): array
-    {
-        return ['sell' => 'Sell', 'buy' => 'Buy'];
-    }
-
-    #[Computed]
-    public function postConditionOptions(): array
-    {
-        return [
-            'new' => 'New',
-            'used' => 'Used',
-            'like_new' => 'Like New',
-            'refurbished' => 'Refurbished',
-            'for_parts' => 'For Parts',
-        ];
-    }
-
-    private function photoRules(string $field): array
-    {
-        // 10MB max (Livewire "max" is KB)
-        return [$field => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif', 'max:10240']];
-    }
-
-    public function rules(): array
-    {
-        return array_merge(
-            [
-                // Post (required)
-                'category' => ['required', Rule::in(['gun'])],
-                'listing_type' => ['required', Rule::in(['buy', 'sell'])],
-                'title' => ['required', 'string', 'min:5', 'max:255'],
-                'description' => ['required', 'string', 'min:20'],
-                'price' => [Rule::requiredIf(fn() => $this->listing_type === 'sell'), 'nullable', 'numeric', 'min:0'],
-                'buy_min_price' => [Rule::requiredIf(fn() => $this->listing_type === 'buy'), 'nullable', 'numeric', 'min:0'],
-                'buy_max_price' => [Rule::requiredIf(fn() => $this->listing_type === 'buy'), 'nullable', 'numeric', 'min:0'],
-                'is_negotiable' => ['boolean'],
-                'post_condition' => ['nullable', 'string', 'max:50'],
-                'location' => ['nullable', 'string', 'max:255'],
-                'expires_at' => ['nullable', 'date'],
-
-                // Gun
-                'manufacturer' => ['nullable', 'string', 'max:255'],
-                'model' => ['nullable', 'string', 'max:255'],
-                'variant' => ['nullable', 'string', 'max:255'],
-                'series' => ['nullable', 'string', 'max:255'],
-                'country_of_origin' => ['nullable', 'string', 'max:255'],
-
-                'platform' => ['nullable', Rule::in(['handgun', 'rifle', 'shotgun', 'pcc', 'smg', 'sniper', 'other'])],
-                'type' => ['nullable', 'string', 'max:255'],
-                'action' => ['nullable', 'string', 'max:255'],
-
-                'caliber' => ['nullable', 'string', 'max:255'],
-                'capacity' => ['nullable', 'integer', 'min:0', 'max:9999'],
-                'barrel_length' => ['nullable', 'numeric', 'min:0'],
-                'overall_length' => ['nullable', 'numeric', 'min:0'],
-                'height' => ['nullable', 'numeric', 'min:0'],
-                'width' => ['nullable', 'numeric', 'min:0'],
-                'weight' => ['nullable', 'numeric', 'min:0'],
-                'weight_unit' => ['required', Rule::in(['kg', 'lb'])],
-
-                'frame_material' => ['nullable', 'string', 'max:255'],
-                'slide_material' => ['nullable', 'string', 'max:255'],
-                'barrel_material' => ['nullable', 'string', 'max:255'],
-                'finish' => ['nullable', 'string', 'max:255'],
-                'color' => ['nullable', 'string', 'max:255'],
-                'grip_type' => ['nullable', 'string', 'max:255'],
-                'stock_type' => ['nullable', 'string', 'max:255'],
-                'handguard_type' => ['nullable', 'string', 'max:255'],
-                'rail_type' => ['nullable', 'string', 'max:255'],
-
-                'sight_type' => ['nullable', 'string', 'max:255'],
-                'optic_ready' => ['boolean'],
-                'optic_mount_pattern' => ['nullable', 'string', 'max:255'],
-
-                'threaded_barrel' => ['boolean'],
-                'thread_pitch' => ['nullable', 'string', 'max:255'],
-                'muzzle_device_included' => ['boolean'],
-                'muzzle_device_type' => ['nullable', 'string', 'max:255'],
-
-                'trigger_type' => ['nullable', 'string', 'max:255'],
-                'trigger_pull' => ['nullable', 'numeric', 'min:0'],
-                'trigger_pull_unit' => ['required', Rule::in(['lb', 'kg'])],
-                'has_manual_safety' => ['boolean'],
-                'has_firing_pin_safety' => ['boolean'],
-
-                'sku' => ['nullable', 'string', 'max:255'],
-                'upc' => ['nullable', 'string', 'max:255'],
-
-                'gun_condition' => ['nullable', Rule::in(['new', 'like_new', 'used', 'refurbished', 'for_parts'])],
-                'round_count_estimate' => ['nullable', 'integer', 'min:0'],
-                'has_box' => ['boolean'],
-                'has_receipt' => ['boolean'],
-                'has_documents' => ['boolean'],
-                'document_notes' => ['nullable', 'string'],
-
-                'included_magazines' => ['nullable', 'integer', 'min:0', 'max:9999'],
-                'included_accessories' => ['nullable', 'string'],
-                'notes' => ['nullable', 'string'],
-            ],
-            // Photos
-            $this->photoRules('photo_1'),
-            $this->photoRules('photo_2'),
-            $this->photoRules('photo_3'),
-            $this->photoRules('photo_4'),
-            $this->photoRules('photo_5'),
-            $this->photoRules('photo_6'),
-            $this->photoRules('photo_7'),
-            $this->photoRules('photo_8'),
-            $this->photoRules('photo_9'),
-            $this->photoRules('photo_10'),
-        );
-    }
-
-    public function mount(Post $post): void
-    {
-        $this->post = $post;
-
-        // populate basic post fields
-        $this->listing_type = $post->listing_type;
-        $this->title = $post->title;
-        $this->description = $post->description;
-        $this->price = $post->price;
-        $this->buy_min_price = $post->buy_min_price;
-        $this->buy_max_price = $post->buy_max_price;
-        $this->is_negotiable = $post->is_negotiable;
-        $this->post_condition = $post->condition;
-        $this->location = $post->location;
-        $this->expires_at = $post->expires_at?->format('Y-m-d');
-
-        // note: photos remain null until new file selected
-
-        $gun = $post->gun ?? new Gun();
-        $this->manufacturer = $gun->manufacturer;
-        $this->model = $gun->model;
-        $this->variant = $gun->variant;
-        $this->series = $gun->series;
-        $this->country_of_origin = $gun->country_of_origin;
-
-        $this->platform = $gun->platform;
-        $this->type = $gun->type;
-        $this->action = $gun->action;
-
-        $this->caliber = $gun->caliber;
-        $this->capacity = $gun->capacity;
-        $this->barrel_length = $gun->barrel_length;
-        $this->overall_length = $gun->overall_length;
-        $this->height = $gun->height;
-        $this->width = $gun->width;
-        $this->weight = $gun->weight;
-        $this->weight_unit = $gun->weight_unit ?: 'kg';
-
-        $this->frame_material = $gun->frame_material;
-        $this->slide_material = $gun->slide_material;
-        $this->barrel_material = $gun->barrel_material;
-        $this->finish = $gun->finish;
-        $this->color = $gun->color;
-        $this->grip_type = $gun->grip_type;
-        $this->stock_type = $gun->stock_type;
-        $this->handguard_type = $gun->handguard_type;
-        $this->rail_type = $gun->rail_type;
-
-        $this->sight_type = $gun->sight_type;
-        $this->optic_ready = $gun->optic_ready;
-        $this->optic_mount_pattern = $gun->optic_mount_pattern;
-
-        $this->threaded_barrel = $gun->threaded_barrel;
-        $this->thread_pitch = $gun->thread_pitch;
-        $this->muzzle_device_included = $gun->muzzle_device_included;
-        $this->muzzle_device_type = $gun->muzzle_device_type;
-
-        $this->trigger_type = $gun->trigger_type;
-        $this->trigger_pull = $gun->trigger_pull;
-        $this->trigger_pull_unit = $gun->trigger_pull_unit ?: 'lb';
-        $this->has_manual_safety = $gun->has_manual_safety;
-        $this->has_firing_pin_safety = $gun->has_firing_pin_safety;
-
-        $this->sku = $gun->sku;
-        $this->upc = $gun->upc;
-
-        $this->gun_condition = $gun->condition;
-        $this->round_count_estimate = $gun->round_count_estimate;
-        $this->has_box = $gun->has_box;
-        $this->has_receipt = $gun->has_receipt;
-        $this->has_documents = $gun->has_documents;
-        $this->document_notes = $gun->document_notes;
-
-        $this->included_magazines = $gun->included_magazines;
-        $this->included_accessories = $gun->included_accessories;
-
-        $this->notes = $gun->notes;
-    }
-
-    private function storePhotoIfPresent($file, string $dir): ?string
-    {
-        if (!$file) {
-            return null;
-        }
-
-        // Stored path example: posts/<uuid>/photo_1_abc123.jpg
-        return $file->storePublicly($dir, 'public');
-    }
-
-    public function save(): void
-    {
-        $this->validate();
-
-        $userId = Auth::id();
-        if (!$userId || $userId !== $this->post->user_id) {
-            abort(403);
-        }
-
-        DB::transaction(function () {
-            $dir = "posts/{$this->post->uuid}";
-
-            // Save uploads first (so we can write paths into p_1..p_10)
-            $p1 = $this->storePhotoIfPresent($this->photo_1, $dir) ?? $this->post->p_1;
-            $p2 = $this->storePhotoIfPresent($this->photo_2, $dir) ?? $this->post->p_2;
-            $p3 = $this->storePhotoIfPresent($this->photo_3, $dir) ?? $this->post->p_3;
-            $p4 = $this->storePhotoIfPresent($this->photo_4, $dir) ?? $this->post->p_4;
-            $p5 = $this->storePhotoIfPresent($this->photo_5, $dir) ?? $this->post->p_5;
-            $p6 = $this->storePhotoIfPresent($this->photo_6, $dir) ?? $this->post->p_6;
-            $p7 = $this->storePhotoIfPresent($this->photo_7, $dir) ?? $this->post->p_7;
-            $p8 = $this->storePhotoIfPresent($this->photo_8, $dir) ?? $this->post->p_8;
-            $p9 = $this->storePhotoIfPresent($this->photo_9, $dir) ?? $this->post->p_9;
-            $p10 = $this->storePhotoIfPresent($this->photo_10, $dir) ?? $this->post->p_10;
-
-            $this->post->update([
-                'listing_type' => $this->listing_type,
-                'title' => $this->title,
-                'description' => $this->description,
-                'price' => $this->price,
-                'buy_min_price' => $this->buy_min_price,
-                'buy_max_price' => $this->buy_max_price,
-                'is_negotiable' => $this->is_negotiable,
-                'condition' => $this->post_condition,
-                'location' => $this->location,
-                'expires_at' => $this->expires_at ? \Carbon\Carbon::parse($this->expires_at) : null,
-
-                'p_1' => $p1,
-                'p_2' => $p2,
-                'p_3' => $p3,
-                'p_4' => $p4,
-                'p_5' => $p5,
-                'p_6' => $p6,
-                'p_7' => $p7,
-                'p_8' => $p8,
-                'p_9' => $p9,
-                'p_10' => $p10,
-            ]);
-
-            $gun = $this->post->gun ?? new Gun(['post_id' => $this->post->id]);
-            $gun->fill([
-                'manufacturer' => $this->manufacturer,
-                'model' => $this->model,
-                'variant' => $this->variant,
-                'series' => $this->series,
-                'country_of_origin' => $this->country_of_origin,
-
-                'platform' => $this->platform,
-                'type' => $this->type,
-                'action' => $this->action,
-
-                'caliber' => $this->caliber,
-                'capacity' => $this->capacity,
-                'barrel_length' => $this->barrel_length,
-                'overall_length' => $this->overall_length,
-                'height' => $this->height,
-                'width' => $this->width,
-                'weight' => $this->weight,
-                'weight_unit' => $this->weight_unit,
-
-                'frame_material' => $this->frame_material,
-                'slide_material' => $this->slide_material,
-                'barrel_material' => $this->barrel_material,
-                'finish' => $this->finish,
-                'color' => $this->color,
-                'grip_type' => $this->grip_type,
-                'stock_type' => $this->stock_type,
-                'handguard_type' => $this->handguard_type,
-                'rail_type' => $this->rail_type,
-
-                'sight_type' => $this->sight_type,
-                'optic_ready' => $this->optic_ready,
-                'optic_mount_pattern' => $this->optic_mount_pattern,
-
-                'threaded_barrel' => $this->threaded_barrel,
-                'thread_pitch' => $this->thread_pitch,
-                'muzzle_device_included' => $this->muzzle_device_included,
-                'muzzle_device_type' => $this->muzzle_device_type,
-
-                'trigger_type' => $this->trigger_type,
-                'trigger_pull' => $this->trigger_pull,
-                'trigger_pull_unit' => $this->trigger_pull_unit,
-                'has_manual_safety' => $this->has_manual_safety,
-                'has_firing_pin_safety' => $this->has_firing_pin_safety,
-
-                'sku' => $this->sku,
-                'upc' => $this->upc,
-
-                'condition' => $this->gun_condition,
-                'round_count_estimate' => $this->round_count_estimate,
-                'has_box' => $this->has_box,
-                'has_receipt' => $this->has_receipt,
-                'has_documents' => $this->has_documents,
-                'document_notes' => $this->document_notes,
-
-                'included_magazines' => $this->included_magazines,
-                'included_accessories' => $this->included_accessories,
-
-                'notes' => $this->notes,
-            ]);
-            $gun->save();
-
-            Flux::toast('Gun post updated.', variant: 'success');
-            return redirect()->route('home');
-        });
-    }
-};
-?>
-
 <div class="max-w-5xl mx-auto space-y-6">
+
     <flux:card>
         <div class="flex items-start justify-between gap-4">
             <div class="space-y-1">
-                <flux:heading size="lg">Edit Gun Post</flux:heading>
+                <flux:heading size="lg">Create Gun Post</flux:heading>
                 <flux:subheading>Fields with <span class="font-semibold">*</span> are required.</flux:subheading>
             </div>
 
@@ -456,89 +15,52 @@ new class extends Component {
         <flux:accordion>
 
             {{-- Photos (p_1..p_10) --}}
-            <flux:accordion.item>
+            <flux:accordion.item expanded>
                 <flux:accordion.heading>Photos</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
                         {{-- Repeat for each slot --}}
                         <div class="space-y-2">
-                            <flux:file-upload wire:model="photo_1" label="Photo 1">
+                            <flux:text class="text-gray-600 dark:text-white/60">Upload a Primary Picture for your post.
+                            </flux:text>
+                            <flux:file-upload wire:model="primary_photo" label="Primary Photo">
                                 <flux:file-upload.dropzone heading="Drop file or click to browse"
                                     text="JPG, PNG, GIF up to 10MB" inline />
                             </flux:file-upload>
-                            <flux:error name="photo_1" />
+                            @if ($primary_photo)
+                                <flux:file-item :heading="$primary_photo->getClientOriginalName()"
+                                    :image="$primary_photo->temporaryUrl()" :size="$primary_photo->getSize()"
+                                    class="flex items-center">
+                                    <x-slot name="actions">
+                                        <flux:file-item.remove wire:click="removePrimaryPhoto" />
+                                    </x-slot>
+                                </flux:file-item>
+                            @endif
+
+                            {{-- <flux:error name="primary_photo" /> --}}
                         </div>
 
                         <div class="space-y-2">
-                            <flux:file-upload wire:model="photo_2" label="Photo 2">
+                            <flux:text class="text-gray-600 dark:text-white/60">You can also upload additional photos
+                                (up to 9).
+                            </flux:text>
+                            <flux:file-upload wire:model="other_photos" multiple label="Other Photos">
                                 <flux:file-upload.dropzone heading="Drop file or click to browse"
                                     text="JPG, PNG, GIF up to 10MB" inline />
                             </flux:file-upload>
-                            <flux:error name="photo_2" />
-                        </div>
+                            @if ($other_photos)
+                                @foreach ($other_photos as $index => $photo)
+                                    <flux:file-item :heading="$photo->getClientOriginalName()"
+                                        :image="$photo->temporaryUrl()" :size="$photo->getSize()"
+                                        class="flex items-center">
+                                        <x-slot name="actions">
+                                            <flux:file-item.remove wire:click="removeOtherPhoto({{ $index }})" />
+                                        </x-slot>
+                                    </flux:file-item>
+                                @endforeach
 
-                        <div class="space-y-2">
-                            <flux:file-upload wire:model="photo_3" label="Photo 3">
-                                <flux:file-upload.dropzone heading="Drop file or click to browse"
-                                    text="JPG, PNG, GIF up to 10MB" inline />
-                            </flux:file-upload>
-                            <flux:error name="photo_3" />
-                        </div>
-
-                        <div class="space-y-2">
-                            <flux:file-upload wire:model="photo_4" label="Photo 4">
-                                <flux:file-upload.dropzone heading="Drop file or click to browse"
-                                    text="JPG, PNG, GIF up to 10MB" inline />
-                            </flux:file-upload>
-                            <flux:error name="photo_4" />
-                        </div>
-
-                        <div class="space-y-2">
-                            <flux:file-upload wire:model="photo_5" label="Photo 5">
-                                <flux:file-upload.dropzone heading="Drop file or click to browse"
-                                    text="JPG, PNG, GIF up to 10MB" inline />
-                            </flux:file-upload>
-                            <flux:error name="photo_5" />
-                        </div>
-
-                        <div class="space-y-2">
-                            <flux:file-upload wire:model="photo_6" label="Photo 6">
-                                <flux:file-upload.dropzone heading="Drop file or click to browse"
-                                    text="JPG, PNG, GIF up to 10MB" inline />
-                            </flux:file-upload>
-                            <flux:error name="photo_6" />
-                        </div>
-
-                        <div class="space-y-2">
-                            <flux:file-upload wire:model="photo_7" label="Photo 7">
-                                <flux:file-upload.dropzone heading="Drop file or click to browse"
-                                    text="JPG, PNG, GIF up to 10MB" inline />
-                            </flux:file-upload>
-                            <flux:error name="photo_7" />
-                        </div>
-
-                        <div class="space-y-2">
-                            <flux:file-upload wire:model="photo_8" label="Photo 8">
-                                <flux:file-upload.dropzone heading="Drop file or click to browse"
-                                    text="JPG, PNG, GIF up to 10MB" inline />
-                            </flux:file-upload>
-                            <flux:error name="photo_8" />
-                        </div>
-
-                        <div class="space-y-2">
-                            <flux:file-upload wire:model="photo_9" label="Photo 9">
-                                <flux:file-upload.dropzone heading="Drop file or click to browse"
-                                    text="JPG, PNG, GIF up to 10MB" inline />
-                            </flux:file-upload>
-                            <flux:error name="photo_9" />
-                        </div>
-
-                        <div class="space-y-2">
-                            <flux:file-upload wire:model="photo_10" label="Photo 10">
-                                <flux:file-upload.dropzone heading="Drop file or click to browse"
-                                    text="JPG, PNG, GIF up to 10MB" inline />
-                            </flux:file-upload>
-                            <flux:error name="photo_10" />
+                            @endif
                         </div>
                     </div>
                 </flux:accordion.content>
@@ -561,20 +83,14 @@ new class extends Component {
                             <flux:error name="listing_type" />
                         </flux:field>
 
-                        {{-- <flux:field>
-                            <flux:label>Location</flux:label>
-                            <flux:input wire:model.live="location" placeholder="City / Province (optional)"/>
-                            <flux:error name="location"/>
-                        </flux:field> --}}
-
                         <flux:field class="md:col-span-2">
-                            <flux:label>Title <span class="text-red-500">*</span></flux:label>
+                            <flux:label>Title <span class="text-red-500"> *</span></flux:label>
                             <flux:input wire:model.live="title" placeholder="e.g., Glock 19 Gen 5 w/ extras" />
                             <flux:error name="title" />
                         </flux:field>
 
                         <flux:field class="md:col-span-2">
-                            <flux:label>Description <span class="text-red-500">*</span></flux:label>
+                            <flux:label>Description <span class="text-red-500"> *</span></flux:label>
                             <flux:textarea wire:model.live="description" rows="6"
                                 placeholder="Condition, inclusions, history, meetup/shipping notes..." />
                             <flux:error name="description" />
@@ -583,7 +99,7 @@ new class extends Component {
                         <flux:field>
                             <flux:label>
                                 General condition
-                                <span class="text-red-500">*</span>
+                                <span class="text-red-500"> *</span>
                             </flux:label>
 
                             <flux:select wire:model.live="post_condition">
@@ -599,7 +115,7 @@ new class extends Component {
                             <flux:field>
                                 <flux:label>
                                     Price
-                                    <span class="text-red-500">*</span>
+                                    <span class="text-red-500"> *</span>
                                 </flux:label>
                                 <flux:input type="number" step="0.01" wire:model.live="price" placeholder="0.00" />
                                 <flux:error name="price" />
@@ -608,7 +124,7 @@ new class extends Component {
                             <flux:field>
                                 <flux:label>
                                     Budget range (min)
-                                    <span class="text-red-500">*</span>
+                                    <span class="text-red-500"> *</span>
                                 </flux:label>
                                 <flux:input type="number" step="0.01" wire:model.live="buy_min_price"
                                     placeholder="0.00" />
@@ -618,13 +134,17 @@ new class extends Component {
                             <flux:field>
                                 <flux:label>
                                     Budget range (max)
-                                    <span class="text-red-500">*</span>
+                                    <span class="text-red-500"> *</span>
                                 </flux:label>
                                 <flux:input type="number" step="0.01" wire:model.live="buy_max_price"
                                     placeholder="0.00" />
                                 <flux:error name="buy_max_price" />
                             </flux:field>
                         @endif
+
+
+
+
 
                         <div class="flex items-center gap-3 mt-7">
                             <flux:switch wire:model.live="is_negotiable" />
@@ -645,12 +165,12 @@ new class extends Component {
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
-                            <flux:label>Manufacturer</flux:label>
+                            <flux:label>Manufacturer<span class="text-red-500"> *</span></flux:label>
                             <flux:input wire:model.live="manufacturer" placeholder="e.g., Glock" />
                             <flux:error name="manufacturer" />
                         </flux:field>
                         <flux:field>
-                            <flux:label>Model</flux:label>
+                            <flux:label>Model<span class="text-red-500"> *</span></flux:label>
                             <flux:input wire:model.live="model" placeholder="e.g., 19" />
                             <flux:error name="model" />
                         </flux:field>
@@ -681,7 +201,7 @@ new class extends Component {
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
-                            <flux:label>Platform</flux:label>
+                            <flux:label>Platform <span class="text-red-500"> *</span></flux:label>
                             <flux:select wire:model.live="platform">
                                 <option value="">— Optional —</option>
                                 @foreach ($this->platformOptions as $value => $label)
@@ -692,12 +212,12 @@ new class extends Component {
                         </flux:field>
 
                         <flux:field>
-                            <flux:label>Type</flux:label>
+                            <flux:label>Type<span class="text-red-500"> *</span></flux:label>
                             <flux:input wire:model.live="type" placeholder="e.g., 1911, AR-15" />
                             <flux:error name="type" />
                         </flux:field>
                         <flux:field>
-                            <flux:label>Action</flux:label>
+                            <flux:label>Action <span class="text-red-500"> *</span></flux:label>
                             <flux:input wire:model.live="action" placeholder="e.g., semi-auto, bolt, pump" />
                             <flux:error name="action" />
                         </flux:field>
@@ -712,7 +232,7 @@ new class extends Component {
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <flux:field>
-                            <flux:label>Caliber</flux:label>
+                            <flux:label>Caliber <span class="text-red-500"> *</span></flux:label>
                             <flux:input wire:model.live="caliber" placeholder="e.g., 9mm" />
                             <flux:error name="caliber" />
                         </flux:field>
@@ -1019,7 +539,7 @@ new class extends Component {
         </flux:accordion>
 
         <div class="flex items-center justify-end gap-3">
-            <flux:button type="submit" variant="primary">Save changes</flux:button>
+            <flux:button type="submit" variant="primary">Submit for review</flux:button>
         </div>
     </form>
 </div>

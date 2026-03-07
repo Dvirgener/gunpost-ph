@@ -2,11 +2,11 @@
 
 use Livewire\Component;
 
-new class extends Component
-{
+new class extends Component {
     public $category;
 
-    public function mount($category){
+    public function mount($category)
+    {
         $this->category = $category;
     }
 };
@@ -14,6 +14,19 @@ new class extends Component
 
 <div>
 
-    <livewire:pages::posts.create.category.gun/>
+    @switch($this->category)
+        @case('gun')
+            <livewire:pages::posts.create.category.gun />
+        @break
+
+        @case('ammunition')
+            <livewire:pages::posts.create.category.ammunition />
+        @break
+
+        @default
+            <div class="text-center py-12">
+                <p class="text-gray-600">Category not found</p>
+            </div>
+    @endswitch
 
 </div>

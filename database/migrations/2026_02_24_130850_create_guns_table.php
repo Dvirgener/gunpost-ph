@@ -113,6 +113,7 @@ return new class extends Migration
 
 
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index(['manufacturer', 'model']);
             $table->index(['platform', 'caliber']);

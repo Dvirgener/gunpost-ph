@@ -2,6 +2,7 @@
 
 use App\Models\posts\Post;
 use App\Models\posts\categories\Gun;
+use App\Models\posts\categories\Ammunition;
 use Livewire\Component;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Computed;
@@ -15,6 +16,9 @@ new class extends Component {
 
     #[Locked]
     public Gun $gun;
+
+    #[Locked]
+    public ?Ammunition $ammunition = null;
 
     public $photos;
 
@@ -44,6 +48,9 @@ new class extends Component {
         switch ($category) {
             case 'gun':
                 $this->gun = $post->gun;
+                break;
+            case 'ammunition':
+                $this->ammunition = $post->ammunition;
                 break;
             // Add cases for other categories as needed
         }
@@ -75,6 +82,27 @@ new class extends Component {
         }
         return $photos;
     }
+
+    public function deletePost()
+    {
+        // $folder = "posts/{$this->post->uuid}";
+
+        // if (Storage::disk('public')->exists($folder)) {
+        //     Storage::disk('public')->deleteDirectory($folder);
+        // }
+
+        // switch ($this->category) {
+        //     case 'gun':
+        //         $this->post->gun()->delete();
+        //         break;
+        //     case 'ammunition':
+        //         $this->post->ammunition()->delete();
+        //         break;
+        // }
+        $this->post->delete();
+
+        return redirect(route('posts'))->with('success', 'Post deleted successfully.');
+    }
 };
 ?>
 
@@ -83,7 +111,22 @@ new class extends Component {
     <!-- Back Button & Title -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
         <flux:button href="{{ route('posts') }}" variant="ghost">← Back to Posts</flux:button>
-        <h1 class="text-4xl font-bold mt-4 mb-2">{{ $this->post->title }}</h1>
+        <div class="flex items-center justify-between">
+            <h1 class="text-4xl font-bold mt-4 mb-2">{{ $this->post->title }}</h1>
+            <div class="flex gap-2 ">
+                @if (auth()->user()->id === $this->post->user_id)
+                    <flux:button variant="primary" color="blue" icon="pencil"
+                        href="{{ route('posts.edit.category.gun', $this->post->uuid) }}">Edit</flux:button>
+                    <flux:button variant="primary" color="red" icon="trash" wire:click="deletePost"
+                        wire:confirm="Are you sure you want to delete this post?">
+                        Delete
+                    </flux:button>
+                @endif
+
+
+            </div>
+        </div>
+
         <p class="text-gray-600">
             <flux:badge :color="$this->post->listing_type == 'sell' ? 'green' : 'violet'">
                 {{ ucfirst($this->post->listing_type) }}</flux:badge> - Posted
@@ -164,6 +207,10 @@ new class extends Component {
                         <livewire:pages::posts.view.category.main.gun :gun="$this->post->gun" />
                     @break
 
+                    @case('ammunition')
+                        <livewire:pages::posts.view.category.main.ammunition :ammunition="$this->post->ammunition" />
+                    @break
+
                     @default
                 @endswitch
 
@@ -221,6 +268,10 @@ new class extends Component {
 
         <!-- Key Details -->
         @switch($this->category)
+            @case('ammunition')
+                <livewire:pages::posts.view.category.details.ammunition :ammunition="$this->post->ammunition" />
+            @break
+
             @case('gun')
                 <livewire:pages::posts.view.category.details.gun :gun="$this->post->gun" :activeImageIndex="$this->activeImageIndex" />
             @break
