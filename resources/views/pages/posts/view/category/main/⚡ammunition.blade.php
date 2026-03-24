@@ -34,21 +34,21 @@ new class extends Component {
 
         @if ($this->ammunition->bullet_type)
             <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-white">Bullet Type:</span>
+                <span class="text-black dark:text-white">Bullet Type:</span>
                 <span class="font-medium dark:text-white/50">{{ ucfirst($this->ammunition->bullet_type) }}</span>
             </div>
         @endif
 
         @if ($this->ammunition->grain)
             <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-white">Grain:</span>
+                <span class="text-black dark:text-white">Grain:</span>
                 <span class="font-medium dark:text-white/50">{{ $this->ammunition->grain }}</span>
             </div>
         @endif
 
         @if ($this->ammunition->condition)
             <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-white">Condition:</span>
+                <span class="text-black dark:text-white">Condition:</span>
                 <span
                     class="font-medium dark:text-white/50">{{ ucfirst(str_replace('_', ' ', $this->ammunition->condition)) }}</span>
             </div>
@@ -56,7 +56,7 @@ new class extends Component {
 
         @if ($this->ammunition->total_rounds)
             <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-white">Total Rounds:</span>
+                <span class="text-black dark:text-white">Total Rounds:</span>
                 <span class="font-medium dark:text-white/50">{{ $this->ammunition->total_rounds }}</span>
             </div>
         @endif

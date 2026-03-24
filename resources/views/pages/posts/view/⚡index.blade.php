@@ -115,8 +115,20 @@ new class extends Component {
             <h1 class="text-4xl font-bold mt-4 mb-2">{{ $this->post->title }}</h1>
             <div class="flex gap-2 ">
                 @if (auth()->user()->id === $this->post->user_id)
-                    <flux:button variant="primary" color="blue" icon="pencil"
-                        href="{{ route('posts.edit.category.gun', $this->post->uuid) }}">Edit</flux:button>
+                    @switch($category)
+                        @case('gun')
+                            <flux:button variant="primary" color="blue" icon="pencil"
+                                href="{{ route('posts.edit.category.gun', $this->post->uuid) }}">Edit</flux:button>
+                        @break
+
+                        @case('ammunition')
+                            <flux:button variant="primary" color="blue" icon="pencil"
+                                href="{{ route('posts.edit.category.ammunition', $this->post->uuid) }}">Edit</flux:button>
+                        @break
+
+                        @default
+                    @endswitch
+
                     <flux:button variant="primary" color="red" icon="trash" wire:click="deletePost"
                         wire:confirm="Are you sure you want to delete this post?">
                         Delete

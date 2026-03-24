@@ -35,7 +35,45 @@ new class extends Component {
     public $primary_photo = null;
     public $other_photos = null;
 
-    // Gun
+    #[Computed]
+    public function listingTypeOptions(): array
+    {
+        return ['sell' => 'Sell', 'buy' => 'Buy'];
+    }
+
+    #[Computed]
+    public function postConditionOptions(): array
+    {
+        return [
+            'new' => 'New',
+            'used' => 'Used',
+            'like_new' => 'Like New',
+            'refurbished' => 'Refurbished',
+            'for_parts' => 'For Parts',
+        ];
+    }
+
+    public function removePrimaryPhoto()
+    {
+        $this->primary_photo->delete();
+        $this->primary_photo = null;
+    }
+
+    public function removeOtherPhoto(int $index)
+    {
+        if (isset($this->other_photos[$index])) {
+            $this->other_photos[$index]->delete();
+            unset($this->other_photos[$index]);
+            $this->other_photos = array_values($this->other_photos); // reindex
+        }
+    }
+
+
+
+
+
+    // ===================================================================================== GUN PROPERTIES =====================================================================================
+
     public ?string $manufacturer = null;
     public ?string $model = null;
     public ?string $variant = null;
@@ -109,43 +147,13 @@ new class extends Component {
         ];
     }
 
-    #[Computed]
-    public function listingTypeOptions(): array
-    {
-        return ['sell' => 'Sell', 'buy' => 'Buy'];
-    }
 
-    #[Computed]
-    public function postConditionOptions(): array
-    {
-        return [
-            'new' => 'New',
-            'used' => 'Used',
-            'like_new' => 'Like New',
-            'refurbished' => 'Refurbished',
-            'for_parts' => 'For Parts',
-        ];
-    }
-
-    public function removePrimaryPhoto()
-    {
-        $this->primary_photo->delete();
-        $this->primary_photo = null;
-    }
-
-    public function removeOtherPhoto(int $index)
-    {
-        if (isset($this->other_photos[$index])) {
-            $this->other_photos[$index]->delete();
-            unset($this->other_photos[$index]);
-            $this->other_photos = array_values($this->other_photos); // reindex
-        }
-    }
 
     public function rules(): array
     {
         return array_merge([
-            // Post (required)
+
+            // POST RULES (required)
             'category' => ['required', Rule::in(['gun'])],
             'listing_type' => ['required', Rule::in(['buy', 'sell'])],
             'title' => ['required', 'string', 'min:5', 'max:255'],
@@ -155,8 +163,9 @@ new class extends Component {
             'buy_max_price' => [Rule::requiredIf(fn() => $this->listing_type === 'buy'), 'nullable', 'numeric', 'min:0'],
             'is_negotiable' => ['boolean'],
             'post_condition' => ['required', 'string', 'max:50'],
-            'location' => ['nullable', 'string', 'max:255'],
-            'expires_at' => ['nullable', 'date'],
+            'primary_photo' => ['required', 'file', 'mimes:jpg,jpeg,png,gif', 'max:10240'],
+            'other_photos' => ['nullable', 'array', 'max:9'],
+            'other_photos.*' => ['file', 'mimes:jpg,jpeg,png,gif', 'max:5080'],
 
             // Gun
             'manufacturer' => ['required', 'string', 'max:255'],
@@ -164,11 +173,9 @@ new class extends Component {
             'variant' => ['nullable', 'string', 'max:255'],
             'series' => ['nullable', 'string', 'max:255'],
             'country_of_origin' => ['nullable', 'string', 'max:255'],
-
             'platform' => ['required', Rule::in(['handgun', 'rifle', 'shotgun', 'pcc', 'smg', 'sniper', 'other'])],
             'type' => ['required', 'string', 'max:255'],
             'action' => ['required', 'string', 'max:255'],
-
             'caliber' => ['required', 'string', 'max:255'],
             'capacity' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'barrel_length' => ['nullable', 'numeric', 'min:0'],
@@ -177,7 +184,6 @@ new class extends Component {
             'width' => ['nullable', 'numeric', 'min:0'],
             'weight' => ['nullable', 'numeric', 'min:0'],
             'weight_unit' => ['required', Rule::in(['kg', 'lb'])],
-
             'frame_material' => ['nullable', 'string', 'max:255'],
             'slide_material' => ['nullable', 'string', 'max:255'],
             'barrel_material' => ['nullable', 'string', 'max:255'],
@@ -187,38 +193,29 @@ new class extends Component {
             'stock_type' => ['nullable', 'string', 'max:255'],
             'handguard_type' => ['nullable', 'string', 'max:255'],
             'rail_type' => ['nullable', 'string', 'max:255'],
-
             'sight_type' => ['nullable', 'string', 'max:255'],
             'optic_ready' => ['boolean'],
             'optic_mount_pattern' => ['nullable', 'string', 'max:255'],
-
             'threaded_barrel' => ['boolean'],
             'thread_pitch' => ['nullable', 'string', 'max:255'],
             'muzzle_device_included' => ['boolean'],
             'muzzle_device_type' => ['nullable', 'string', 'max:255'],
-
             'trigger_type' => ['nullable', 'string', 'max:255'],
             'trigger_pull' => ['nullable', 'numeric', 'min:0'],
             'trigger_pull_unit' => ['required', Rule::in(['lb', 'kg'])],
             'has_manual_safety' => ['boolean'],
             'has_firing_pin_safety' => ['boolean'],
-
             'sku' => ['nullable', 'string', 'max:255'],
             'upc' => ['nullable', 'string', 'max:255'],
-
             'gun_condition' => ['nullable', Rule::in(['new', 'like_new', 'used', 'refurbished', 'for_parts'])],
             'round_count_estimate' => ['nullable', 'integer', 'min:0'],
             'has_box' => ['boolean'],
             'has_receipt' => ['boolean'],
             'has_documents' => ['boolean'],
             'document_notes' => ['nullable', 'string'],
-
             'included_magazines' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'included_accessories' => ['nullable', 'string'],
-            'notes' => ['nullable', 'string'],
-            'primary_photo' => ['required', 'file', 'mimes:jpg,jpeg,png,gif', 'max:10240'],
-            'other_photos' => ['nullable', 'array', 'max:9'],
-            'other_photos.*' => ['file', 'mimes:jpg,jpeg,png,gif', 'max:5080'],
+            'notes' => ['nullable', 'string']
         ]);
     }
 
@@ -298,9 +295,7 @@ new class extends Component {
                 'buy_max_price' => $this->buy_max_price,
                 'is_negotiable' => $this->is_negotiable,
                 'condition' => $this->post_condition,
-                'location' => $this->location,
                 'status' => 'pending',
-                'expires_at' => $this->expires_at ? \Carbon\Carbon::parse($this->expires_at) : null,
 
                 // picture paths
                 'p_1' => $p1,

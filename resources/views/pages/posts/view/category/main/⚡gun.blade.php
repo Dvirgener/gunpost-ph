@@ -34,21 +34,21 @@ new class extends Component {
 
         @if ($this->gun->model)
             <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-white">Model:</span>
+                <span class="text-black dark:text-white">Model:</span>
                 <span class="font-medium dark:text-white/50">{{ $this->gun->model }}</span>
             </div>
         @endif
 
         @if ($this->gun->caliber)
             <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-white">Caliber:</span>
+                <span class="text-black dark:text-white">Caliber:</span>
                 <span class="font-medium dark:text-white/50">{{ $this->gun->caliber }}</span>
             </div>
         @endif
 
         @if ($this->gun->condition)
             <div class="flex justify-between">
-                <span class="text-gray-600 dark:text-white">Condition:</span>
+                <span class="text-black dark:text-white">Condition:</span>
                 <span
                     class="font-medium dark:text-white/50">{{ ucfirst(str_replace('_', ' ', $this->gun->condition)) }}</span>
             </div>

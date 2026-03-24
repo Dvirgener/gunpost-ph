@@ -81,13 +81,13 @@ new class extends Component {
                         </div>
                     @endif
                     @if ($this->ammunition->corrosive)
-                        <div class="py-2 border-b border-gray-200">
+                        <div class="py-2 border-b border-gray-200 flex justify-between items-center">
                             <span class="text-gray-600 dark:text-white/80">Corrosive:</span>
                             <flux:badge class="mt-1" color="red">Yes</flux:badge>
                         </div>
                     @endif
                     @if ($this->ammunition->reloads)
-                        <div class="py-2 border-b border-gray-200">
+                        <div class="py-2 border-b border-gray-200 flex justify-between items-center">
                             <span class="text-gray-600 dark:text-white/80">Reloads:</span>
                             <flux:badge class="mt-1" color="blue">Yes</flux:badge>
                         </div>
