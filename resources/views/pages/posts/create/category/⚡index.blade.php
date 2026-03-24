@@ -23,6 +23,10 @@ new class extends Component {
             <livewire:pages::posts.create.category.ammunition />
         @break
 
+        @case('airsoft')
+            <livewire:pages::posts.create.category.airsoft />
+        @break
+
         @default
             <div class="text-center py-12">
                 <p class="text-gray-600">Category not found</p>

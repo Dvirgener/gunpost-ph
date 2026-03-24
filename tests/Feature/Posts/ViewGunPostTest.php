@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\posts\categories\Airsoft;
 use App\Models\posts\categories\Gun;
 use App\Models\posts\Post;
 use App\Models\user\User;
@@ -19,8 +20,7 @@ test('allows an authenticated user to view a gun post', function () {
         'p_3' => 'photos/gun3.jpg',
     ]);
 
-    Gun::factory()->create([
-        'post_id' => $post->id,
+    $post->gun()->update([
         'manufacturer' => 'Glock',
         'model' => 'Glock 19',
         'platform' => 'handgun',
@@ -32,7 +32,7 @@ test('allows an authenticated user to view a gun post', function () {
         ->get(route('posts.view.category.index', ['post' => $post, 'category' => 'gun']))
         ->assertStatus(200)
         ->assertSee('Glock 19 Gen 5')
-        ->assertSee('$599.99')
+        ->assertSee('P599.99')
         ->assertSee('Glock')
         ->assertSee('9mm');
 });
@@ -46,8 +46,7 @@ test('shows only non-blank fields in gun specifications', function () {
         'p_1' => 'photos/test.jpg',
     ]);
 
-    Gun::factory()->create([
-        'post_id' => $post->id,
+    $post->gun()->update([
         'manufacturer' => 'Test Manufacturer',
         'model' => null, // This should not appear
         'caliber' => '45 ACP',
@@ -73,7 +72,7 @@ test('displays main photo and thumbnails correctly', function () {
         'p_4' => null, // Should not display
     ]);
 
-    Gun::factory()->create(['post_id' => $post->id]);
+    $post->gun()->update([]);
 
     $this->actingAs($user)
         ->get(route('posts.view.category.index', ['post' => $post, 'category' => 'gun']))
@@ -95,7 +94,7 @@ test('displays seller information correctly', function () {
         'p_1' => 'photos/test.jpg',
     ]);
 
-    Gun::factory()->create(['post_id' => $post->id]);
+    $post->gun()->update([]);
 
     $this->actingAs($user)
         ->get(route('posts.view.category.index', ['post' => $post, 'category' => 'gun']))
@@ -114,12 +113,13 @@ test('properly displays buy listing price range', function () {
         'buy_max_price' => 250.00,
     ]);
 
-    Gun::factory()->create(['post_id' => $post->id]);
+    $post->gun()->update([]);
 
     $this->actingAs($user)
         ->get(route('posts.view.category.index', ['post' => $post, 'category' => 'gun']))
         ->assertStatus(200)
-        ->assertSee('$100.00 - $250.00');
+        ->assertSee('P100.00')
+        ->assertSee('P250.00');
 });
 
 test('handles posts with minimal data', function () {
@@ -131,12 +131,78 @@ test('handles posts with minimal data', function () {
         'price' => 100.00,
     ]);
 
-    Gun::factory()->create(['post_id' => $post->id]);
+    $post->gun()->update([]);
 
     $this->actingAs($user)
         ->get(route('posts.view.category.index', ['post' => $post, 'category' => 'gun']))
         ->assertStatus(200)
         ->assertSee('Minimal Post');
+});
+
+it('allows an authenticated user to view an airsoft post', function () {
+    $user = User::factory()->create();
+
+    $post = Post::factory()->create([
+        'user_id' => $user->id,
+        'category' => 'airsoft',
+        'listing_type' => 'sell',
+        'title' => 'JAG AEG',
+        'description' => 'Well maintained airsoft rifle',
+        'price' => 350.00,
+        'p_1' => 'photos/airsoft1.jpg',
+    ]);
+
+    $post->airsoft()->update([
+        'brand' => 'G&G',
+        'model' => 'GC16',
+        'platform' => 'rifle',
+        'power_source' => 'aeg',
+        'fps' => 340,
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('posts.view.category.index', ['post' => $post, 'category' => 'airsoft']))
+        ->assertStatus(200)
+        ->assertSee('JAG AEG')
+        ->assertSee('G&G')
+        ->assertSee('340');
+});
+
+it('shows only non-blank fields in airsoft specifications', function () {
+    $user = User::factory()->create();
+
+    $post = Post::factory()->create([
+        'user_id' => $user->id,
+        'category' => 'airsoft',
+        'title' => 'Minimal Airsoft',
+        'p_1' => 'photos/airsoft-minimal.jpg',
+    ]);
+
+    $post->airsoft()->update([
+        'brand' => 'Tokyo Marui',
+        'model' => null,
+        'fps' => 320,
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('posts.view.category.index', ['post' => $post, 'category' => 'airsoft']))
+        ->assertStatus(200)
+        ->assertSee('Tokyo Marui')
+        ->assertSee('320')
+        ->assertDontSee('Model:');
+});
+
+it('airsoft factory includes all migration columns as attributes', function () {
+    $airsoft = Airsoft::factory()->make();
+    $expected = [
+        'brand', 'model', 'series', 'platform', 'power_source', 'compatibility_platform', 'gearbox_version',
+        'fps', 'joule', 'color', 'body_material', 'metal_body', 'blowback', 'battery_type', 'battery_connector',
+        'gas_type', 'includes_magazines', 'magazine_count', 'magazine_type', 'package_includes', 'condition', 'notes',
+    ];
+
+    foreach ($expected as $attr) {
+        expect(array_key_exists($attr, $airsoft->getAttributes()))->toBeTrue();
+    }
 });
 
 it('gun factory includes all migration columns as attributes', function () {

@@ -31,6 +31,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('posts/create/ammunition', 'pages::posts.create.category.ammunition')->name('posts.create.category.ammunition');
     Route::livewire('posts/{post}/edit/ammunition', 'pages::posts.edit.category.ammunition')->name('posts.edit.category.ammunition');
 
+    Route::livewire('posts/create/airsoft', 'pages::posts.create.category.airsoft')->name('posts.create.category.airsoft');
+    Route::livewire('posts/{post}/edit/airsoft', 'pages::posts.edit.category.airsoft')->name('posts.edit.category.airsoft');
+
     Route::livewire('posts/{post}/view/{category}', 'pages::posts.view.index')->name('posts.view.category.index');
 
     Route::livewire('posts/create/post/{category}', 'pages::posts.create.post')->name('posts.create');

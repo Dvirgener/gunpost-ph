@@ -189,7 +189,7 @@ new class extends Component {
                 @foreach ($sightFields as $field => $label)
                     @if ($field === 'optic_ready')
                         @if ($this->gun->$field)
-                            <div class="py-2 border-b border-gray-200 gap-3">
+                            <div class="py-2 border-b border-gray-200 gap-3 flex justify-between items-center">
                                 <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
                                 <flux:badge class="mt-1" color="green">Yes</flux:badge>
                             </div>
@@ -222,19 +222,19 @@ new class extends Component {
             <flux:heading level="4" class="mb-4">Barrel & Muzzle</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @if ($this->gun->threaded_barrel)
-                    <div class="py-2 border-b border-gray-200 gap-3">
+                    <div class="py-2 border-b border-gray-200 gap-3 flex justify-between items-center">
                         <span class="text-gray-600 dark:text-white/80">Threaded Barrel:</span>
                         <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
                     </div>
                 @endif
                 @if ($this->gun->thread_pitch)
-                    <div class="flex justify-between py-2 border-b border-gray-200">
+                    <div class="flex justify-between py-2 border-b border-gray-200 flex justify-between items-center">
                         <span class="text-gray-600 dark:text-white/80">Thread Pitch:</span>
                         <span class="font-medium dark:text-white/50">{{ $this->gun->thread_pitch }}</span>
                     </div>
                 @endif
                 @if ($this->gun->muzzle_device_included)
-                    <div class="py-2 border-b border-gray-200 gap-3">
+                    <div class="py-2 border-b border-gray-200 gap-3 flex justify-between items-center">
                         <span class="text-gray-600 dark:text-white/80">Muzzle Device Included:</span>
                         <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
                     </div>
@@ -280,13 +280,13 @@ new class extends Component {
                     </div>
                 @endif
                 @if ($this->gun->has_manual_safety)
-                    <div class="py-2 border-b border-gray-200">
+                    <div class="py-2 border-b border-gray-200 flex justify-between items-center">
                         <span class="text-gray-600 dark:text-white/80">Manual Safety:</span>
                         <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
                     </div>
                 @endif
                 @if ($this->gun->has_firing_pin_safety)
-                    <div class="py-2 border-b border-gray-200">
+                    <div class="py-2 border-b border-gray-200 flex justify-between items-center">
                         <span class="text-gray-600 dark:text-white/80">Firing Pin Safety:</span>
                         <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
                     </div>
@@ -339,25 +339,25 @@ new class extends Component {
             <flux:heading level="4" class="mb-4">Condition & Extras</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @if ($this->gun->round_count_estimate)
-                    <div class="flex justify-between py-2 border-b border-gray-200">
+                    <div class="flex justify-between py-2 border-b border-gray-200 items-center">
                         <span class="text-gray-600 dark:text-white/80">Round Count Estimate:</span>
                         <span class="font-medium dark:text-white/50">{{ $this->gun->round_count_estimate }}</span>
                     </div>
                 @endif
                 @if ($this->gun->has_box)
-                    <div class="py-2 border-b border-gray-200">
+                    <div class="py-2 border-b border-gray-200 flex justify-between items-center">
                         <span class="text-gray-600 dark:text-white/80">Original Box:</span>
                         <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
                     </div>
                 @endif
                 @if ($this->gun->has_receipt)
-                    <div class="py-2 border-b border-gray-200">
+                    <div class="py-2 border-b border-gray-200 flex justify-between items-center">
                         <span class="text-gray-600 dark:text-white/80">Receipt Included:</span>
                         <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
                     </div>
                 @endif
                 @if ($this->gun->has_documents)
-                    <div class="py-2 border-b border-gray-200">
+                    <div class="py-2 border-b border-gray-200 flex justify-between items-center">
                         <span class="text-gray-600 dark:text-white/80">Documentation:</span>
                         <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
                     </div>

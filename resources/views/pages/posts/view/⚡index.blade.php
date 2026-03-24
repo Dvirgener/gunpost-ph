@@ -3,6 +3,7 @@
 use App\Models\posts\Post;
 use App\Models\posts\categories\Gun;
 use App\Models\posts\categories\Ammunition;
+use App\Models\posts\categories\Airsoft;
 use Livewire\Component;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Computed;
@@ -19,6 +20,9 @@ new class extends Component {
 
     #[Locked]
     public ?Ammunition $ammunition = null;
+
+    #[Locked]
+    public ?Airsoft $airsoft = null;
 
     public $photos;
 
@@ -51,6 +55,9 @@ new class extends Component {
                 break;
             case 'ammunition':
                 $this->ammunition = $post->ammunition;
+                break;
+            case 'airsoft':
+                $this->airsoft = $post->airsoft;
                 break;
             // Add cases for other categories as needed
         }
@@ -126,7 +133,10 @@ new class extends Component {
                                 href="{{ route('posts.edit.category.ammunition', $this->post->uuid) }}">Edit</flux:button>
                         @break
 
-                        @default
+                        @case('airsoft')
+                            <flux:button variant="primary" color="blue" icon="pencil"
+                                href="{{ route('posts.edit.category.airsoft', $this->post->uuid) }}">Edit</flux:button>
+                        @break
                     @endswitch
 
                     <flux:button variant="primary" color="red" icon="trash" wire:click="deletePost"
@@ -223,6 +233,10 @@ new class extends Component {
                         <livewire:pages::posts.view.category.main.ammunition :ammunition="$this->post->ammunition" />
                     @break
 
+                    @case('airsoft')
+                        <livewire:pages::posts.view.category.main.airsoft :airsoft="$this->post->airsoft" />
+                    @break
+
                     @default
                 @endswitch
 
@@ -286,6 +300,10 @@ new class extends Component {
 
             @case('gun')
                 <livewire:pages::posts.view.category.details.gun :gun="$this->post->gun" :activeImageIndex="$this->activeImageIndex" />
+            @break
+
+            @case('airsoft')
+                <livewire:pages::posts.view.category.details.airsoft :airsoft="$this->post->airsoft" />
             @break
 
             @default
