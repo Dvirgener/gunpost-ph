@@ -9,6 +9,7 @@ new class extends Component {
 
     public function mount(Post $post, $category)
     {
+        dd('aw');
         $this->post = $post;
         $this->category = $category;
 

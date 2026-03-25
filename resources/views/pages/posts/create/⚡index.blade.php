@@ -23,10 +23,9 @@ new class extends Component {
         <x-virg.create-post-button name="Ammo"
             link="{{ route('posts.create.category.ammunition', ['category' => 'ammunition']) }}" />
         <x-virg.create-post-button name="Airsoft" link="{{ route('posts.create.category.airsoft') }}" />
+        <x-virg.create-post-button name="Accessory" link="{{ route('posts.create.category.accessory') }}" />
 
-        {{-- <x-virg.create-post-button name="Accessory"
-            link="{{ route('posts.create.category.index', ['category' => 'accessory']) }}" />
-        <x-virg.create-post-button name="Other"
+        {{-- <x-virg.create-post-button name="Other"
             link="{{ route('posts.create.category.index', ['category' => 'other']) }}" /> --}}
     </div>
 

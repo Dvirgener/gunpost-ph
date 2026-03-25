@@ -34,6 +34,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('posts/create/airsoft', 'pages::posts.create.category.airsoft')->name('posts.create.category.airsoft');
     Route::livewire('posts/{post}/edit/airsoft', 'pages::posts.edit.category.airsoft')->name('posts.edit.category.airsoft');
 
+    Route::livewire('posts/create/accessory', 'pages::posts.create.category.accessory')->name('posts.create.category.accessory');
+    Route::livewire('posts/{post}/edit/accessory', 'pages::posts.edit.category.accessory')->name('posts.edit.category.accessory');
+
     Route::livewire('posts/{post}/view/{category}', 'pages::posts.view.index')->name('posts.view.category.index');
 
     Route::livewire('posts/create/post/{category}', 'pages::posts.create.post')->name('posts.create');

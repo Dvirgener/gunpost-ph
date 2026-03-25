@@ -4,6 +4,7 @@ use App\Models\posts\Post;
 use App\Models\posts\categories\Gun;
 use App\Models\posts\categories\Ammunition;
 use App\Models\posts\categories\Airsoft;
+use App\Models\posts\categories\Accessory;
 use Livewire\Component;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Computed;
@@ -23,6 +24,9 @@ new class extends Component {
 
     #[Locked]
     public ?Airsoft $airsoft = null;
+
+    #[Locked]
+    public ?Accessory $accessory = null;
 
     public $photos;
 
@@ -58,6 +62,9 @@ new class extends Component {
                 break;
             case 'airsoft':
                 $this->airsoft = $post->airsoft;
+                break;
+            case 'accessory':
+                $this->accessory = $post->accessory;
                 break;
             // Add cases for other categories as needed
         }
@@ -136,6 +143,11 @@ new class extends Component {
                         @case('airsoft')
                             <flux:button variant="primary" color="blue" icon="pencil"
                                 href="{{ route('posts.edit.category.airsoft', $this->post->uuid) }}">Edit</flux:button>
+                        @break
+
+                        @case('accessory')
+                            <flux:button variant="primary" color="blue" icon="pencil"
+                                href="{{ route('posts.edit.category.accessory', $this->post->uuid) }}">Edit</flux:button>
                         @break
                     @endswitch
 
@@ -237,6 +249,10 @@ new class extends Component {
                         <livewire:pages::posts.view.category.main.airsoft :airsoft="$this->post->airsoft" />
                     @break
 
+                    @case('accessory')
+                        <livewire:pages::posts.view.category.main.accessory :accessory="$this->post->accessory" />
+                    @break
+
                     @default
                 @endswitch
 
@@ -304,6 +320,10 @@ new class extends Component {
 
             @case('airsoft')
                 <livewire:pages::posts.view.category.details.airsoft :airsoft="$this->post->airsoft" />
+            @break
+
+            @case('accessory')
+                <livewire:pages::posts.view.category.details.accessory :accessory="$this->post->accessory" />
             @break
 
             @default
