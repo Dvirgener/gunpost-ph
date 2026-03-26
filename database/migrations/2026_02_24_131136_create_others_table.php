@@ -23,18 +23,7 @@ return new class extends Migration
             /**
              * Classification
              */
-            $table->enum('weapon_type', [
-                'knife',
-                'sword',
-                'machete',
-                'axe',
-                'tomahawk',
-                'baton',
-                'stick',
-                'tonfa',
-                'spear',
-                'other',
-            ])->nullable();
+            $table->string('weapon_type')->nullable(); // e.g., karambit, bowie, katana, kukri, balisong (if applicable)
 
             $table->string('subcategory')->nullable(); // e.g., karambit, bowie, katana, kukri, balisong (if applicable)
             $table->string('intended_use')->nullable(); // utility, training, display, collection, outdoors, etc.

@@ -8,7 +8,7 @@
         'airsoft' => 'target',
         'ammunition' => 'bolt',
         'accessory' => 'wrench',
-        'other' => 'cube',
+        'others' => 'cube',
     ];
     $icon = $iconMap[$cat] ?? null;
 @endphp

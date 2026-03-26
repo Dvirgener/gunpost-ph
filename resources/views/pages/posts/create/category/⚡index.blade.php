@@ -27,6 +27,14 @@ new class extends Component {
             <livewire:pages::posts.create.category.airsoft />
         @break
 
+        @case('accessory')
+            <livewire:pages::posts.create.category.accessory />
+        @break
+
+        @case('others')
+            <livewire:pages::posts.create.category.others />
+        @break
+
         @default
             <div class="text-center py-12">
                 <p class="text-gray-600">Category not found</p>

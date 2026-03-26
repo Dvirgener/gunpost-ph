@@ -5,6 +5,7 @@ use App\Models\posts\categories\Gun;
 use App\Models\posts\categories\Ammunition;
 use App\Models\posts\categories\Airsoft;
 use App\Models\posts\categories\Accessory;
+use App\Models\posts\categories\Other;
 use Livewire\Component;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Computed;
@@ -27,6 +28,9 @@ new class extends Component {
 
     #[Locked]
     public ?Accessory $accessory = null;
+
+    #[Locked]
+    public ?Other $others = null;
 
     public $photos;
 
@@ -65,6 +69,9 @@ new class extends Component {
                 break;
             case 'accessory':
                 $this->accessory = $post->accessory;
+                break;
+            case 'others':
+                $this->others = $post->others;
                 break;
             // Add cases for other categories as needed
         }
@@ -148,6 +155,11 @@ new class extends Component {
                         @case('accessory')
                             <flux:button variant="primary" color="blue" icon="pencil"
                                 href="{{ route('posts.edit.category.accessory', $this->post->uuid) }}">Edit</flux:button>
+                        @break
+
+                        @case('others')
+                            <flux:button variant="primary" color="blue" icon="pencil"
+                                href="{{ route('posts.edit.category.others', $this->post->uuid) }}">Edit</flux:button>
                         @break
                     @endswitch
 
@@ -253,6 +265,10 @@ new class extends Component {
                         <livewire:pages::posts.view.category.main.accessory :accessory="$this->post->accessory" />
                     @break
 
+                    @case('others')
+                        <livewire:pages::posts.view.category.main.others :other="$this->post->other" />
+                    @break
+
                     @default
                 @endswitch
 
@@ -324,6 +340,10 @@ new class extends Component {
 
             @case('accessory')
                 <livewire:pages::posts.view.category.details.accessory :accessory="$this->post->accessory" />
+            @break
+
+            @case('others')
+                <livewire:pages::posts.view.category.details.others :others="$this->post->other" />
             @break
 
             @default
