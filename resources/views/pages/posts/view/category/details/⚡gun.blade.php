@@ -228,7 +228,7 @@ new class extends Component {
                     </div>
                 @endif
                 @if ($this->gun->thread_pitch)
-                    <div class="flex justify-between py-2 border-b border-gray-200 flex justify-between items-center">
+                    <div class="flex justify-between py-2 border-b border-gray-200 items-center">
                         <span class="text-gray-600 dark:text-white/80">Thread Pitch:</span>
                         <span class="font-medium dark:text-white/50">{{ $this->gun->thread_pitch }}</span>
                     </div>
