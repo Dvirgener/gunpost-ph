@@ -35,16 +35,14 @@ new class extends Component {
 
         @if (collect($basicFields)->some(fn($_, $field) => $this->ammunition->$field))
             <div>
-                <flux:heading level="4" class="mb-4 text-black dark:text-white">Basic Information
+                <flux:heading level="4" class="mb-4 text-blue-500">Basic Information
                 </flux:heading>
                 <div class="space-y-3 text-sm">
                     @foreach ($basicFields as $field => $label)
                         @if ($this->ammunition->$field)
-                            <div class="flex justify-between py-2 border-b border-gray-200">
-                                <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                                <span
-                                    class="font-medium dark:text-white/50 ">{{ ucfirst($this->ammunition->$field) }}</span>
-                            </div>
+                            <x-virg.posts.post-view-prop :label="$label">
+                                {{ ucfirst($this->ammunition->$field) }}
+                            </x-virg.posts.post-view-prop>
                         @endif
                     @endforeach
                 </div>
@@ -63,34 +61,28 @@ new class extends Component {
 
         @if (collect($ammoFields)->some(fn($_, $key) => $key === 'corrosive' || $key === 'reloads' ? $this->ammunition->$key : $this->ammunition->$key))
             <div>
-                <flux:heading level="4" class="mb-4 text-black dark:text-white">Ammunition Properties
+                <flux:heading level="4" class="mb-4 text-blue-500">Ammunition Properties
                 </flux:heading>
                 <div class="space-y-3 text-sm">
                     @if ($this->ammunition->case_material)
-                        <div class="flex justify-between py-2 border-b border-gray-200">
-                            <span class="text-gray-600 dark:text-white/80">Case Material:</span>
-                            <span
-                                class="font-medium dark:text-white/50">{{ ucfirst($this->ammunition->case_material) }}</span>
-                        </div>
+                        <x-virg.posts.post-view-prop label="Case Material">
+                            {{ ucfirst($this->ammunition->case_material) }}
+                        </x-virg.posts.post-view-prop>
                     @endif
                     @if ($this->ammunition->primer_type)
-                        <div class="flex justify-between py-2 border-b border-gray-200">
-                            <span class="text-gray-600 dark:text-white/80">Primer Type:</span>
-                            <span
-                                class="font-medium dark:text-white/50">{{ ucfirst($this->ammunition->primer_type) }}</span>
-                        </div>
+                        <x-virg.posts.post-view-prop label="Primer Type">
+                            {{ ucfirst($this->ammunition->primer_type) }}
+                        </x-virg.posts.post-view-prop>
                     @endif
                     @if ($this->ammunition->corrosive)
-                        <div class="py-2 border-b border-gray-200 flex justify-between items-center">
-                            <span class="text-gray-600 dark:text-white/80">Corrosive:</span>
-                            <flux:badge class="mt-1" color="red">Yes</flux:badge>
-                        </div>
+                        <x-virg.posts.post-view-prop label="Corrosive">
+                            <flux:badge class="mt-1" color="green">Yes</flux:badge>
+                        </x-virg.posts.post-view-prop>
                     @endif
                     @if ($this->ammunition->reloads)
-                        <div class="py-2 border-b border-gray-200 flex justify-between items-center">
-                            <span class="text-gray-600 dark:text-white/80">Reloads:</span>
-                            <flux:badge class="mt-1" color="blue">Yes</flux:badge>
-                        </div>
+                        <x-virg.posts.post-view-prop label="Reloads">
+                            <flux:badge class="mt-1" color="green">Yes</flux:badge>
+                        </x-virg.posts.post-view-prop>
                     @endif
                 </div>
             </div>
@@ -109,14 +101,13 @@ new class extends Component {
 
     @if (collect($quantityFields)->some(fn($_, $field) => $this->ammunition->$field))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4 text-black dark:text-white">Quantity & Packaging</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500">Quantity & Packaging</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @foreach ($quantityFields as $field => $label)
                     @if ($this->ammunition->$field)
-                        <div class="flex justify-between py-2 border-b border-gray-200">
-                            <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                            <span class="font-medium dark:text-white/50">{{ $this->ammunition->$field }}</span>
-                        </div>
+                        <x-virg.posts.post-view-prop :label="$label">
+                            {{ $this->ammunition->$field }}
+                        </x-virg.posts.post-view-prop>
                     @endif
                 @endforeach
             </div>
@@ -134,15 +125,13 @@ new class extends Component {
 
     @if (collect($lotFields)->some(fn($_, $field) => $this->ammunition->$field))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4 text-black dark:text-white">Lot & SKU Information</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500">Lot & SKU Information</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @foreach ($lotFields as $field => $label)
                     @if ($this->ammunition->$field)
-                        <div class="flex justify-between py-2 border-b border-gray-200">
-                            <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                            <span
-                                class="font-medium font-mono dark:text-white/50">{{ $this->ammunition->$field }}</span>
-                        </div>
+                        <x-virg.posts.post-view-prop :label="$label">
+                            {{ $this->ammunition->$field }}
+                        </x-virg.posts.post-view-prop>
                     @endif
                 @endforeach
             </div>
@@ -152,7 +141,7 @@ new class extends Component {
     <!-- Condition -->
     @if ($this->ammunition->condition)
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4 text-black dark:text-white">Condition</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500">Condition</flux:heading>
             <div class="text-sm">
                 <div class="flex justify-between py-2">
                     <span class="text-gray-600 dark:text-white/80">Status:</span>
@@ -179,7 +168,7 @@ new class extends Component {
     <!-- Notes -->
     @if ($this->ammunition->notes)
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4 text-black dark:text-white">Additional Notes</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500">Additional Notes</flux:heading>
             <p class="text-gray-700 whitespace-pre-wrap dark:text-white/50 text-sm">
                 {{ $this->ammunition->notes }}</p>
         </div>

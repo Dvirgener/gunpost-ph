@@ -15,7 +15,7 @@
 
             {{-- Photos (p_1..p_10) --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Photos</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Photos</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {{-- Repeat for each slot --}}
@@ -104,7 +104,7 @@
 
             {{-- Listing --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Listing details</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Listing details</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <flux:field>
@@ -197,7 +197,7 @@
 
             {{-- 2) Gun identification --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Gun identification</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Gun identification</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -233,7 +233,7 @@
 
             {{-- 3) Classification --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Classification</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Classification</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -264,7 +264,7 @@
 
             {{-- 4) Core specs --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Core specs</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Core specs</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <flux:field>
@@ -319,7 +319,7 @@
 
             {{-- 5) Materials & finish --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Materials & finish</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Materials & finish</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -382,7 +382,7 @@
 
             {{-- 6) Sights & optics --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Sights & optics</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Sights & optics</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -411,7 +411,7 @@
 
             {{-- 7) Barrel & muzzle --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Barrel & muzzle</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Barrel & muzzle</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="flex items-center gap-3 mt-1">
@@ -449,7 +449,7 @@
 
             {{-- 8) Safety & trigger --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Safety & trigger</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Safety & trigger</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <flux:field class="md:col-span-2">
@@ -495,7 +495,7 @@
 
             {{-- 9) Metadata & inclusions --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Metadata & inclusions</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Metadata & inclusions</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>

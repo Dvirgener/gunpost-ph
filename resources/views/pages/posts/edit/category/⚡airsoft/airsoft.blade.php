@@ -13,7 +13,7 @@
         <flux:accordion>
             <!-- Photos -->
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Photos</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Photos</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="space-y-2">
@@ -31,11 +31,13 @@
                                 </flux:file-item>
                             @endif
 
-                            <flux:text>Current primary photo</flux:text>
-                            @if ($uploaded_primary_photo)
-                                <img src="{{ asset('storage/' . $uploaded_primary_photo) }}" alt="Current primary"
-                                    class="object-cover w-40 h-40" />
-                            @endif
+                            <flux:text>Current upload:</flux:text>
+                            <div
+                                class="w-full py-1 rounded-md border shadow flex justify-between items-center px-3 dark:bg-stone-800 dark:border-stone-700/60 dark:shadow-stone-900/50">
+                                <img src="{{ asset('storage/' . $this->uploaded_primary_photo) }}" alt="Photo 1 preview"
+                                    class="object-cover w-15 h-15" />
+
+                            </div>
                         </div>
 
                         <div class="space-y-2">
@@ -45,27 +47,20 @@
                                     text="JPG, PNG, GIF up to 10MB" inline />
                             </flux:file-upload>
 
+                            <flux:text>Current upload:</flux:text>
                             @foreach ($uploaded_other_photos as $index => $photo)
                                 @if ($photo)
-                                    <div class="flex items-center gap-2">
-                                        <img src="{{ asset('storage/' . $photo) }}" class="h-16 w-16 object-cover"
-                                            alt="Uploaded" />
-                                        <flux:button icon="x-mark" variant="danger"
-                                            wire:click="removePhoto({{ $index }})" />
+                                    <div
+                                        class="w-full py-1 rounded-md border shadow flex justify-between items-center px-3 dark:bg-stone-800 dark:border-stone-700/60 dark:shadow-stone-900/50">
+                                        <img src="{{ asset('storage/' . $photo) }}" alt="Photo 1 preview"
+                                            class="object-cover w-15 h-15" />
+
+                                        <flux:button icon="x-mark" class="hover:cursor-pointer"
+                                            wire:click="removePhoto({{ $index }})"></flux:button>
+
                                     </div>
                                 @endif
                             @endforeach
-
-                            @if ($other_photos)
-                                @foreach ($other_photos as $index => $photo)
-                                    <flux:file-item :heading="$photo->getClientOriginalName()"
-                                        :image="$photo->temporaryUrl()" :size="$photo->getSize()">
-                                        <x-slot name="actions">
-                                            <flux:file-item.remove wire:click="removeOtherPhoto({{ $index }})" />
-                                        </x-slot>
-                                    </flux:file-item>
-                                @endforeach
-                            @endif
                         </div>
                     </div>
                 </flux:accordion.content>
@@ -73,7 +68,7 @@
 
             <!-- Listing details (same as create) -->
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Listing details</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Listing details</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <flux:field>
@@ -140,7 +135,7 @@
 
             <!-- Airsoft fields (keep same as create for consistency) -->
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Airsoft identification</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Airsoft identification</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -164,7 +159,7 @@
 
             <!-- Classification, performance, etc. -->
             <flux:accordion.item>
-                <flux:accordion.heading>Classification</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Classification</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -202,7 +197,7 @@
             </flux:accordion.item>
 
             <flux:accordion.item>
-                <flux:accordion.heading>Performance</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Performance</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <flux:field>
@@ -220,7 +215,7 @@
             </flux:accordion.item>
 
             <flux:accordion.item>
-                <flux:accordion.heading>Build</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Build</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -250,7 +245,7 @@
             </flux:accordion.item>
 
             <flux:accordion.item>
-                <flux:accordion.heading>Power / Magazine</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Power / Magazine</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -290,7 +285,7 @@
             </flux:accordion.item>
 
             <flux:accordion.item>
-                <flux:accordion.heading>Package & Extras</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Package & Extras</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:field class="md:col-span-3">
                         <flux:label>Package includes</flux:label>
@@ -301,19 +296,8 @@
             </flux:accordion.item>
 
             <flux:accordion.item>
-                <flux:accordion.heading>Condition & Notes</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Notes</flux:accordion.heading>
                 <flux:accordion.content>
-                    <flux:field class="md:col-span-2">
-                        <flux:label>Condition</flux:label>
-                        <flux:select wire:model.live="condition">
-                            <option value="">— Optional —</option>
-                            <option value="new">New</option>
-                            <option value="like_new">Like New</option>
-                            <option value="used">Used</option>
-                            <option value="for_parts">For Parts</option>
-                        </flux:select>
-                        <flux:error name="condition" />
-                    </flux:field>
                     <flux:field class="md:col-span-3">
                         <flux:label>Notes</flux:label>
                         <flux:textarea wire:model.live="notes" rows="4" />
@@ -324,7 +308,7 @@
         </flux:accordion>
 
         <div class="flex justify-end">
-            <flux:button type="submit" variant="primary">Save changes</flux:button>
+            <flux:button type="submit" variant="primary">Update Post</flux:button>
             <flux:button
                 href="{{ route('posts.view.category.index', ['post' => $post, 'category' => $post->category]) }}"
                 variant="ghost">← Back </flux:button>

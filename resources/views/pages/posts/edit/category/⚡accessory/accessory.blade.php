@@ -13,7 +13,7 @@
         <flux:accordion>
             {{-- Photos (p_1..p_10) --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Photos</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Photos</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {{-- Repeat for each slot --}}
@@ -101,7 +101,7 @@
 
             <!-- Listing -->
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Listing details</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Listing details</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <flux:field>
@@ -173,7 +173,7 @@
 
             <!-- Accessory identification -->
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Accessory identification</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Accessory identification</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -202,7 +202,7 @@
 
             <!-- Compatibility & Fitment -->
             <flux:accordion.item>
-                <flux:accordion.heading>Compatibility & Fitment</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Compatibility & Fitment</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -233,7 +233,7 @@
 
             <!-- Materials & Finish -->
             <flux:accordion.item>
-                <flux:accordion.heading>Materials & Finish</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Materials & Finish</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -252,7 +252,7 @@
 
             <!-- Commercial Identifiers -->
             <flux:accordion.item>
-                <flux:accordion.heading>Commercial Identifiers</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Commercial Identifiers</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <flux:field>
@@ -271,7 +271,7 @@
 
             <!-- Package -->
             <flux:accordion.item>
-                <flux:accordion.heading>Package includes</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Package includes</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:field class="md:col-span-3">
                         <flux:label>Package includes</flux:label>
@@ -282,27 +282,9 @@
                 </flux:accordion.content>
             </flux:accordion.item>
 
-            <!-- Condition -->
-            <flux:accordion.item>
-                <flux:accordion.heading>Condition</flux:accordion.heading>
-                <flux:accordion.content>
-                    <flux:field class="md:col-span-2">
-                        <flux:label>Condition</flux:label>
-                        <flux:select wire:model.live="condition">
-                            <option value="">— Optional —</option>
-                            <option value="new">New</option>
-                            <option value="like_new">Like New</option>
-                            <option value="used">Used</option>
-                            <option value="for_parts">For Parts</option>
-                        </flux:select>
-                        <flux:error name="condition" />
-                    </flux:field>
-                </flux:accordion.content>
-            </flux:accordion.item>
-
             <!-- Notes -->
             <flux:accordion.item>
-                <flux:accordion.heading>Notes</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Notes</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:field class="md:col-span-3">
                         <flux:label>Notes</flux:label>
@@ -316,7 +298,7 @@
         </flux:accordion>
 
         <div class="flex gap-3 justify-end">
-            <flux:button type="submit" variant="primary">Save Changes</flux:button>
+            <flux:button type="submit" variant="primary">Update Post</flux:button>
             <flux:button
                 href="{{ route('posts.view.category.index', ['post' => $post, 'category' => $post->category]) }}"
                 variant="ghost">← Back </flux:button>

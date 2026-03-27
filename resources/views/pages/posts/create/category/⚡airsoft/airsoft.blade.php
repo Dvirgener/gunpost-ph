@@ -13,7 +13,7 @@
         <flux:accordion>
             <!-- Photos -->
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Photos</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Photos</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="space-y-2">
@@ -54,7 +54,7 @@
 
             <!-- Listing -->
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Listing details</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Listing details</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <flux:field>
@@ -126,7 +126,7 @@
 
             <!-- Airsoft identification -->
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Airsoft identification</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Airsoft identification</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -150,7 +150,7 @@
 
             <!-- Classification -->
             <flux:accordion.item>
-                <flux:accordion.heading>Classification</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Classification</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -192,7 +192,7 @@
 
             <!-- Performance -->
             <flux:accordion.item>
-                <flux:accordion.heading>Performance</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Performance</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <flux:field>
@@ -212,7 +212,7 @@
 
             <!-- Build -->
             <flux:accordion.item>
-                <flux:accordion.heading>Build</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Build</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -243,7 +243,7 @@
 
             <!-- Power -->
             <flux:accordion.item>
-                <flux:accordion.heading>Power</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Power</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -267,7 +267,7 @@
 
             <!-- Magazine -->
             <flux:accordion.item>
-                <flux:accordion.heading>Magazine</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Magazine</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="flex items-center gap-3 mt-1">
@@ -292,7 +292,7 @@
 
             <!-- Package -->
             <flux:accordion.item>
-                <flux:accordion.heading>Package includes</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Package includes</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:field class="md:col-span-3">
                         <flux:label>Package includes</flux:label>
@@ -302,27 +302,9 @@
                 </flux:accordion.content>
             </flux:accordion.item>
 
-            <!-- Condition -->
-            <flux:accordion.item>
-                <flux:accordion.heading>Condition</flux:accordion.heading>
-                <flux:accordion.content>
-                    <flux:field class="md:col-span-2">
-                        <flux:label>Condition</flux:label>
-                        <flux:select wire:model.live="condition">
-                            <option value="">— Optional —</option>
-                            <option value="new">New</option>
-                            <option value="like_new">Like New</option>
-                            <option value="used">Used</option>
-                            <option value="for_parts">For Parts</option>
-                        </flux:select>
-                        <flux:error name="condition" />
-                    </flux:field>
-                </flux:accordion.content>
-            </flux:accordion.item>
-
             <!-- Notes -->
             <flux:accordion.item>
-                <flux:accordion.heading>Notes</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Notes</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:field class="md:col-span-3">
                         <flux:label>Notes</flux:label>
@@ -334,8 +316,14 @@
 
         </flux:accordion>
 
-        <div class="flex justify-end">
-            <flux:button type="submit" variant="primary">Submit for review</flux:button>
+        <div class="flex items-center justify-end gap-3">
+
+            <flux:button type="submit" variant="primary" class="hover:cursor-pointer">
+                Submit for review
+            </flux:button>
+
+            <flux:button href="{{ route('posts') }}" type="button" variant="ghost">← Back </flux:button>
+
         </div>
     </form>
 </div>

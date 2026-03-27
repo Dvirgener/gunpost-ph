@@ -16,7 +16,7 @@
 
             {{-- Photos (p_1..p_10) --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Photos</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Photos</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -70,7 +70,7 @@
 
             {{-- Listing --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Listing details</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Listing details</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <flux:field>
@@ -161,7 +161,7 @@
 
             {{-- 2) Gun identification --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Gun identification</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Gun identification</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -182,12 +182,12 @@
 
                         <flux:field>
                             <flux:label>Series</flux:label>
-                            <flux:input wire:model="series" placeholder="Optional" />
+                            <flux:input wire:model="series" placeholder="e.g., Standard" />
                             <flux:error name="series" />
                         </flux:field>
                         <flux:field>
                             <flux:label>Country of origin</flux:label>
-                            <flux:input wire:model="country_of_origin" placeholder="Optional" />
+                            <flux:input wire:model="country_of_origin" placeholder="e.g., USA" />
                             <flux:error name="country_of_origin" />
                         </flux:field>
                     </div>
@@ -197,7 +197,7 @@
 
             {{-- 3) Classification --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Classification</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Classification</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -228,7 +228,7 @@
 
             {{-- 4) Core specs --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Core specs</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Core specs</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <flux:field>
@@ -249,23 +249,26 @@
                         </flux:field>
                         <flux:field>
                             <flux:label>Overall length</flux:label>
-                            <flux:input type="number" step="0.01" wire:model="overall_length" />
+                            <flux:input type="number" step="0.01" wire:model="overall_length"
+                                placeholder="e.g., 7.28" />
                             <flux:error name="overall_length" />
                         </flux:field>
 
                         <flux:field>
                             <flux:label>Height</flux:label>
-                            <flux:input type="number" step="0.01" wire:model="height" />
+                            <flux:input type="number" step="0.01" wire:model="height"
+                                placeholder="e.g., 5.43" />
                             <flux:error name="height" />
                         </flux:field>
                         <flux:field>
                             <flux:label>Width</flux:label>
-                            <flux:input type="number" step="0.01" wire:model="width" />
+                            <flux:input type="number" step="0.01" wire:model="width" placeholder="e.g., 1.18" />
                             <flux:error name="width" />
                         </flux:field>
                         <flux:field>
                             <flux:label>Weight</flux:label>
-                            <flux:input type="number" step="0.001" wire:model="weight" />
+                            <flux:input type="number" step="0.001" wire:model="weight"
+                                placeholder="e.g., 0.75" />
                             <flux:error name="weight" />
                         </flux:field>
                         <flux:field>
@@ -283,49 +286,49 @@
 
             {{-- 5) Materials & finish --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Materials & finish</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Materials & finish</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
                             <flux:label>Frame material</flux:label>
-                            <flux:input wire:model="frame_material" />
+                            <flux:input wire:model="frame_material" placeholder="e.g., Polymer" />
                             <flux:error name="frame_material" />
                         </flux:field>
                         <flux:field>
                             <flux:label>Slide material</flux:label>
-                            <flux:input wire:model="slide_material" />
+                            <flux:input wire:model="slide_material" placeholder="e.g., Steel" />
                             <flux:error name="slide_material" />
                         </flux:field>
                         <flux:field>
                             <flux:label>Barrel material</flux:label>
-                            <flux:input wire:model="barrel_material" />
+                            <flux:input wire:model="barrel_material" placeholder="e.g., Steel" />
                             <flux:error name="barrel_material" />
                         </flux:field>
 
                         <flux:field>
                             <flux:label>Finish</flux:label>
-                            <flux:input wire:model="finish" />
+                            <flux:input wire:model="finish" placeholder="e.g., Cerakote" />
                             <flux:error name="finish" />
                         </flux:field>
                         <flux:field>
                             <flux:label>Color</flux:label>
-                            <flux:input wire:model="color" />
+                            <flux:input wire:model="color" placeholder="e.g., Black" />
                             <flux:error name="color" />
                         </flux:field>
                         <flux:field>
                             <flux:label>Grip type</flux:label>
-                            <flux:input wire:model="grip_type" />
+                            <flux:input wire:model="grip_type" placeholder="e.g., Polymer" />
                             <flux:error name="grip_type" />
                         </flux:field>
 
                         <flux:field>
                             <flux:label>Stock type</flux:label>
-                            <flux:input wire:model="stock_type" />
+                            <flux:input wire:model="stock_type" placeholder="e.g., Fixed" />
                             <flux:error name="stock_type" />
                         </flux:field>
                         <flux:field>
                             <flux:label>Handguard type</flux:label>
-                            <flux:input wire:model="handguard_type" />
+                            <flux:input wire:model="handguard_type" placeholder="e.g., M-LOK" />
                             <flux:error name="handguard_type" />
                         </flux:field>
                         <flux:field>
@@ -346,12 +349,12 @@
 
             {{-- 6) Sights & optics --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Sights & optics</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Sights & optics</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
                             <flux:label>Sight type</flux:label>
-                            <flux:input wire:model="sight_type" />
+                            <flux:input wire:model="sight_type" placeholder="e.g., Iron sights" />
                             <flux:error name="sight_type" />
                         </flux:field>
 
@@ -375,7 +378,7 @@
 
             {{-- 7) Barrel & muzzle --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Barrel & muzzle</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Barrel & muzzle</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="flex items-center gap-3 mt-1">
@@ -413,18 +416,19 @@
 
             {{-- 8) Safety & trigger --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Safety & trigger</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Safety & trigger</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <flux:field class="md:col-span-2">
                             <flux:label>Trigger type</flux:label>
-                            <flux:input wire:model="trigger_type" />
+                            <flux:input wire:model="trigger_type" placeholder="e.g., Striker" />
                             <flux:error name="trigger_type" />
                         </flux:field>
 
                         <flux:field>
                             <flux:label>Trigger pull</flux:label>
-                            <flux:input type="number" step="0.01" wire:model="trigger_pull" />
+                            <flux:input type="number" step="0.01" wire:model="trigger_pull"
+                                placeholder="e.g., 5.5" />
                             <flux:error name="trigger_pull" />
                         </flux:field>
 
@@ -459,17 +463,17 @@
 
             {{-- 9) Metadata & inclusions --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Metadata & inclusions</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-5">Metadata & inclusions</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
                             <flux:label>SKU</flux:label>
-                            <flux:input wire:model="sku" />
+                            <flux:input wire:model="sku" placeholder="e.g., GLK-19-G5" />
                             <flux:error name="sku" />
                         </flux:field>
                         <flux:field>
                             <flux:label>UPC</flux:label>
-                            <flux:input wire:model="upc" />
+                            <flux:input wire:model="upc" placeholder="e.g., 764503035192" />
                             <flux:error name="upc" />
                         </flux:field>
 
@@ -488,13 +492,13 @@
 
                         <flux:field>
                             <flux:label>Round count estimate</flux:label>
-                            <flux:input type="number" wire:model="round_count_estimate" />
+                            <flux:input type="number" wire:model="round_count_estimate" placeholder="e.g., 500" />
                             <flux:error name="round_count_estimate" />
                         </flux:field>
 
                         <flux:field>
                             <flux:label>Included magazines</flux:label>
-                            <flux:input type="number" wire:model="included_magazines" />
+                            <flux:input type="number" wire:model="included_magazines" placeholder="e.g., 2" />
                             <flux:error name="included_magazines" />
                         </flux:field>
 
@@ -515,7 +519,8 @@
 
                         <flux:field class="md:col-span-3">
                             <flux:label>Document notes</flux:label>
-                            <flux:textarea wire:model="document_notes" rows="3" />
+                            <flux:textarea wire:model="document_notes" rows="3"
+                                placeholder="e.g., Original box, manual included" />
                             <flux:error name="document_notes" />
                         </flux:field>
 
@@ -528,7 +533,8 @@
 
                         <flux:field class="md:col-span-3">
                             <flux:label>Extra notes</flux:label>
-                            <flux:textarea wire:model="notes" rows="3" />
+                            <flux:textarea wire:model="notes" rows="3"
+                                placeholder="e.g., Custom trigger work" />
                             <flux:error name="notes" />
                         </flux:field>
                     </div>
@@ -539,7 +545,13 @@
         </flux:accordion>
 
         <div class="flex items-center justify-end gap-3">
-            <flux:button type="submit" variant="primary">Submit for review</flux:button>
+
+            <flux:button type="submit" variant="primary" class="hover:cursor-pointer">
+                Submit for review
+            </flux:button>
+
+            <flux:button href="{{ route('posts') }}" type="button" variant="ghost">← Back </flux:button>
+
         </div>
     </form>
 </div>

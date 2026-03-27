@@ -13,7 +13,7 @@
         <flux:accordion>
             <!-- Photos -->
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Photos</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Photos</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="space-y-2">
@@ -54,7 +54,7 @@
 
             <!-- Listing -->
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Listing details</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Listing details</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <flux:field>
@@ -127,7 +127,7 @@
 
             <!-- Weapon Classification -->
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Weapon classification</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Weapon classification</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -163,7 +163,7 @@
 
             <!-- Identity -->
             <flux:accordion.item>
-                <flux:accordion.heading>Identity</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Identity</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -192,7 +192,8 @@
 
             <!-- Blade / Head Specs -->
             <flux:accordion.item>
-                <flux:accordion.heading>Blade / Head specifications</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Blade / Head specifications
+                </flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -222,7 +223,7 @@
                         </flux:field>
 
                         <div class="flex items-center gap-2">
-                            <flux:checkbox wire:model="full_tang" />
+                            <flux:switch wire:model="full_tang" />
                             <flux:label>Full tang</flux:label>
                         </div>
                     </div>
@@ -231,7 +232,7 @@
 
             <!-- Dimensions -->
             <flux:accordion.item>
-                <flux:accordion.heading>Dimensions</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Dimensions</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -271,7 +272,7 @@
 
             <!-- Weight -->
             <flux:accordion.item>
-                <flux:accordion.heading>Weight</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Weight</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <flux:field>
@@ -293,7 +294,7 @@
 
             <!-- Handle / Grip -->
             <flux:accordion.item>
-                <flux:accordion.heading>Handle / Grip</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Handle / Grip</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -317,11 +318,11 @@
 
             <!-- Mechanism & Lock -->
             <flux:accordion.item>
-                <flux:accordion.heading>Mechanism & Lock</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Mechanism & Lock</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="flex items-center gap-2">
-                            <flux:checkbox wire:model="is_folding" />
+                            <flux:switch wire:model="is_folding" />
                             <flux:label>Is folding</flux:label>
                         </div>
                         <flux:field>
@@ -340,11 +341,12 @@
 
             <!-- Sheath / Scabbard -->
             <flux:accordion.item>
-                <flux:accordion.heading>Sheath / Scabbard</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Sheath / Scabbard</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="flex items-center gap-2">
-                            <flux:checkbox wire:model="includes_sheath" />
+
+                            <flux:switch wire:model="includes_sheath" />
                             <flux:label>Includes sheath</flux:label>
                         </div>
                         <flux:field>
@@ -361,43 +363,11 @@
                 </flux:accordion.content>
             </flux:accordion.item>
 
-            <!-- Condition & Packaging -->
-            <flux:accordion.item>
-                <flux:accordion.heading>Condition & Packaging</flux:accordion.heading>
-                <flux:accordion.content>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <flux:field>
-                            <flux:label>Condition</flux:label>
-                            <flux:select wire:model="condition">
-                                <option value="">— Optional —</option>
-                                <option value="new">New</option>
-                                <option value="like_new">Like New</option>
-                                <option value="used">Used</option>
-                                <option value="refurbished">Refurbished</option>
-                                <option value="for_parts">For Parts</option>
-                            </flux:select>
-                            <flux:error name="condition" />
-                        </flux:field>
-
-                        <div class="flex flex-wrap items-center gap-4 md:col-span-3">
-                            <label class="flex items-center gap-2">
-                                <flux:checkbox wire:model="has_box" />
-                                <span class="text-sm">Has box</span>
-                            </label>
-                            <label class="flex items-center gap-2">
-                                <flux:checkbox wire:model="has_receipt" />
-                                <span class="text-sm">Has receipt</span>
-                            </label>
-                        </div>
-                    </div>
-                </flux:accordion.content>
-            </flux:accordion.item>
-
             <!-- Package & Notes -->
             <flux:accordion.item>
-                <flux:accordion.heading>Package & Notes</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Package & Notes</flux:accordion.heading>
                 <flux:accordion.content>
-                    <flux:field class="md:col-span-3">
+                    <flux:field class="md:col-span-3 mb-3">
                         <flux:label>Package includes</flux:label>
                         <flux:textarea wire:model="package_includes" rows="3"
                             placeholder="e.g., sharpening tool, extra sheath, manuals" />
@@ -415,8 +385,14 @@
 
         </flux:accordion>
 
-        <div class="flex justify-end">
-            <flux:button type="submit" variant="primary">Submit for review</flux:button>
+        <div class="flex items-center justify-end gap-3">
+
+            <flux:button type="submit" variant="primary" class="hover:cursor-pointer">
+                Submit for review
+            </flux:button>
+
+            <flux:button href="{{ route('posts') }}" type="button" variant="ghost">← Back </flux:button>
+
         </div>
     </form>
 </div>

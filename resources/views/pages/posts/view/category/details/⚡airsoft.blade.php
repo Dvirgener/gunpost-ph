@@ -32,14 +32,13 @@ new class extends Component {
 
         @if (collect($basicFields)->some(fn($_, $field) => $this->airsoft->$field))
             <div>
-                <flux:heading level="4" class="mb-4 text-black dark:text-white">Basic Information</flux:heading>
+                <flux:heading level="4" class="mb-4 text-blue-500">Basic Information</flux:heading>
                 <div class="space-y-3 text-sm">
                     @foreach ($basicFields as $field => $label)
                         @if ($this->airsoft->$field)
-                            <div class="flex justify-between py-2 border-b border-gray-200">
-                                <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                                <span class="font-medium dark:text-white/50">{{ $this->airsoft->$field }}</span>
-                            </div>
+                            <x-virg.posts.post-view-prop :label="$label">
+                                {{ $this->airsoft->$field }}
+                            </x-virg.posts.post-view-prop>
                         @endif
                     @endforeach
                 </div>
@@ -58,15 +57,13 @@ new class extends Component {
 
         @if (collect($classificationFields)->some(fn($_, $field) => $this->airsoft->$field))
             <div>
-                <flux:heading level="4" class="mb-4 text-black dark:text-white">Classification</flux:heading>
+                <flux:heading level="4" class="mb-4 text-blue-500">Classification</flux:heading>
                 <div class="space-y-3 text-sm">
                     @foreach ($classificationFields as $field => $label)
                         @if ($this->airsoft->$field)
-                            <div class="flex justify-between py-2 border-b border-gray-200">
-                                <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                                <span
-                                    class="font-medium dark:text-white/50">{{ ucfirst(str_replace('_', ' ', $this->airsoft->$field)) }}</span>
-                            </div>
+                            <x-virg.posts.post-view-prop :label="$label">
+                                {{ ucfirst(str_replace('_', ' ', $this->airsoft->$field)) }}
+                            </x-virg.posts.post-view-prop>
                         @endif
                     @endforeach
                 </div>
@@ -85,20 +82,13 @@ new class extends Component {
 
     @if (collect($performanceFields)->some(fn($_, $field) => $this->airsoft->$field))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4 text-black dark:text-white">Performance</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500">Performance</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @foreach ($performanceFields as $field => $label)
                     @if ($this->airsoft->$field)
-                        <div class="flex justify-between py-2 border-b border-gray-200">
-                            <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                            <span class="font-medium dark:text-white/50">
-                                @if ($field === 'joule')
-                                    {{ number_format($this->airsoft->$field, 2) }}
-                                @else
-                                    {{ $this->airsoft->$field }}
-                                @endif
-                            </span>
-                        </div>
+                        <x-virg.posts.post-view-prop :label="$label">
+                            {{ number_format($this->airsoft->$field, 2) }}
+                        </x-virg.posts.post-view-prop>
                     @endif
                 @endforeach
             </div>
@@ -117,31 +107,27 @@ new class extends Component {
 
     @if (collect($buildFields)->some(fn($_, $key) => $key === 'metal_body' || $key === 'blowback' ? $this->airsoft->$key : $this->airsoft->$key))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4 text-black dark:text-white">Build</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500">Build</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @if ($this->airsoft->color)
-                    <div class="flex justify-between py-2 border-b border-gray-200">
-                        <span class="text-gray-600 dark:text-white/80">Color:</span>
-                        <span class="font-medium dark:text-white/50">{{ ucfirst($this->airsoft->color) }}</span>
-                    </div>
+                    <x-virg.posts.post-view-prop label="Color">
+                        {{ ucfirst($this->airsoft->color) }}
+                    </x-virg.posts.post-view-prop>
                 @endif
                 @if ($this->airsoft->body_material)
-                    <div class="flex justify-between py-2 border-b border-gray-200">
-                        <span class="text-gray-600 dark:text-white/80">Body Material:</span>
-                        <span class="font-medium dark:text-white/50">{{ ucfirst($this->airsoft->body_material) }}</span>
-                    </div>
+                    <x-virg.posts.post-view-prop label="Body Material">
+                        {{ ucfirst($this->airsoft->body_material) }}
+                    </x-virg.posts.post-view-prop>
                 @endif
                 @if ($this->airsoft->metal_body)
-                    <div class="py-2 border-b border-gray-200 gap-3 flex justify-between items-center">
-                        <span class="text-gray-600 dark:text-white/80">Metal Body:</span>
+                    <x-virg.posts.post-view-prop label="Metal Body">
                         <flux:badge class="mt-1" color="green">Yes</flux:badge>
-                    </div>
+                    </x-virg.posts.post-view-prop>
                 @endif
                 @if ($this->airsoft->blowback)
-                    <div class="py-2 border-b border-gray-200 gap-3 flex justify-between items-center">
-                        <span class="text-gray-600 dark:text-white/80">Blowback:</span>
+                    <x-virg.posts.post-view-prop label="Blowback">
                         <flux:badge class="mt-1" color="green">Yes</flux:badge>
-                    </div>
+                    </x-virg.posts.post-view-prop>
                 @endif
             </div>
         </div>
@@ -158,14 +144,13 @@ new class extends Component {
 
     @if (collect($powerFields)->some(fn($_, $field) => $this->airsoft->$field))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4 text-black dark:text-white">Power</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500">Power</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @foreach ($powerFields as $field => $label)
                     @if ($this->airsoft->$field)
-                        <div class="flex justify-between py-2 border-b border-gray-200">
-                            <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                            <span class="font-medium dark:text-white/50">{{ ucfirst($this->airsoft->$field) }}</span>
-                        </div>
+                        <x-virg.posts.post-view-prop :label="$label">
+                            {{ ucfirst($this->airsoft->$field) }}
+                        </x-virg.posts.post-view-prop>
                     @endif
                 @endforeach
             </div>
@@ -183,26 +168,27 @@ new class extends Component {
 
     @if (collect($magazineFields)->some(fn($_, $key) => $key === 'includes_magazines' ? $this->airsoft->$key : $this->airsoft->$key))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4 text-black dark:text-white">Magazine</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500">Magazine</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @if ($this->airsoft->includes_magazines)
-                    <div class="py-2 border-b border-gray-200 gap-3 flex justify-between items-center">
-                        <span class="text-gray-600 dark:text-white/80">Includes Magazines:</span>
+                    <x-virg.posts.post-view-prop label="Includes Magazines">
                         <flux:badge class="mt-1" color="green">Yes</flux:badge>
-                    </div>
+                    </x-virg.posts.post-view-prop>
                 @endif
                 @if ($this->airsoft->magazine_count)
-                    <div class="flex justify-between py-2 border-b border-gray-200">
-                        <span class="text-gray-600 dark:text-white/80">Magazine Count:</span>
-                        <span class="font-medium dark:text-white/50">{{ $this->airsoft->magazine_count }}</span>
-                    </div>
+                    <x-virg.posts.post-view-prop label="Magazine Count">
+                        {{ $this->airsoft->magazine_count }}
+                    </x-virg.posts.post-view-prop>
                 @endif
                 @if ($this->airsoft->magazine_type)
-                    <div class="flex justify-between py-2 border-b border-gray-200">
-                        <span class="text-gray-600 dark:text-white/80">Magazine Type:</span>
-                        <span
-                            class="font-medium dark:text-white/50">{{ ucfirst($this->airsoft->magazine_type) }}</span>
-                    </div>
+                    <x-virg.posts.post-view-prop label="Magazine Type">
+                        {{ ucfirst($this->airsoft->magazine_type) }}
+                    </x-virg.posts.post-view-prop>
+                @endif
+                @if ($this->airsoft->magazine_count)
+                    <x-virg.posts.post-view-prop label="Magazine Count">
+                        {{ $this->airsoft->magazine_count }}
+                    </x-virg.posts.post-view-prop>
                 @endif
             </div>
         </div>
@@ -211,7 +197,7 @@ new class extends Component {
     <!-- Package -->
     @if ($this->airsoft->package_includes)
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4 text-black dark:text-white">Package</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500">Package</flux:heading>
             <div class="text-sm">
                 <p class="text-gray-600 dark:text-white/80 mb-2">Package Includes:</p>
                 <p class="font-medium dark:text-white/50">{{ $this->airsoft->package_includes }}</p>
@@ -219,24 +205,10 @@ new class extends Component {
         </div>
     @endif
 
-    <!-- Condition -->
-    @if ($this->airsoft->condition)
-        <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4 text-black dark:text-white">Condition</flux:heading>
-            <div class="text-sm">
-                <div class="flex justify-between py-2">
-                    <span class="text-gray-600 dark:text-white/80">Condition:</span>
-                    <span
-                        class="font-medium dark:text-white/50">{{ ucfirst(str_replace('_', ' ', $this->airsoft->condition)) }}</span>
-                </div>
-            </div>
-        </div>
-    @endif
-
     <!-- Notes -->
     @if ($this->airsoft->notes)
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4 text-black dark:text-white">Notes</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500">Notes</flux:heading>
             <div class="text-sm">
                 <p class="text-gray-600 dark:text-white/80 mb-2">Additional Notes:</p>
                 <p class="font-medium dark:text-white/50">{{ $this->airsoft->notes }}</p>

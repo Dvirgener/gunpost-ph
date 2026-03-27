@@ -15,7 +15,7 @@
 
             {{-- Photos (p_1..p_10) --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Photos</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Photos</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {{-- Repeat for each slot --}}
@@ -104,7 +104,7 @@
 
             {{-- Listing --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Listing details</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Listing details</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <flux:field>
@@ -191,7 +191,7 @@
 
             {{-- Ammunition identification --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Ammunition identification</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Ammunition identification</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -216,7 +216,7 @@
 
             {{-- Specifications --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Specifications</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Specifications</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -272,7 +272,7 @@
 
             {{-- Quantity & Packaging --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Quantity & Packaging</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Quantity & Packaging</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -299,7 +299,7 @@
 
             {{-- Lot & SKU Information --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Lot & SKU Information</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Lot & SKU Information</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -345,7 +345,7 @@
 
             {{-- Additional Notes --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Additional Notes</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Additional Notes</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:field>
                         <flux:label>Notes</flux:label>
@@ -359,9 +359,9 @@
 
         </flux:accordion>
 
-        <div class="flex justify-end">
+        <div class="flex justify-end gap-3">
             <flux:spacer />
-            <flux:button type="submit" variant="primary">Save changes</flux:button>
+            <flux:button type="submit" variant="primary">Update Post</flux:button>
             <flux:button
                 href="{{ route('posts.view.category.index', ['post' => $post, 'category' => $post->category]) }}"
                 variant="ghost">← Back </flux:button>

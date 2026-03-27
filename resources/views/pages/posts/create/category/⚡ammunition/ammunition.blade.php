@@ -10,13 +10,13 @@
         </div>
     </flux:card>
 
-    <form action="" wire:submit="save">
+    <form action="" wire:submit="save" class="space-y-4">
         <flux:accordion>
 
 
             {{-- Photos (p_1..p_10) --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Photos</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Photos</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -70,7 +70,7 @@
 
             {{-- Listing --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Listing details</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Listing details</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <flux:field>
@@ -161,7 +161,7 @@
 
             {{-- Ammunition identification --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Ammunition identification</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Ammunition identification</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -186,7 +186,7 @@
 
             {{-- Ammunition specs --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Ammunition specifications</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Ammunition specifications</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -217,7 +217,7 @@
 
             {{-- Quantity & packaging --}}
             <flux:accordion.item expanded>
-                <flux:accordion.heading>Quantity & packaging</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Quantity & packaging</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -242,7 +242,7 @@
 
             {{-- Lot & metadata --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Lot & SKU information</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Lot & SKU information</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -267,7 +267,7 @@
 
             {{-- Condition & special --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Condition & special flags</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Condition & special flags</flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <flux:field>
@@ -305,7 +305,7 @@
 
             {{-- Notes --}}
             <flux:accordion.item>
-                <flux:accordion.heading>Additional notes</flux:accordion.heading>
+                <flux:accordion.heading class="text-blue-500! mb-3">Additional notes</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:field class="md:col-span-3">
                         <flux:label>Notes</flux:label>
@@ -320,7 +320,13 @@
         </flux:accordion>
 
         <div class="flex items-center justify-end gap-3">
-            <flux:button type="submit" variant="primary">Submit for review</flux:button>
+
+            <flux:button type="submit" variant="primary" class="hover:cursor-pointer">
+                Submit for review
+            </flux:button>
+
+            <flux:button href="{{ route('posts') }}" type="button" variant="ghost">← Back </flux:button>
+
         </div>
     </form>
 </div>

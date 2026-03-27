@@ -18,7 +18,7 @@ new class extends Component {
 
 <div class="mt-8 bg-white dark:bg-stone-900 rounded-lg shadow dark:shadow-white/50 p-6">
 
-    <flux:heading level="2" class="mb-6 text-black dark:text-white">Full Specifications</flux:heading>
+    <flux:heading level="2" class="mb-6 text-black dark:text-white text-2xl ">Full Specifications</flux:heading>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
@@ -38,15 +38,14 @@ new class extends Component {
 
         @if (collect($basicFields)->some(fn($_, $field) => $this->gun->$field))
             <div>
-                <flux:heading level="4" class="mb-4 text-black dark:text-white">Basic Information
+                <flux:heading level="4" class="mb-4 text-blue-500 ">Basic Information
                 </flux:heading>
                 <div class="space-y-3 text-sm">
                     @foreach ($basicFields as $field => $label)
                         @if ($this->gun->$field)
-                            <div class="flex justify-between py-2 border-b border-gray-200">
-                                <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                                <span class="font-medium dark:text-white/50 ">{{ $this->gun->$field }}</span>
-                            </div>
+                            <x-virg.posts.post-view-prop :label="$label">
+                                {{ $this->gun->$field }}
+                            </x-virg.posts.post-view-prop>
                         @endif
                     @endforeach
                 </div>
@@ -65,21 +64,13 @@ new class extends Component {
 
         @if (collect($ballisticsFields)->some(fn($_, $field) => $this->gun->$field))
             <div>
-                <flux:heading level="4" class="mb-4">Ballistics & Capacity</flux:heading>
+                <flux:heading level="4" class="mb-4 text-blue-500 ">Ballistics & Capacity</flux:heading>
                 <div class="space-y-3 text-sm">
                     @foreach ($ballisticsFields as $field => $label)
                         @if ($this->gun->$field)
-                            <div class="flex justify-between py-2 border-b border-gray-200">
-                                <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                                <span class="font-medium dark:text-white/50">
-                                    @if ($field === 'capacity')
-                                        {{ $this->gun->$field }}
-                                    @else
-                                        {{ $this->gun->$field }}
-                                        {{ in_array($field, ['barrel_length', 'overall_length']) ? 'in' : '' }}
-                                    @endif
-                                </span>
-                            </div>
+                            <x-virg.posts.post-view-prop :label="$label">
+                                {{ $this->gun->$field }}
+                            </x-virg.posts.post-view-prop>
                         @endif
                     @endforeach
                 </div>
@@ -99,22 +90,12 @@ new class extends Component {
 
     @if (collect($dimensionFields)->some(fn($_, $field) => $this->gun->$field))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4">Dimensions & Weight</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500 ">Dimensions & Weight</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @foreach ($dimensionFields as $field => $label)
-                    @if ($this->gun->$field)
-                        <div class="flex justify-between py-2 border-b border-gray-200">
-                            <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                            <span class="font-medium dark:text-white/50">
-                                {{ $this->gun->$field }}
-                                @if ($field === 'weight')
-                                    {{ $this->gun->weight_unit }}
-                                @else
-                                    in
-                                @endif
-                            </span>
-                        </div>
-                    @endif
+                    <x-virg.posts.post-view-prop :label="$label">
+                        {{ $this->gun->$field }}
+                    </x-virg.posts.post-view-prop>
                 @endforeach
             </div>
         </div>
@@ -133,14 +114,13 @@ new class extends Component {
 
     @if (collect($materialFields)->some(fn($_, $field) => $this->gun->$field))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4">Materials & Finish</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500 ">Materials & Finish</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @foreach ($materialFields as $field => $label)
                     @if ($this->gun->$field)
-                        <div class="flex justify-between py-2 border-b border-gray-200">
-                            <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                            <span class="font-medium dark:text-white/50">{{ ucfirst($this->gun->$field) }}</span>
-                        </div>
+                        <x-virg.posts.post-view-prop :label="$label">
+                            {{ $this->gun->$field }}
+                        </x-virg.posts.post-view-prop>
                     @endif
                 @endforeach
             </div>
@@ -159,14 +139,13 @@ new class extends Component {
 
     @if (collect($gripFields)->some(fn($_, $field) => $this->gun->$field))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4">Grips & Stock</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500 ">Grips & Stock</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @foreach ($gripFields as $field => $label)
                     @if ($this->gun->$field)
-                        <div class="flex justify-between py-2 border-b border-gray-200">
-                            <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                            <span class="font-medium dark:text-white/50">{{ ucfirst($this->gun->$field) }}</span>
-                        </div>
+                        <x-virg.posts.post-view-prop :label="$label">
+                            {{ $this->gun->$field }}
+                        </x-virg.posts.post-view-prop>
                     @endif
                 @endforeach
             </div>
@@ -184,21 +163,19 @@ new class extends Component {
 
     @if (collect($sightFields)->some(fn($_, $key) => $key === 'optic_ready' ? $this->gun->$key : $this->gun->$key))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4">Sights & Optics</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500 ">Sights & Optics</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @foreach ($sightFields as $field => $label)
                     @if ($field === 'optic_ready')
                         @if ($this->gun->$field)
-                            <div class="py-2 border-b border-gray-200 gap-3 flex justify-between items-center">
-                                <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
+                            <x-virg.posts.post-view-prop :label="$label">
                                 <flux:badge class="mt-1" color="green">Yes</flux:badge>
-                            </div>
+                            </x-virg.posts.post-view-prop>
                         @endif
                     @elseif ($this->gun->$field)
-                        <div class="flex justify-between py-2 border-b border-gray-200">
-                            <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                            <span class="font-medium dark:text-white/50">{{ ucfirst($this->gun->$field) }}</span>
-                        </div>
+                        <x-virg.posts.post-view-prop :label="$label">
+                            {{ $this->gun->$field }}
+                        </x-virg.posts.post-view-prop>
                     @endif
                 @endforeach
             </div>
@@ -219,32 +196,27 @@ new class extends Component {
                 ? $this->gun->$key
                 : $this->gun->$key))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4">Barrel & Muzzle</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500 ">Barrel & Muzzle</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @if ($this->gun->threaded_barrel)
-                    <div class="py-2 border-b border-gray-200 gap-3 flex justify-between items-center">
-                        <span class="text-gray-600 dark:text-white/80">Threaded Barrel:</span>
+                    <x-virg.posts.post-view-prop label="Threaded Barrel">
                         <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
-                    </div>
+                    </x-virg.posts.post-view-prop>
                 @endif
                 @if ($this->gun->thread_pitch)
-                    <div class="flex justify-between py-2 border-b border-gray-200 items-center">
-                        <span class="text-gray-600 dark:text-white/80">Thread Pitch:</span>
-                        <span class="font-medium dark:text-white/50">{{ $this->gun->thread_pitch }}</span>
-                    </div>
+                    <x-virg.posts.post-view-prop label="Thread Pitch">
+                        {{ $this->gun->thread_pitch }}
+                    </x-virg.posts.post-view-prop>
                 @endif
                 @if ($this->gun->muzzle_device_included)
-                    <div class="py-2 border-b border-gray-200 gap-3 flex justify-between items-center">
-                        <span class="text-gray-600 dark:text-white/80">Muzzle Device Included:</span>
+                    <x-virg.posts.post-view-prop label="Muzzle Device Included">
                         <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
-                    </div>
+                    </x-virg.posts.post-view-prop>
                 @endif
                 @if ($this->gun->muzzle_device_type)
-                    <div class="flex justify-between py-2 border-b border-gray-200">
-                        <span class="text-gray-600 dark:text-white/80">Muzzle Device Type:</span>
-                        <span
-                            class="font-medium dark:text-white/50">{{ ucfirst($this->gun->muzzle_device_type) }}</span>
-                    </div>
+                    <x-virg.posts.post-view-prop label="Muzzle Device Types">
+                        {{ $this->gun->muzzle_device_type }}
+                    </x-virg.posts.post-view-prop>
                 @endif
             </div>
         </div>
@@ -264,32 +236,27 @@ new class extends Component {
                 ? $this->gun->$key
                 : $this->gun->$key))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4">Trigger & Safety</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500 ">Trigger & Safety</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @if ($this->gun->trigger_type)
-                    <div class="flex justify-between py-2 border-b border-gray-200">
-                        <span class="text-gray-600 dark:text-white/80">Trigger Type:</span>
-                        <span class="font-medium dark:text-white/50">{{ ucfirst($this->gun->trigger_type) }}</span>
-                    </div>
+                    <x-virg.posts.post-view-prop label="Trigger Type">
+                        {{ ucfirst($this->gun->trigger_type) }}
+                    </x-virg.posts.post-view-prop>
                 @endif
                 @if ($this->gun->trigger_pull)
-                    <div class="flex justify-between py-2 border-b border-gray-200">
-                        <span class="text-gray-600 dark:text-white/80">Trigger Pull:</span>
-                        <span class="font-medium dark:text-white/50">{{ $this->gun->trigger_pull }}
-                            {{ $this->gun->trigger_pull_unit }}</span>
-                    </div>
+                    <x-virg.posts.post-view-prop label="Trigger Pull">
+                        {{ $this->gun->trigger_pull }} {{ $this->gun->trigger_pull_unit }}
+                    </x-virg.posts.post-view-prop>
                 @endif
                 @if ($this->gun->has_manual_safety)
-                    <div class="py-2 border-b border-gray-200 flex justify-between items-center">
-                        <span class="text-gray-600 dark:text-white/80">Manual Safety:</span>
+                    <x-virg.posts.post-view-prop label="Manual Safety">
                         <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
-                    </div>
+                    </x-virg.posts.post-view-prop>
                 @endif
                 @if ($this->gun->has_firing_pin_safety)
-                    <div class="py-2 border-b border-gray-200 flex justify-between items-center">
-                        <span class="text-gray-600 dark:text-white/80">Firing Pin Safety:</span>
+                    <x-virg.posts.post-view-prop label="Firing Pin Safety">
                         <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
-                    </div>
+                    </x-virg.posts.post-view-prop>
                 @endif
             </div>
         </div>
@@ -305,7 +272,7 @@ new class extends Component {
 
     @if (collect($idFields)->some(fn($_, $field) => $this->gun->$field))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4">Identifiers</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500 ">Identifiers</flux:heading>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 @foreach ($idFields as $field => $label)
                     @if ($this->gun->$field)
@@ -336,52 +303,64 @@ new class extends Component {
                 ? $this->gun->$key
                 : $this->gun->$key))
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4">Condition & Extras</flux:heading>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <flux:heading level="4" class="mb-4 text-blue-500 ">Condition & Extras</flux:heading>
+            <div class="gap-4 text-sm grid grid-cols-1 md:grid-cols-2">
                 @if ($this->gun->round_count_estimate)
                     <div class="flex justify-between py-2 border-b border-gray-200 items-center">
                         <span class="text-gray-600 dark:text-white/80">Round Count Estimate:</span>
                         <span class="font-medium dark:text-white/50">{{ $this->gun->round_count_estimate }}</span>
                     </div>
                 @endif
-                @if ($this->gun->has_box)
-                    <div class="py-2 border-b border-gray-200 flex justify-between items-center">
-                        <span class="text-gray-600 dark:text-white/80">Original Box:</span>
-                        <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
-                    </div>
-                @endif
-                @if ($this->gun->has_receipt)
-                    <div class="py-2 border-b border-gray-200 flex justify-between items-center">
-                        <span class="text-gray-600 dark:text-white/80">Receipt Included:</span>
-                        <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
-                    </div>
-                @endif
-                @if ($this->gun->has_documents)
-                    <div class="py-2 border-b border-gray-200 flex justify-between items-center">
-                        <span class="text-gray-600 dark:text-white/80">Documentation:</span>
-                        <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
-                    </div>
-                @endif
-                @if ($this->gun->document_notes)
-                    <div class="col-span-2 py-2 border-b border-gray-200">
-                        <span class="text-gray-600 dark:text-white/50">Document Notes:</span>
-                        <p class="text-gray-700 mt-1 dark:text-white/80">{{ $this->gun->document_notes }}
-                        </p>
-                    </div>
-                @endif
+
                 @if ($this->gun->included_magazines)
                     <div class="flex justify-between py-2 border-b border-gray-200">
                         <span class="text-gray-600 dark:text-white/80">Included Magazines:</span>
                         <span class="font-medium dark:text-white/50">{{ $this->gun->included_magazines }}</span>
                     </div>
                 @endif
+
+                @if ($this->gun->has_box)
+                    <div class="py-2 border-b border-gray-200 flex justify-between items-center">
+                        <span class="text-gray-600 dark:text-white/80">Original Box:</span>
+                        <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
+                    </div>
+                @endif
+
+                @if ($this->gun->has_receipt)
+                    <div class="py-2 border-b border-gray-200 flex justify-between items-center">
+                        <span class="text-gray-600 dark:text-white/80">Receipt Included:</span>
+                        <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
+                    </div>
+                @endif
+
+
+
+                @if ($this->gun->has_documents)
+                    <div class="py-2 border-b border-gray-200 flex justify-between items-center">
+                        <span class="text-gray-600 dark:text-white/80">Documentation:</span>
+                        <flux:badge class="mt-1 px-4!" color="green">Yes</flux:badge>
+                    </div>
+                @endif
+
+
+
+                @if ($this->gun->document_notes)
+                    <div class="md:col-span-2 py-2 border-b border-gray-200">
+                        <span class="text-gray-600 dark:text-white/50">Document Notes:</span>
+                        <p class="text-gray-700 mt-1 dark:text-white/80">{{ $this->gun->document_notes }}
+                        </p>
+                    </div>
+                @endif
+
+
                 @if ($this->gun->included_accessories)
-                    <div class="col-span-2 py-2 border-b border-gray-200">
+                    <div class="md:col-span-2 py-2 border-b border-gray-200">
                         <span class="text-gray-600 dark:text-white/80">Included Accessories:</span>
                         <p class="text-gray-700 mt-1 dark:text-white/50">
                             {{ $this->gun->included_accessories }}</p>
                     </div>
                 @endif
+
             </div>
         </div>
     @endif
@@ -389,18 +368,9 @@ new class extends Component {
     <!-- Notes -->
     @if ($this->gun->notes)
         <div class="mt-8 pt-8 border-t border-gray-200">
-            <flux:heading level="4" class="mb-4">Additional Notes</flux:heading>
+            <flux:heading level="4" class="mb-4 text-blue-500 ">Additional Notes</flux:heading>
             <p class="text-gray-700 whitespace-pre-wrap dark:text-white/50 text-sm">
                 {{ $this->gun->notes }}</p>
         </div>
     @endif
 </div>
-{{-- <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-        <!-- Detailed Specifications -->
-
-        @if ($this->gun)
-        @endif
-    </div>
-</div> --}}

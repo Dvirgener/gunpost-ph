@@ -34,15 +34,13 @@ new class extends Component {
 
                 @if (collect($materialFields)->some(fn($_, $field) => $this->accessory->$field))
                     <div>
-                        <flux:heading level="4" class="mb-4">Materials & Finish</flux:heading>
+                        <flux:heading level="4" class="mb-4 text-blue-500">Materials & Finish</flux:heading>
                         <div class="space-y-3 text-sm">
                             @foreach ($materialFields as $field => $label)
                                 @if ($this->accessory->$field)
-                                    <div class="flex justify-between py-2 border-b border-gray-200">
-                                        <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                                        <span
-                                            class="font-medium dark:text-white/50">{{ ucfirst($this->accessory->$field) }}</span>
-                                    </div>
+                                    <x-virg.posts.post-view-prop :label="$label">
+                                        {{ $this->accessory->$field }}
+                                    </x-virg.posts.post-view-prop>
                                 @endif
                             @endforeach
                         </div>
@@ -59,15 +57,13 @@ new class extends Component {
 
                 @if (collect($compatibilityFields)->some(fn($_, $field) => $this->accessory->$field))
                     <div>
-                        <flux:heading level="4" class="mb-4">Compatibility & Fitment</flux:heading>
+                        <flux:heading level="4" class="mb-4 text-blue-500">Compatibility & Fitment</flux:heading>
                         <div class="space-y-3 text-sm">
                             @foreach ($compatibilityFields as $field => $label)
                                 @if ($this->accessory->$field)
-                                    <div class="flex justify-between py-2 border-b border-gray-200">
-                                        <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                                        <span
-                                            class="font-medium dark:text-white/50">{{ ucfirst($this->accessory->$field) }}</span>
-                                    </div>
+                                    <x-virg.posts.post-view-prop :label="$label">
+                                        {{ $this->accessory->$field }}
+                                    </x-virg.posts.post-view-prop>
                                 @endif
                             @endforeach
                         </div>
@@ -88,15 +84,13 @@ new class extends Component {
 
             @if (collect($idFields)->some(fn($_, $field) => $this->accessory->$field))
                 <div class="mt-8 pt-8 border-t border-gray-200">
-                    <flux:heading level="4" class="mb-4">Commercial Identifiers</flux:heading>
+                    <flux:heading level="4" class="mb-4 text-blue-500">Commercial Identifiers</flux:heading>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         @foreach ($idFields as $field => $label)
                             @if ($this->accessory->$field)
-                                <div class="flex justify-between py-2 border-b border-gray-200">
-                                    <span class="text-gray-600 dark:text-white/80">{{ $label }}:</span>
-                                    <span
-                                        class="font-medium font-mono dark:text-white/50">{{ $this->accessory->$field }}</span>
-                                </div>
+                                <x-virg.posts.post-view-prop :label="$label">
+                                    {{ $this->accessory->$field }}
+                                </x-virg.posts.post-view-prop>
                             @endif
                         @endforeach
                     </div>
@@ -106,30 +100,16 @@ new class extends Component {
             <!-- Package Contents -->
             @if ($this->accessory->package_includes)
                 <div class="mt-8 pt-8 border-t border-gray-200">
-                    <flux:heading level="4" class="mb-4">Package Contents</flux:heading>
+                    <flux:heading level="4" class="mb-4 text-blue-500">Package Contents</flux:heading>
                     <p class="text-gray-700 whitespace-pre-wrap dark:text-white/50 text-sm">
                         {{ $this->accessory->package_includes }}</p>
-                </div>
-            @endif
-
-            <!-- Condition -->
-            @if ($this->accessory->condition)
-                <div class="mt-8 pt-8 border-t border-gray-200">
-                    <flux:heading level="4" class="mb-4">Condition</flux:heading>
-                    <div class="text-sm">
-                        <div class="flex justify-between py-2 border-b border-gray-200">
-                            <span class="text-gray-600 dark:text-white/80">Condition:</span>
-                            <span
-                                class="font-medium dark:text-white/50">{{ ucfirst(str_replace('_', ' ', $this->accessory->condition)) }}</span>
-                        </div>
-                    </div>
                 </div>
             @endif
 
             <!-- Notes -->
             @if ($this->accessory->notes)
                 <div class="mt-8 pt-8 border-t border-gray-200">
-                    <flux:heading level="4" class="mb-4">Additional Notes</flux:heading>
+                    <flux:heading level="4" class="mb-4 text-blue-500">Additional Notes</flux:heading>
                     <p class="text-gray-700 whitespace-pre-wrap dark:text-white/50 text-sm">
                         {{ $this->accessory->notes }}</p>
                 </div>
