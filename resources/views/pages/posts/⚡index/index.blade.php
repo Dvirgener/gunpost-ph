@@ -7,23 +7,27 @@
     </div>
 
     <div class="my-5 space-y-3 bg-gray-100/30 dark:bg-none p-4 rounded-md shadow-md outline-1 outline-gray-300">
-
         {{-- Category Filters --}}
-        {{-- <flux:heading>Categories :</flux:heading> --}}
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-8 justify-around">
-            <x-virg.posts.category-buttons label="All" />
-            <x-virg.posts.category-buttons label="Guns" />
-            <x-virg.posts.category-buttons label="Airsofts" />
-            <x-virg.posts.category-buttons label="Ammunitions" />
-            <x-virg.posts.category-buttons label="Accessories" />
-            <x-virg.posts.category-buttons label="Others" />
+            <x-virg.posts.category-buttons label="All" wire:click="filterByCategory('all')"
+                class="{{ $postCategory === 'all' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-600' }}" />
+            <x-virg.posts.category-buttons label="Guns" wire:click="filterByCategory('gun')"
+                class="{{ $postCategory === 'gun' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-600' }}" />
+            <x-virg.posts.category-buttons label="Airsofts" wire:click="filterByCategory('airsoft')"
+                class="{{ $postCategory === 'airsoft' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-600' }}" />
+            <x-virg.posts.category-buttons label="Ammunitions" wire:click="filterByCategory('ammunition')"
+                class="{{ $postCategory === 'ammunition' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-600' }}" />
+            <x-virg.posts.category-buttons label="Accessories" wire:click="filterByCategory('accessory')"
+                class="{{ $postCategory === 'accessory' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-600' }}" />
+            <x-virg.posts.category-buttons label="Others" wire:click="filterByCategory('others')"
+                class="{{ $postCategory === 'others' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700' }}" />
         </div>
     </div>
 
     <div class="flex flex-col md:flex-row justify-start items-start gap-5 md:justify-between md:items-end">
 
         {{-- Filter Type --}}
-        <flux:radio.group wire:model="postTypeFilter" label="" variant="segmented">
+        <flux:radio.group wire:model.live="postTypeFilter" label="" variant="segmented">
             <flux:radio label="All Posts" value="all" />
             <flux:radio label="Selling" value="sell" />
             <flux:radio label="Buying" value="buy" />
@@ -31,8 +35,8 @@
 
         {{-- Search any keyword --}}
         <div class="flex flex-col gap-3">
-            {{-- <flux:heading>Search:</flux:heading> --}}
-            <flux:input type="text" icon="magnifying-glass" placeholder="Search..." class="rounded-md w-80!" />
+            <flux:input type="text" icon="magnifying-glass" placeholder="Search..." class="rounded-md w-80!"
+                wire:model.live="query_search" />
         </div>
     </div>
 
@@ -52,8 +56,10 @@
                         <div class="space-y-3 mb-3">
                             <flux:heading>Set Price Range:</flux:heading>
                             <div class="flex gap-2">
-                                <flux:input type="number" placeholder="Min Price" class="w-full rounded-md" />
-                                <flux:input type="number" placeholder="Max Price" class="w-full rounded-md" />
+                                <flux:input type="number" placeholder="Min Price" class="w-full rounded-md"
+                                    wire:model.live="min_price" />
+                                <flux:input type="number" placeholder="Max Price" class="w-full rounded-md"
+                                    wire:model.live="max_price" />
                             </div>
                         </div>
 
@@ -61,24 +67,30 @@
                             <flux:heading>Filter by Location:</flux:heading>
                             <div class="grid grid-cols-3 w-full gap-2">
                                 <flux:select wire:model.live="region" placeholder="Choose Region..." label="Region">
+
                                     @foreach ($regions as $region)
                                         <flux:select.option value="{{ $region['key'] }}">{{ $region['name'] }}
                                         </flux:select.option>
                                     @endforeach
+
                                 </flux:select>
                                 <flux:select wire:model.live="province" placeholder="Choose Province..."
                                     label="Province" class="">
+
                                     @foreach ($this->filteredProvinces as $province)
                                         <flux:select.option value="{{ $province['key'] }}">{{ $province['name'] }}
                                         </flux:select.option>
                                     @endforeach
+
                                 </flux:select>
 
-                                <flux:select wire:model="city" placeholder="Choose a City..." label="City">
+                                <flux:select wire:model.live="city" placeholder="Choose a City..." label="City">
+
                                     @foreach ($this->filteredCities as $city)
                                         <flux:select.option value="{{ $city['name'] }}">{{ $city['name'] }}
                                         </flux:select.option>
                                     @endforeach
+
                                 </flux:select>
                             </div>
                         </div>

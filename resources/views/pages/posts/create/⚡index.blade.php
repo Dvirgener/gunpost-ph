@@ -18,7 +18,7 @@ new class extends Component {
         <p class="text-gray-500 mb-10">Select a category to create a post in.</p>
     </div>
 
-    <div class="flex items-center gap-10 px-10 rounded-md py-10 h-100">
+    <div class="flex items-center justify-center gap-3 px-10 rounded-md py-10 h-100">
         <x-virg.create-post-button name="Gun" link="{{ route('posts.create.category.gun') }}" />
         <x-virg.create-post-button name="Ammo"
             link="{{ route('posts.create.category.ammunition', ['category' => 'ammunition']) }}" />
