@@ -34,12 +34,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'terms_accepted',
     ];
 
-        /**
+    /**
      * Create UUID when creating a new User
-     *
-     *
      */
-
     protected static function booted()
     {
         static::creating(function ($user) {
@@ -62,6 +59,14 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
+     * Optional: Route model binding by UUID (nice for /posts/{post:uuid})
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -79,14 +84,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function initials(): string
     {
-        return Str::of($this->first_name . ' ' . $this->last_name)
+        return Str::of($this->first_name.' '.$this->last_name)
             ->explode(' ')
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
     }
-
-
 
     /*
     |-------------------------------------------------------------------------------=-------------------
@@ -109,4 +112,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(UserVerification::class);
     }
 
+    /**
+     * Provide a custom factory for namespaced model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\UserFactory::new();
+    }
 }
