@@ -14,6 +14,10 @@ Route::livewire('help', 'pages::help.index')->name('help');
 Route::middleware(['auth', 'is_admin', 'verified'])->group(function () {
 
     Route::livewire('dashboard', 'pages::admin.dashboard.index')->name('dashboard');
+    Route::livewire('dashboard/users', 'pages::admin.dashboard.users')->name('admin.users');
+    Route::livewire('dashboard/posts', 'pages::admin.dashboard.posts')->name('admin.posts');
+    Route::livewire('dashboard/orders', 'pages::admin.dashboard.orders.orders')->name('admin.orders');
+    Route::livewire('dashboard/tickets', 'pages::admin.dashboard.tickets.tickets')->name('admin.tickets');
 
 });
 
@@ -24,7 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('posts', 'pages::posts.index')->name('posts');
     Route::livewire('posts/create', 'pages::posts.create.index')->name('posts.create.index');
 
-
+    Route::livewire('orders', 'pages::orders.index')->name('order');
 
     // routes for Gun CRUD operations. These will be used for creating, editing, and viewing gun posts. The {category} parameter will be used to determine which category of post is being created, edited, or viewed. The {post} parameter will be used to determine which post is being edited or viewed.
     Route::livewire('posts/create/gun', 'pages::posts.create.category.gun')->name('posts.create.category.gun');

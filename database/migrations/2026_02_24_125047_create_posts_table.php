@@ -56,6 +56,7 @@ return new class extends Migration
                 'approved',
                 'rejected',
                 'expired',
+                'archived'
             ])->default('pending');
 
             $table->timestamp('approved_at')->nullable();
