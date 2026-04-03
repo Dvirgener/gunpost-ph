@@ -70,48 +70,65 @@ new class extends Component {
 <div>
     @if ($order)
         <div class="space-y-6">
+
             <div>
                 <flux:heading size="lg">Confirm Payment</flux:heading>
                 <flux:text class="mt-2">Confirm payment and add purchased credits to User's Credit Balance.</flux:text>
             </div>
 
             <div class="flex flex-col space-y-4">
+                <flux:input label="Reqeusted by" disabled value="{{ $order->user->first_name }}" />
                 <flux:input label="Package" disabled value="{{ $order->package }}" />
                 <flux:input label="Quantity" type="number" disabled value="{{ $order->quantity }}" />
                 <flux:input label="Total Price" type="number" disabled value="{{ $order->amount }}" />
+                <flux:input label="Payment Method" type="text" disabled value="{{ $order->payment_method }}" />
             </div>
             <flux:separator />
-            <div class="flex flex-col space-y-4">
-                <flux:input label="User" disabled value="{{ $order->user->first_name }}" />
-                <flux:input label="Credits" type="email" disabled value="{{ $order->user->post_credits }}" />
-                <flux:input label="Total Credits" type="number" disabled value="{{ $newCredits }}" />
-
-            </div>
 
 
-            <form action="" enctype="multipart/form-data" wire:submit="confirmPayment">
-                <flux:file-upload wire:model="photo" label="Proof of Payment">
-                    <flux:file-upload.dropzone heading="Drop files or click to browse" text="JPG, PNG, GIF up to 10MB"
-                        with-progress inline />
-                </flux:file-upload>
+            @if ($order->status == 'pending')
+                <div class="flex flex-col space-y-4">
 
-                <div class="my-4 flex flex-col gap-2">
-                    @if ($photo)
-                        <flux:file-item heading="" :image="$photo->temporaryUrl()">
-                            <x-slot name="actions">
-                                <flux:file-item.remove wire:click="removePhoto()" />
-                            </x-slot>
-                        </flux:file-item>
-                    @endif
+                    <flux:input label="Credits" type="email" disabled value="{{ $order->user->post_credits }}" />
+                    <flux:input label="Total Credits" type="number" disabled value="{{ $newCredits }}" />
+
                 </div>
+                <form action="" enctype="multipart/form-data" wire:submit="confirmPayment">
+                    <flux:file-upload wire:model="photo" label="Proof of Payment">
+                        <flux:file-upload.dropzone heading="Drop files or click to browse"
+                            text="JPG, PNG, GIF up to 10MB" with-progress inline />
+                    </flux:file-upload>
 
-                <div class="flex">
-                    <flux:spacer />
+                    <div class="my-4 flex flex-col gap-2">
+                        @if ($photo)
+                            <flux:file-item heading="" :image="$photo->temporaryUrl()">
+                                <x-slot name="actions">
+                                    <flux:file-item.remove wire:click="removePhoto()" />
+                                </x-slot>
+                            </flux:file-item>
+                        @endif
+                    </div>
 
-                    <flux:button type="submit" variant="primary">Confirm Payment</flux:button>
-                </div>
+                    <div class="flex">
+                        <flux:spacer />
 
-            </form>
+                        <flux:button type="submit" variant="primary">Confirm Payment</flux:button>
+                    </div>
+
+                </form>
+            @else
+                <flux:badge color="green" size="sm">Payment Confirmed</flux:badge>
+                <flux:input label="Confirmed By" disabled value="{{ $order->confirmer->first_name }}" />
+                <flux:input label="Confirmed At" disabled value="{{ $order->confirmed_at }}" />
+                <flux:text>Proof of Payment:</flux:text>
+                @if ($order->image_path)
+                    <img src="{{ url('storage/' . $order->image_path) }}" alt="Proof of Payment"
+                        class="w-full h-auto rounded">
+                @else
+                    <flux:text>No proof of payment uploaded.</flux:text>
+                @endif
+            @endif
+
 
 
 

@@ -8,7 +8,9 @@ Route::get('/', function () {
     return view('pages.home.index');
 })->name('home');
 
+Route::livewire('posts', 'pages::posts.index')->name('posts');
 Route::livewire('help', 'pages::help.index')->name('help');
+Route::livewire('posts/{post}/view/{category}', 'pages::posts.view.index')->name('posts.view.category.index');
 
 // These Routes are for Administrators use only.
 Route::middleware(['auth', 'is_admin', 'verified'])->group(function () {
@@ -25,7 +27,6 @@ Route::middleware(['auth', 'is_admin', 'verified'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::livewire('posts', 'pages::posts.index')->name('posts');
     Route::livewire('posts/create', 'pages::posts.create.index')->name('posts.create.index');
 
     Route::livewire('orders', 'pages::orders.index')->name('order');
@@ -45,8 +46,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::livewire('posts/create/others', 'pages::posts.create.category.others')->name('posts.create.category.others');
     Route::livewire('posts/{post}/edit/others', 'pages::posts.edit.category.others')->name('posts.edit.category.others');
-
-    Route::livewire('posts/{post}/view/{category}', 'pages::posts.view.index')->name('posts.view.category.index');
 
     Route::livewire('posts/create/post/{category}', 'pages::posts.create.post')->name('posts.create');
 

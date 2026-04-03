@@ -19,8 +19,8 @@
         </flux:badge>
     @break
 
-    @case('closed')
-        <flux:badge color="red" size="sm" inset="top bottom" class="capitalize!">{{ $status }}
+    @case('archived')
+        <flux:badge color="gray" size="sm" inset="top bottom" class="capitalize!">{{ $status }}
         </flux:badge>
     @break
 

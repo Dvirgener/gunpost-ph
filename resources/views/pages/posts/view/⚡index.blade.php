@@ -135,39 +135,42 @@ new class extends Component {
         <div class="flex items-center justify-between">
             <h1 class="text-4xl font-bold mt-4 mb-2">{{ $this->post->title }}</h1>
             <div class="flex gap-2 ">
-                @if (auth()->user()->id === $this->post->user_id)
-                    @switch($category)
-                        @case('gun')
-                            <flux:button variant="primary" color="blue" icon="pencil"
-                                href="{{ route('posts.edit.category.gun', $this->post->uuid) }}">Edit</flux:button>
-                        @break
+                @auth
+                    @if (auth()->user()->id === $this->post->user_id)
+                        @switch($category)
+                            @case('gun')
+                                <flux:button variant="primary" color="blue" icon="pencil"
+                                    href="{{ route('posts.edit.category.gun', $this->post->uuid) }}">Edit</flux:button>
+                            @break
 
-                        @case('ammunition')
-                            <flux:button variant="primary" color="blue" icon="pencil"
-                                href="{{ route('posts.edit.category.ammunition', $this->post->uuid) }}">Edit</flux:button>
-                        @break
+                            @case('ammunition')
+                                <flux:button variant="primary" color="blue" icon="pencil"
+                                    href="{{ route('posts.edit.category.ammunition', $this->post->uuid) }}">Edit</flux:button>
+                            @break
 
-                        @case('airsoft')
-                            <flux:button variant="primary" color="blue" icon="pencil"
-                                href="{{ route('posts.edit.category.airsoft', $this->post->uuid) }}">Edit</flux:button>
-                        @break
+                            @case('airsoft')
+                                <flux:button variant="primary" color="blue" icon="pencil"
+                                    href="{{ route('posts.edit.category.airsoft', $this->post->uuid) }}">Edit</flux:button>
+                            @break
 
-                        @case('accessory')
-                            <flux:button variant="primary" color="blue" icon="pencil"
-                                href="{{ route('posts.edit.category.accessory', $this->post->uuid) }}">Edit</flux:button>
-                        @break
+                            @case('accessory')
+                                <flux:button variant="primary" color="blue" icon="pencil"
+                                    href="{{ route('posts.edit.category.accessory', $this->post->uuid) }}">Edit</flux:button>
+                            @break
 
-                        @case('others')
-                            <flux:button variant="primary" color="blue" icon="pencil"
-                                href="{{ route('posts.edit.category.others', $this->post->uuid) }}">Edit</flux:button>
-                        @break
-                    @endswitch
+                            @case('others')
+                                <flux:button variant="primary" color="blue" icon="pencil"
+                                    href="{{ route('posts.edit.category.others', $this->post->uuid) }}">Edit</flux:button>
+                            @break
+                        @endswitch
 
-                    <flux:button variant="primary" color="red" icon="trash" wire:click="deletePost"
-                        wire:confirm="Are you sure you want to delete this post?">
-                        Delete
-                    </flux:button>
-                @endif
+                        <flux:button variant="primary" color="red" icon="trash" wire:click="deletePost"
+                            wire:confirm="Are you sure you want to delete this post?">
+                            Delete
+                        </flux:button>
+                    @endif
+                @endauth
+
 
 
             </div>
@@ -323,31 +326,33 @@ new class extends Component {
 
 
         {{-- # INSERT CATEGORIES HERE --}}
+        @auth
+            <!-- Key Details -->
+            @switch($this->category)
+                @case('ammunition')
+                    <livewire:pages::posts.view.category.details.ammunition :ammunition="$this->post->ammunition" />
+                @break
 
-        <!-- Key Details -->
-        @switch($this->category)
-            @case('ammunition')
-                <livewire:pages::posts.view.category.details.ammunition :ammunition="$this->post->ammunition" />
-            @break
+                @case('gun')
+                    <livewire:pages::posts.view.category.details.gun :gun="$this->post->gun" :activeImageIndex="$this->activeImageIndex" />
+                @break
 
-            @case('gun')
-                <livewire:pages::posts.view.category.details.gun :gun="$this->post->gun" :activeImageIndex="$this->activeImageIndex" />
-            @break
+                @case('airsoft')
+                    <livewire:pages::posts.view.category.details.airsoft :airsoft="$this->post->airsoft" />
+                @break
 
-            @case('airsoft')
-                <livewire:pages::posts.view.category.details.airsoft :airsoft="$this->post->airsoft" />
-            @break
+                @case('accessory')
+                    <livewire:pages::posts.view.category.details.accessory :accessory="$this->post->accessory" />
+                @break
 
-            @case('accessory')
-                <livewire:pages::posts.view.category.details.accessory :accessory="$this->post->accessory" />
-            @break
+                @case('others')
+                    <livewire:pages::posts.view.category.details.others :others="$this->post->other" />
+                @break
 
-            @case('others')
-                <livewire:pages::posts.view.category.details.others :others="$this->post->other" />
-            @break
+                @default
+            @endswitch
+        @endauth
 
-            @default
-        @endswitch
 
     </div>
 

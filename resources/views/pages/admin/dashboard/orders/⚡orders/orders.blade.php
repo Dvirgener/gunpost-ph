@@ -48,18 +48,11 @@
                 @foreach ($this->orders as $order)
                     <flux:table.row>
                         <flux:table.cell variant="strong">
-                            @if ($order->status == 'pending')
-                                <flux:button wire:click="confirmOrder({{ $order->id }})" color="blue"
-                                    class="hover:cursor-pointer">
-                                    {{ $order->ticket_id }}
-                                </flux:button>
-                            @else
-                                <flux:button wire:click="confirmOrder({{ $order->id }})" color="blue"
-                                    class="hover:cursor-pointer" disabled>
-                                    {{ $order->ticket_id }}
-                                </flux:button>
-                            @endif
 
+                            <flux:button wire:click="confirmOrder({{ $order->id }})" color="blue"
+                                class="hover:cursor-pointer">
+                                {{ $order->ticket_id }}
+                            </flux:button>
 
                         </flux:table.cell>
                         <flux:table.cell variant="strong">

@@ -3,6 +3,7 @@
 namespace Database\Factories\posts\categories;
 
 use App\Models\posts\categories\Other;
+use App\Models\posts\Post;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OtherFactory extends Factory
@@ -12,11 +13,12 @@ class OtherFactory extends Factory
     public function definition(): array
     {
         return [
+            'post_id' => Post::factory(),
             'weapon_type' => $this->faker->optional()->randomElement([
-                'knife','sword','machete','axe','tomahawk','baton','stick','tonfa','spear','other'
+                'knife', 'sword', 'machete', 'axe', 'tomahawk', 'baton', 'stick', 'tonfa', 'spear', 'other',
             ]),
             'subcategory' => $this->faker->optional()->word(),
-            'intended_use' => $this->faker->optional()->randomElement(['utility','training','display','collection','outdoors']),
+            'intended_use' => $this->faker->optional()->randomElement(['utility', 'training', 'display', 'collection', 'outdoors']),
 
             'brand' => $this->faker->optional()->randomElement(['Cold Steel', 'Gerber', 'Kershaw', 'Ontario', 'CRKT', 'Generic']),
             'model' => $this->faker->optional()->bothify('Model-###??'),

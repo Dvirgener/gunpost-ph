@@ -35,10 +35,10 @@
                     <div class="grid grid-cols-2 space-x-2 w-full mt-4">
                         <flux:input type="number" label="Quantity" wire:model.live="quantity" />
                         <flux:select label="Payment Option" wire:model="paymentOption">
-                            <flux:select.option>Cash</flux:select.option>
-                            <flux:select.option>Maya</flux:select.option>
-                            <flux:select.option>G Cash</flux:select.option>
-                            <flux:select.option>Bank Transfer</flux:select.option>
+                            <flux:select.option value="cash">Cash</flux:select.option>
+                            <flux:select.option value="maya">Maya</flux:select.option>
+                            <flux:select.option value="gcash">G Cash</flux:select.option>
+                            <flux:select.option value="bank">Bank Transfer</flux:select.option>
 
                         </flux:select>
 

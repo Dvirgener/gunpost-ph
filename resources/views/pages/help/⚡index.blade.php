@@ -75,10 +75,12 @@ new class extends Component {
     public $activeTickets;
     public function mount()
     {
-        $this->admins = User::where('account_type', '=', 'TFT_admin')->pluck('id');
-        $this->activeTickets = Ticket::where('user_id', auth()->user()->id)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        if (!auth()->guest()) {
+            $this->admins = User::where('account_type', '=', 'TFT_admin')->pluck('id');
+            $this->activeTickets = Ticket::where('user_id', auth()->user()->id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
     }
 };
 ?>

@@ -195,7 +195,7 @@ it('shows only non-blank fields in airsoft specifications', function () {
 it('airsoft factory includes all migration columns as attributes', function () {
     $airsoft = Airsoft::factory()->make();
     $expected = [
-        'brand', 'model', 'series', 'platform', 'power_source', 'compatibility_platform', 'gearbox_version',
+        'post_id', 'brand', 'model', 'series', 'platform', 'power_source', 'compatibility_platform', 'gearbox_version',
         'fps', 'joule', 'color', 'body_material', 'metal_body', 'blowback', 'battery_type', 'battery_connector',
         'gas_type', 'includes_magazines', 'magazine_count', 'magazine_type', 'package_includes', 'condition', 'notes',
     ];
@@ -208,7 +208,7 @@ it('airsoft factory includes all migration columns as attributes', function () {
 it('gun factory includes all migration columns as attributes', function () {
     $gun = Gun::factory()->make();
     $expected = [
-        'manufacturer', 'model', 'variant', 'series', 'country_of_origin',
+        'post_id', 'manufacturer', 'model', 'variant', 'series', 'country_of_origin',
         'platform', 'type', 'action',
         'caliber', 'capacity', 'barrel_length', 'overall_length', 'height', 'width', 'weight', 'weight_unit',
         'frame_material', 'slide_material', 'barrel_material', 'finish', 'color', 'grip_type',
@@ -223,5 +223,59 @@ it('gun factory includes all migration columns as attributes', function () {
 
     foreach ($expected as $attr) {
         expect(array_key_exists($attr, $gun->getAttributes()))->toBeTrue();
+    }
+});
+
+it('accessory factory includes all migration columns as attributes', function () {
+    $accessory = Accessory::factory()->make();
+    $expected = [
+        'post_id', 'category', 'brand', 'model', 'compatible_with', 'mount_type', 'size', 'color', 'material',
+        'sku', 'upc', 'package_includes', 'condition', 'notes',
+    ];
+
+    foreach ($expected as $attr) {
+        expect(array_key_exists($attr, $accessory->getAttributes()))->toBeTrue();
+    }
+});
+
+it('ammunition factory includes all migration columns as attributes', function () {
+    $ammunition = Ammunition::factory()->make();
+    $expected = [
+        'post_id', 'brand', 'product_line', 'caliber', 'bullet_type', 'grain', 'case_material', 'primer_type',
+        'corrosive', 'total_rounds', 'boxes', 'rounds_per_box', 'lot_number', 'sku', 'upc', 'condition', 'reloads', 'notes',
+    ];
+
+    foreach ($expected as $attr) {
+        expect(array_key_exists($attr, $ammunition->getAttributes()))->toBeTrue();
+    }
+});
+
+it('other factory includes all migration columns as attributes', function () {
+    $other = Other::factory()->make();
+    $expected = [
+        'post_id', 'weapon_type', 'subcategory', 'intended_use', 'brand', 'model', 'variant', 'country_of_origin',
+        'blade_type', 'edge_type', 'steel_type', 'finish', 'full_tang', 'overall_length', 'blade_length', 'head_length',
+        'handle_length', 'length_unit', 'weight', 'weight_unit', 'handle_material', 'handle_color', 'grip_texture',
+        'is_folding', 'opening_mechanism', 'lock_type', 'includes_sheath', 'sheath_type', 'carry_type', 'condition',
+        'has_box', 'has_receipt', 'package_includes', 'notes',
+    ];
+
+    foreach ($expected as $attr) {
+        expect(array_key_exists($attr, $other->getAttributes()))->toBeTrue();
+    }
+});
+
+it('post factory includes all migration columns as attributes', function () {
+    $post = Post::factory()->make();
+
+    $expected = [
+        'uuid', 'user_id', 'category', 'listing_type', 'title', 'slug', 'description',
+        'price', 'buy_min_price', 'buy_max_price', 'is_negotiable', 'condition', 'location',
+        'status', 'approved_at', 'approved_by', 'rejection_reason', 'is_featured', 'views',
+        'expires_at', 'p_1', 'p_2', 'p_3', 'p_4', 'p_5', 'p_6', 'p_7', 'p_8', 'p_9', 'p_10',
+    ];
+
+    foreach ($expected as $attr) {
+        expect(array_key_exists($attr, $post->getAttributes()))->toBeTrue();
     }
 });

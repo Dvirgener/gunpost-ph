@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use App\Models\user\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-        protected $fillable = [
+    use HasFactory;
+
+    protected $fillable = [
         'package',
         'quantity',
         'credits',
@@ -28,6 +31,6 @@ class Order extends Model
 
     public function confirmer()
     {
-        return $this->belongsTo(User::class, 'confirmed_by_id');
+        return $this->hasOne(User::class, 'id', 'confirmed_by_id');
     }
 }

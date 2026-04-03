@@ -55,7 +55,7 @@ use WithPagination;
     public $selectedPackage = "Single";
     public $displayPackage;
     public $quantity = 1;
-    public $paymentOption;
+    public $paymentOption = 'cash';
     public $price;
     public $totalPrice;
     public $totalCredits;

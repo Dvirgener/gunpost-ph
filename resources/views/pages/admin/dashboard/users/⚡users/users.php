@@ -22,7 +22,7 @@ new class extends Component
     {
         $this->allUsers = User::count();
         $this->pendingUsers = User::where("status", "pending")->count();
-        $this->approvedUsers = User::where("status", "verified")->count();
+        $this->approvedUsers = User::where("status", "active")->count();
         $this->flaggedUsers = User::where("status", "flagged")->count();
     }
     public function approveUser(User $user)
@@ -64,6 +64,13 @@ new class extends Component
     public function updateUserFilter($filter)
     {
         $this->userFilter = $filter;
+    }
+
+
+    public function openAddCreditModal(User $user)
+    {
+         Flux::modal('add-credit-modal')->show();
+         $this->dispatch('selectedUserClicked', $user->uuid);
     }
 
     #[Computed()]

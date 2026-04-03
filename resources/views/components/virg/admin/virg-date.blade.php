@@ -5,7 +5,7 @@
 <span>
     @switch($withTime)
         @case(true)
-            {{ $date->timezone('Asia/Manila')->format('M d, Y h:A') ?? '—' }}
+            {{ $date->timezone('Asia/Manila')->format('M d, Y h:m A') ?? '—' }}
         @break
 
         @case(false)

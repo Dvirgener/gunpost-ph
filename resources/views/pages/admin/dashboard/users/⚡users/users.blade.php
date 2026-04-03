@@ -11,9 +11,9 @@
                 class="border rounded-md {{ $userFilter == 'all' ? 'border-amber-500' : '' }}">
                 <x-virg.admin.number-card label="All Users" numbers="{{ $allUsers }}" />
             </button>
-            <button wire:click="updateUserFilter('verified')"
-                class="border rounded-md {{ $userFilter == 'verified' ? 'border-amber-500' : '' }}">
-                <x-virg.admin.number-card label="Verified" numbers="{{ $approvedUsers }}" />
+            <button wire:click="updateUserFilter('active')"
+                class="border rounded-md {{ $userFilter == 'active' ? 'border-amber-500' : '' }}">
+                <x-virg.admin.number-card label="Active" numbers="{{ $approvedUsers }}" />
             </button>
             <button wire:click="updateUserFilter('pending')"
                 class="border rounded-md {{ $userFilter == 'pending' ? 'border-amber-500' : '' }}">
@@ -71,12 +71,13 @@
                         <flux:table.cell>
                             <div class="flex items-center gap-2">
 
-                                <span class="font-semibold"> {{ $user->fullName() }}</span>
-                                @if ($user->documents->isNotEmpty() && $user->status == 'pending')
+                                <span class="font-semibold"> {{ $user->first_name }}</span>
+
+                                {{-- @if ($user->documents->isNotEmpty() && $user->status == 'pending')
                                     <flux:badge color="green" size="xs" inset="top bottom" class="text-xs">
                                         Documents Uploaded
                                     </flux:badge>
-                                @endif
+                                @endif --}}
                             </div>
                         </flux:table.cell>
                         <flux:table.cell>{{ $user->created_at->format('F j, Y') }}</flux:table.cell>
@@ -87,7 +88,7 @@
                                         {{ $user->status }}</flux:badge>
                                 @break
 
-                                @case('verified')
+                                @case('active')
                                     <flux:badge color="green" size="sm" inset="top bottom" class="capitalize">
                                         {{ $user->status }}</flux:badge>
                                 @break
@@ -104,7 +105,8 @@
 
                         </flux:table.cell>
 
-                        <flux:table.cell variant="strong" class="text-center">{{ $user->post_credits }}
+                        <flux:table.cell variant="strong" class="text-center">
+                            {{ $user->post_credits }}
                         </flux:table.cell>
 
                         <flux:table.cell variant="strong">
@@ -112,18 +114,17 @@
                                 <flux:button icon:trailing="chevron-down"></flux:button>
 
                                 <flux:menu>
-                                    <flux:menu.item variant="default" icon="user" class="hover:bg-amber-600 ">
-                                        <a href=" {{ route('other.profile', ['user' => $user->uuid]) }}"
+                                    {{-- <flux:menu.item variant="default" icon="user" class="hover:bg-amber-600 "> --}}
+                                    {{-- <a href=" {{ route('other.profile', ['user' => $user->uuid]) }}"
                                             class="">
                                             View Profile
-                                        </a>
+                                        </a> --}}
+                                    {{-- </flux:menu.item> --}}
+
+                                    <flux:menu.item variant="default" icon="plus" class="hover:cursor-pointer"
+                                        wire:click="openAddCreditModal('{{ $user->uuid }}')">
+                                        Add Credits
                                     </flux:menu.item>
-                                    @if ($user->documents->isNotEmpty() && $user->status == 'pending')
-                                        <flux:menu.item variant="default" icon="check" class="hover:cursor-pointer"
-                                            wire:click="approveUser('{{ $user->uuid }}')">
-                                            Verify User
-                                        </flux:menu.item>
-                                    @endif
 
                                     @if ($user->status == 'flagged')
                                         <flux:menu.item variant="default" icon="check" class="hover:cursor-pointer"
@@ -153,4 +154,10 @@
 
 
     </div>
+
+
+
+    <flux:modal name="add-credit-modal" class="md:w-96">
+        <livewire:pages::admin.dashboard.users.add-credit />
+    </flux:modal>
 </div>

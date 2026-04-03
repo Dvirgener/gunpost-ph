@@ -3,6 +3,7 @@
 namespace Database\Factories\posts\categories;
 
 use App\Models\posts\categories\Ammunition;
+use App\Models\posts\Post;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AmmunitionFactory extends Factory
@@ -15,6 +16,7 @@ class AmmunitionFactory extends Factory
         $rpb = $boxes ? $this->faker->randomElement([20, 25, 50, 100]) : null;
 
         return [
+            'post_id' => Post::factory(),
             'brand' => $this->faker->randomElement(['Federal', 'Winchester', 'Hornady', 'Remington', 'PMC', 'Magtech']),
             'product_line' => $this->faker->optional()->word(),
             'caliber' => $this->faker->randomElement(['9mm', '.45 ACP', '5.56 NATO', '7.62x39', '.22 LR', '12 GA']),
@@ -32,7 +34,7 @@ class AmmunitionFactory extends Factory
             'sku' => $this->faker->optional()->bothify('SKU-####-??'),
             'upc' => $this->faker->optional()->ean13(),
 
-            'condition' => $this->faker->optional()->randomElement(['factory_new','sealed','opened','mixed','other']),
+            'condition' => $this->faker->optional()->randomElement(['factory_new', 'sealed', 'opened', 'mixed', 'other']),
             'reloads' => $this->faker->boolean(8),
             'notes' => $this->faker->optional()->sentence(),
         ];

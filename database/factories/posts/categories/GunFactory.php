@@ -3,6 +3,7 @@
 namespace Database\Factories\posts\categories;
 
 use App\Models\posts\categories\Gun;
+use App\Models\posts\Post;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class GunFactory extends Factory
@@ -13,6 +14,7 @@ class GunFactory extends Factory
     {
         return [
             // Identification / naming
+            'post_id' => Post::factory(),
             'manufacturer' => $this->faker->randomElement(['Glock', 'Colt', 'SIG Sauer', 'Smith & Wesson', 'Beretta', 'Ruger']),
             'model' => $this->faker->randomElement(['G19', 'G17', 'P320', 'M&P9', '92FS', 'SR9']).' '.$this->faker->randomNumber(2),
             'variant' => $this->faker->optional()->randomElement(['Gen 3', 'Gen 4', 'Gen 5']),

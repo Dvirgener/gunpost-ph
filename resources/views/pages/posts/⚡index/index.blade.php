@@ -2,8 +2,17 @@
 
     <div class="flex justify-between">
         <h1 class="font-bold text-2xl">POSTS</h1>
-        <flux:button href="{{ route('posts.create.index') }}" class="hover:cursor-pointer font-bold! text-xs!">ADD POST
-        </flux:button>
+        @auth
+            @if (auth()->user()->post_credits <= 0)
+                <flux:button disabled class="hover:cursor-not-allowed font-bold! text-xs! opacity-50!">ADD POST
+                </flux:button>
+            @else
+                <flux:button class="hover:cursor-pointer font-bold! text-xs!" href="{{ route('posts.create.index') }}">ADD
+                    POST
+                </flux:button>
+            @endif
+        @endauth
+
     </div>
 
     <div class="my-5 space-y-3 bg-gray-100/30 dark:bg-none p-4 rounded-md shadow-md outline-1 outline-gray-300">

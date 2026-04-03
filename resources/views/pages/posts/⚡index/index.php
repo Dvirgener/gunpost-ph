@@ -82,6 +82,7 @@ new class extends Component
     public function posts()
     {
         return Post::query()
+            ->where('status','approved')
             ->when(
                 $this->postCategory !== 'all',
                 fn ($q) => $q->where('category', $this->postCategory)

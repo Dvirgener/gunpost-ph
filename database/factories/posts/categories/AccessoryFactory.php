@@ -3,6 +3,7 @@
 namespace Database\Factories\posts\categories;
 
 use App\Models\posts\categories\Accessory;
+use App\Models\posts\Post;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AccessoryFactory extends Factory
@@ -12,6 +13,7 @@ class AccessoryFactory extends Factory
     public function definition(): array
     {
         return [
+            'post_id' => Post::factory(),
             'category' => $this->faker->randomElement(['optic', 'holster', 'light', 'sling', 'bag', 'grip', 'magazine', 'case']),
             'brand' => $this->faker->randomElement(['Magpul', 'SureFire', 'Streamlight', 'Vortex', 'Holosun', '5.11', 'Generic']),
             'model' => $this->faker->optional()->bothify('Model-###??'),
@@ -26,7 +28,7 @@ class AccessoryFactory extends Factory
             'upc' => $this->faker->optional()->ean13(),
 
             'package_includes' => $this->faker->optional()->sentence(),
-            'condition' => $this->faker->optional()->randomElement(['new','like_new','used','for_parts']),
+            'condition' => $this->faker->optional()->randomElement(['new', 'like_new', 'used', 'for_parts']),
             'notes' => $this->faker->optional()->paragraph(),
         ];
     }
