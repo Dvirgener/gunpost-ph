@@ -40,6 +40,10 @@
                             {{ __('Dashboard') }}
                         </flux:sidebar.item>
                     @endif
+                    <flux:sidebar.item icon="user" :href="route('profile', ['user' => auth()->user()->uuid])"
+                        :current="request()->routeIs('profile')" wire:navigate>
+                        {{ __('Profile') }}
+                    </flux:sidebar.item>
                     <flux:sidebar.item icon="shopping-bag" :href="route('order')" :current="request()->routeIs('order')"
                         wire:navigate>
                         {{ __('Order') }}

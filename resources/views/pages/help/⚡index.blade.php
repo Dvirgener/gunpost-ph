@@ -87,15 +87,20 @@ new class extends Component {
 
 <div class="p-4">
 
+    <x-virg.guest-callout />
+
     <h1 class="font-bold text-2xl">HELP</h1>
     <flux:text class="mt-2 text-center md:text-start">Welcome to the GunPost PH Help Center!
         This page will guide you through how to organize your inventory and post items online efficiently.
     </flux:text>
     <div>
+
+
         @auth
             <div class="my-5">
 
-                <flux:heading size="lg" class="text-center md:text-start">“If something doesn’t look right, we’re here to
+                <flux:heading size="lg" class="text-center md:text-start">“If something doesn’t look right, we’re here
+                    to
                     make
                     it right.”
                 </flux:heading>

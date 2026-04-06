@@ -19,7 +19,7 @@ return new class extends Migration
             ->cascadeOnDelete();
 
             // Business identity
-            $table->string('company_name', 150);
+            $table->string('company_name', 150)->nullable();
             $table->string('business_type', 80)->nullable(); // gun store|dealer|distributor|etc
 
             // Address

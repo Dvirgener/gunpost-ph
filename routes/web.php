@@ -21,6 +21,8 @@ Route::middleware(['auth', 'is_admin', 'verified'])->group(function () {
     Route::livewire('dashboard/orders', 'pages::admin.dashboard.orders.orders')->name('admin.orders');
     Route::livewire('dashboard/tickets', 'pages::admin.dashboard.tickets.tickets')->name('admin.tickets');
 
+    Route::livewire('profile/admin/{user}', 'pages::profile.index')->name('admin.user.profile');
+
 });
 
 // These Routes are for any authenticated and verified user, but will check for post credits before allowing access to the create post page.
@@ -49,6 +51,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::livewire('posts/create/post/{category}', 'pages::posts.create.post')->name('posts.create');
 
+    Route::livewire('profile/{user}','pages::profile.index')->name('profile');
 });
 
 // BELOW ARE EMAIL VERIFICATION ROUTES, DO NOT DELETE OR EDIT UNLESS YOU KNOW WHAT YOU ARE DOING. THESE ARE REQUIRED FOR THE EMAIL VERIFICATION SYSTEM TO WORK PROPERLY.

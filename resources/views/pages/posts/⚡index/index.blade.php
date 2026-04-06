@@ -1,4 +1,5 @@
 <div class="p-4 h-full overflow-visible relative">
+    <x-virg.guest-callout />
 
     <div class="flex justify-between">
         <h1 class="font-bold text-2xl">POSTS</h1>
@@ -12,6 +13,8 @@
                 </flux:button>
             @endif
         @endauth
+
+
 
     </div>
 
@@ -74,7 +77,7 @@
 
                         <div class="mb-3 space-y-3">
                             <flux:heading>Filter by Location:</flux:heading>
-                            <div class="grid grid-cols-3 w-full gap-2">
+                            <div class="grid grid-cols-1 md:grid-cols-3 w-full gap-2">
                                 <flux:select wire:model.live="region" placeholder="Choose Region..." label="Region">
 
                                     @foreach ($regions as $region)

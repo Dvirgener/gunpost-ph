@@ -2,6 +2,7 @@
 
 namespace App\Models\user;
 
+use App\Models\posts\Post;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -91,6 +92,22 @@ class User extends Authenticatable implements MustVerifyEmail
             ->implode('');
     }
 
+    public function fullName(): string
+    {
+
+        return $this->first_name . ' ' . $this->last_name;
+
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->account_type === 'TFT_admin' && $this->status === 'immune';
+    }
+
+    public function posts(){
+        return $this->hasMany(Post::class);
+    }
+
     /*
     |-------------------------------------------------------------------------------=-------------------
     | Relationships
@@ -119,4 +136,6 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return \Database\Factories\UserFactory::new();
     }
+
+
 }

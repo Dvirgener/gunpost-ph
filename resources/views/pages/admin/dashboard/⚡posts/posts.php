@@ -34,7 +34,16 @@ new class extends Component
 
     public function approvePost($postUuid)
     {
+
         $post = Post::where('id', $postUuid)->first();
+        $user = $post->user;
+        if($user->post_credits <= 0){
+            Flux::toast(
+                text: 'Cannot approve post. User has insufficient post credits.',
+                variant: 'danger',
+            );
+            return;
+        }
         $post->status = 'approved';
         $post->approved_at = now();
         $post->approved_by = auth()->user()->id;

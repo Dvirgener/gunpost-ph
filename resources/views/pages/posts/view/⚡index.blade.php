@@ -129,6 +129,9 @@ new class extends Component {
 
 <div class=" py-8">
 
+    <x-virg.guest-callout />
+
+
     <!-- Back Button & Title -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
         <flux:button href="{{ route('posts') }}" variant="ghost">← Back to Posts</flux:button>

@@ -69,6 +69,12 @@ class CreateNewUser implements CreatesNewUsers
             'password'     => Hash::make($validated['password']), // IMPORTANT
         ]);
 
+        if($user->account_type === 'personal') {
+            $user->personalProfile()->create([]);
+        } else {
+            $user->corporateProfile()->create([]);
+        }
+
         $user->verification()->create([
             'kyc_status' => 'pending',
         ]);

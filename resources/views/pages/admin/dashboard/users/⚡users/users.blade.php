@@ -11,17 +11,17 @@
                 class="border rounded-md {{ $userFilter == 'all' ? 'border-amber-500' : '' }}">
                 <x-virg.admin.number-card label="All Users" numbers="{{ $allUsers }}" />
             </button>
-            <button wire:click="updateUserFilter('active')"
-                class="border rounded-md {{ $userFilter == 'active' ? 'border-amber-500' : '' }}">
-                <x-virg.admin.number-card label="Active" numbers="{{ $approvedUsers }}" />
+            <button wire:click="updateUserFilter('verified')"
+                class="border rounded-md {{ $userFilter == 'verified' ? 'border-amber-500' : '' }}">
+                <x-virg.admin.number-card label="KYC Verified" numbers="{{ $approvedUsers }}" />
             </button>
             <button wire:click="updateUserFilter('pending')"
                 class="border rounded-md {{ $userFilter == 'pending' ? 'border-amber-500' : '' }}">
                 <x-virg.admin.number-card label="Pending" numbers="{{ $pendingUsers }}" />
             </button>
-            <button wire:click="updateUserFilter('flagged')"
-                class="border rounded-md {{ $userFilter == 'flagged' ? 'border-amber-500' : '' }}">
-                <x-virg.admin.number-card label="Flagged" numbers="{{ $flaggedUsers }}" />
+            <button wire:click="updateUserFilter('blocked')"
+                class="border rounded-md {{ $userFilter == 'blocked' ? 'border-amber-500' : '' }}">
+                <x-virg.admin.number-card label="Blocked" numbers="{{ $flaggedUsers }}" />
             </button>
         </div>
     </div>
@@ -47,7 +47,8 @@
                 <flux:table.column>Picture</flux:table.column>
                 <flux:table.column>Full Name</flux:table.column>
                 <flux:table.column>Date Registered</flux:table.column>
-                <flux:table.column>Status</flux:table.column>
+                <flux:table.column>Account Status</flux:table.column>
+                <flux:table.column>KYC Status</flux:table.column>
 
 
                 <flux:table.column class=""><span class="text-center w-full">
@@ -63,21 +64,17 @@
                     <flux:table.row>
 
                         <flux:table.cell>
-
                             <flux:avatar size="sm"
-                                src="{{ $user->picture ? url('storage/' . $user->picture) : asset('/blank_image.png') }}"
+                                src="{{ $user->avatar_path ? url('storage/' . $user->avatar_path) : asset('/blank_image.png') }}"
                                 :name="$user->first_name" />
                         </flux:table.cell>
                         <flux:table.cell>
-                            <div class="flex items-center gap-2">
+                            <div class="flex flex-col items-start gap-2">
 
-                                <span class="font-semibold"> {{ $user->first_name }}</span>
-
-                                {{-- @if ($user->documents->isNotEmpty() && $user->status == 'pending')
-                                    <flux:badge color="green" size="xs" inset="top bottom" class="text-xs">
-                                        Documents Uploaded
-                                    </flux:badge>
-                                @endif --}}
+                                <span class="font-semibold"> {{ $user->fullName() }}</span>
+                                @if ($user->verification->submitted_at && $user->verification->kyc_status == 'pending')
+                                    <flux:badge size="sm" color="green">Docs Uploaded</flux:badge>
+                                @endif
                             </div>
                         </flux:table.cell>
                         <flux:table.cell>{{ $user->created_at->format('F j, Y') }}</flux:table.cell>
@@ -104,6 +101,25 @@
                             @endswitch
 
                         </flux:table.cell>
+                        <flux:table.cell>
+                            @switch($user->verification->kyc_status)
+                                @case('pending')
+                                    <flux:badge color="orange" size="sm" inset="top bottom" class="capitalize">
+                                        {{ $user->verification->kyc_status }}</flux:badge>
+                                @break
+
+                                @case('verified')
+                                    <flux:badge color="green" size="sm" inset="top bottom" class="capitalize">
+                                        {{ $user->verification->kyc_status }}</flux:badge>
+                                @break
+
+                                @case('blocked')
+                                    <flux:badge color="red" size="sm" inset="top bottom" class="capitalize">
+                                        {{ $user->verification->kyc_status }}</flux:badge>
+                                @break
+                            @endswitch
+
+                        </flux:table.cell>
 
                         <flux:table.cell variant="strong" class="text-center">
                             {{ $user->post_credits }}
@@ -114,12 +130,12 @@
                                 <flux:button icon:trailing="chevron-down"></flux:button>
 
                                 <flux:menu>
-                                    {{-- <flux:menu.item variant="default" icon="user" class="hover:bg-amber-600 "> --}}
-                                    {{-- <a href=" {{ route('other.profile', ['user' => $user->uuid]) }}"
+                                    <flux:menu.item variant="default" icon="user" class="hover:bg-amber-600 ">
+                                        <a href=" {{ route('admin.user.profile', ['user' => $user->uuid]) }}"
                                             class="">
                                             View Profile
-                                        </a> --}}
-                                    {{-- </flux:menu.item> --}}
+                                        </a>
+                                    </flux:menu.item>
 
                                     <flux:menu.item variant="default" icon="plus" class="hover:cursor-pointer"
                                         wire:click="openAddCreditModal('{{ $user->uuid }}')">
