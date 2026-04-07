@@ -89,26 +89,137 @@ new class extends Component {
 
     <x-virg.guest-callout />
 
-    <h1 class="font-bold text-2xl">HELP</h1>
-    <flux:text class="mt-2 text-center md:text-start">Welcome to the GunPost PH Help Center!
-        This page will guide you through how to organize your inventory and post items online efficiently.
+    <div class="flex items-center gap-3 mb-6">
+        <flux:icon.question-mark-circle class="w-8 h-8 text-purple-600" />
+        <h1 class="font-bold text-2xl">HELP CENTER</h1>
+    </div>
+    <flux:text class="mt-2 text-center md:text-start text-gray-700 dark:text-gray-300">Welcome to the GunPost PH Help
+        Center! This page will guide you through how to organize your inventory and post items online efficiently.
     </flux:text>
     <div>
 
+        <!-- Getting Started Guide -->
+        <flux:separator class="my-6" />
+
+        <!-- Site Navigation Section -->
+        <div
+            class="my-6 p-5  from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/10 border-l-4 border-purple-600 rounded-r-lg">
+            <flux:heading size="lg" class="text-purple-700 dark:text-purple-300 mb-4 flex items-center gap-2">
+                <flux:icon.map-pin class="w-5 h-5" />
+                How to Navigate the Site
+            </flux:heading>
+            <flux:text class="text-center md:text-start mb-3 text-gray-700 dark:text-gray-300">
+                GunPost PH is designed to be user-friendly and intuitive. Here's how to get around:
+            </flux:text>
+            <ul class="space-y-3 ms-4">
+                <li class="text-sm text-gray-700 dark:text-gray-300"><span
+                        class="inline-block w-2 h-2 bg-purple-600 rounded-full mr-2"></span><strong
+                        class="text-purple-700 dark:text-purple-300">Sidebar Navigation:</strong> Use the sidebar menu
+                    on the left to access different sections including Dashboard, Browse Posts, Messages, Tickets, and
+                    more.</li>
+                <li class="text-sm text-gray-700 dark:text-gray-300"><span
+                        class="inline-block w-2 h-2 bg-purple-600 rounded-full mr-2"></span><strong
+                        class="text-purple-700 dark:text-purple-300">Profile:</strong> Your Profile where you can
+                    view your posts, messages, and account overview.</li>
+                <li class="text-sm text-gray-700 dark:text-gray-300"><span
+                        class="inline-block w-2 h-2 bg-purple-600 rounded-full mr-2"></span><strong
+                        class="text-purple-700 dark:text-purple-300">Browse Posts:</strong> Search and filter through
+                    available posts from our community members.</li>
+                <li class="text-sm text-gray-700 dark:text-gray-300"><span
+                        class="inline-block w-2 h-2 bg-purple-600 rounded-full mr-2"></span><strong
+                        class="text-purple-700 dark:text-purple-300">Messages:</strong> Communicate with other users
+                    about their posts or inquiries.</li>
+                <li class="text-sm text-gray-700 dark:text-gray-300"><span
+                        class="inline-block w-2 h-2 bg-purple-600 rounded-full mr-2"></span><strong
+                        class="text-purple-700 dark:text-purple-300">Account Settings:</strong> Manage your profile,
+                    preferences, and account information.</li>
+            </ul>
+        </div>
+
+        <!-- Creating Posts Section -->
+        <div
+            class="my-6 p-5 from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/10 border-l-4 border-purple-600 rounded-r-lg">
+            <flux:heading size="lg" class="text-purple-700 dark:text-purple-300 mb-4 flex items-center gap-2">
+                <flux:icon.document-plus class="w-5 h-5" />
+                How to Create Posts
+            </flux:heading>
+            <flux:text class="text-center md:text-start mb-3 text-gray-700 dark:text-gray-300">
+                Creating and publishing posts on GunPost PH is simple. Follow these steps:
+            </flux:text>
+            <ol class="space-y-3 ms-4">
+                <li class="text-sm text-gray-700 dark:text-gray-300"><strong
+                        class="text-purple-700 dark:text-purple-300">1. Navigate to Create Post:</strong> Look for the
+                    "Create Post" or "New Post" button in your profile or in the Posts page.</li>
+                <li class="text-sm text-gray-700 dark:text-gray-300"><strong
+                        class="text-purple-700 dark:text-purple-300">2. Fill in Details:</strong>Select the Category and
+                    Enter the post title,
+                    description, and any other relevant information about your item.</li>
+                <li class="text-sm text-gray-700 dark:text-gray-300"><strong
+                        class="text-purple-700 dark:text-purple-300">3. Add Photos:</strong> Upload clear photos of the
+                    item from different angles to attract potential buyers/sellers.</li>
+                <li class="text-sm text-gray-700 dark:text-gray-300"><strong
+                        class="text-purple-700 dark:text-purple-300">4. Set Price & Terms:</strong> Specify the price,
+                    condition, and any terms of sale.</li>
+                <li class="text-sm text-gray-700 dark:text-gray-300"><strong
+                        class="text-purple-700 dark:text-purple-300">5. Review & Submit:</strong> Double-check all
+                    information and send to admin for review and approval.</li>
+                <li class="text-sm text-gray-700 dark:text-gray-300"><strong
+                        class="text-purple-700 dark:text-purple-300">6. Publication:</strong> After an admin approves
+                    your post, it will be published on the platform for a period of 2 months.</li>
+            </ol>
+        </div>
+
+        <!-- Post Credits Section - Important -->
+        <flux:callout color="purple" class="my-6 dark:bg-purple-900/30">
+            <x-slot name="icon">
+                <flux:icon.star />
+            </x-slot>
+            <flux:callout.heading>Important: Purchasing Post Credits</flux:callout.heading>
+            <flux:callout.text>
+                <p class="mb-3 text-gray-700 dark:text-gray-300">
+                    To publish posts on GunPost PH, you must purchase post credits. Here's what you need to know:
+                </p>
+                <ul class="space-y-2 ms-4">
+                    <li class="text-sm text-gray-700 dark:text-gray-300">✓ <strong
+                            class="text-purple-700 dark:text-purple-300">Credits Required:</strong> Each published post
+                        requires post credits.
+                    </li>
+                    <li class="text-sm text-gray-700 dark:text-gray-300">✓ <strong
+                            class="text-purple-700 dark:text-purple-300">Flexible Packages:</strong> We offer various
+                        credit packages to suit your needs, from individual posts to bulk publishing options.</li>
+                    <li class="text-sm text-gray-700 dark:text-gray-300">✓ <strong
+                            class="text-purple-700 dark:text-purple-300">Easy Purchase:</strong> You can purchase post
+                        credits directly from the Orders page. Multiple payment methods are also available.</li>
+                    <li class="text-sm text-gray-700 dark:text-gray-300">✓ <strong
+                            class="text-purple-700 dark:text-purple-300">No Expiration for Unused Credits:</strong>
+                        Purchased credits remain in your account until you use them.</li>
+                    <li class="text-sm text-gray-700 dark:text-gray-300">✓ <strong
+                            class="text-purple-700 dark:text-purple-300">How to Purchase:</strong> Go to the Orders
+                        page, Select a credit package and place the order. After which, an admin will contact you for
+                        the payment and after payment is received, your credits will be activated.</li>
+                    <li class="text-sm text-gray-700 dark:text-gray-300">✓ <strong
+                            class="text-purple-700 dark:text-purple-300">Post Duration:</strong> Each Post credit allows
+                        your post to be published for a period of 2 months. To republish expired posts, you can
+                        republish it on your profile page in one click. It will automatically renew as long as you have
+                        sufficient credits.</li>
+                </ul>
+            </flux:callout.text>
+        </flux:callout>
+
+        <flux:separator class="my-6" />
 
         @auth
             <div class="my-5">
 
-                <flux:heading size="lg" class="text-center md:text-start">“If something doesn’t look right, we’re here
-                    to
-                    make
-                    it right.”
-                </flux:heading>
+                <div class="p-5   shadow-md">
+                    <flux:heading size="lg" class="mb-2 flex items-center gap-2 justify-center md:justify-start">
+                        <flux:icon.exclamation-triangle class="w-5 h-5" />
+                        "If something doesn't look right, we're here to make it right."
+                    </flux:heading>
 
-                <flux:text class="text-center md:text-start">Contact Admin Support — Suggestions, bugs, errors, user Reports
-                    or
-                    system
-                    issues? Let us know. Create a Ticket and we'll resolve it for you.</flux:text>
+                    <flux:text class="">Contact Admin Support — Suggestions, bugs, errors, user Reports or
+                        system issues? Let us know. Create a Ticket and we'll resolve it for you.</flux:text>
+                </div>
 
                 <div class="my-4 w-full">
                     <div>
@@ -164,13 +275,16 @@ new class extends Component {
                     </div>
 
                 </div>
-                <div>
-                    <flux:heading size="md" class="font-bold text-center md:text-start mb-2">Your Tickets:
+                <div class="mt-10">
+                    <flux:heading size="md"
+                        class="font-bold text-center md:text-start mb-4 text-purple-700 dark:text-purple-300 flex items-center gap-2 justify-center md:justify-start">
+                        <flux:icon.ticket class="w-5 h-5" />
+                        Your Tickets
                     </flux:heading>
                     @if ($activeTickets->isEmpty())
                         <flux:text class="text-center md:text-start">You have no tickets made.</flux:text>
                     @else
-                        <div class="space-y-2 md:mx-0 mb-4 overflow-y-scroll h-96 pe-2">
+                        <div class="space-y-2 md:mx-0 mb-4 overflow-y-scroll h-96 pe-2 border-l-4 border-purple-600 ps-3">
                             <flux:accordion transition exclusive variant="reverse">
                                 @foreach ($activeTickets as $ticket)
                                     <flux:accordion.item>

@@ -44,6 +44,10 @@
                         :current="request()->routeIs('profile')" wire:navigate>
                         {{ __('Profile') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="chat-bubble-left-right" :href="route('conversations')"
+                        :current="request()->routeIs('conversations')" wire:navigate>
+                        {{ __('Messages') }}
+                    </flux:sidebar.item>
                     <flux:sidebar.item icon="shopping-bag" :href="route('order')" :current="request()->routeIs('order')"
                         wire:navigate>
                         {{ __('Order') }}

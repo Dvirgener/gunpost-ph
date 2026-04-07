@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use App\Models\Conversation;
+use App\Models\Message;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -104,6 +106,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->account_type === 'TFT_admin' && $this->status === 'immune';
     }
 
+    public function isMe(){
+        return auth()->check() && auth()->user()->id === $this->id;
+    }
+
     public function posts(){
         return $this->hasMany(Post::class);
     }
@@ -113,6 +119,11 @@ class User extends Authenticatable implements MustVerifyEmail
     | Relationships
     |---------------------------------------------------------------------------------------------------
     */
+
+        public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class);
+    }
 
     public function personalProfile()
     {
@@ -136,6 +147,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return \Database\Factories\UserFactory::new();
     }
+
+
 
 
 }

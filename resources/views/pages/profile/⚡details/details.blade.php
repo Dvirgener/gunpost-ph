@@ -11,6 +11,10 @@
                     <flux:link href="{{ route('profile.edit') }}" variant="subtle" icon="cog">
                         <flux:icon.cog-6-tooth />
                     </flux:link>
+                @else
+                    <flux:modal.trigger name="sendMessageModal">
+                        <flux:button variant="outline" color="red" icon="chat-bubble-left">Send Message</flux:button>
+                    </flux:modal.trigger>
                 @endif
             @endauth
         </div>
@@ -43,15 +47,17 @@
                                 <div class="text-gray-600 dark:text-gray-300 mb-2 text-sm flex gap-2 items-center">
                                     <span class="text-black dark:text-white font-bold">Post Credits :</span>
                                     <span class="font-bold">{{ $owner->post_credits }}</span>
-
-                                    @if ($owner->post_credits <= 0)
-                                        <flux:badge size="sm" color="red">No post Credits (Purchase credits to
-                                            publish posts)
-                                        </flux:badge>
-                                    @elseif ($owner->post_credits <= 3)
-                                        <flux:badge size="sm" color="orange">Low Credits
-                                        </flux:badge>
+                                    @if ($owner->isMe())
+                                        @if ($owner->post_credits <= 0)
+                                            <flux:badge size="sm" color="red">No post Credits (Purchase credits to
+                                                publish posts)
+                                            </flux:badge>
+                                        @elseif ($owner->post_credits <= 3)
+                                            <flux:badge size="sm" color="orange">Low Credits
+                                            </flux:badge>
+                                        @endif
                                     @endif
+
                                 </div>
 
                                 <div class="flex gap-3 items-center mb-2">
@@ -84,10 +90,10 @@
                                 <div class="">
 
                                     <!-- Rating -->
-                                    <flux:text class="flex flex-col gap-2 font-bold">
+                                    {{-- <flux:text class="flex flex-col gap-2 font-bold">
                                         <flux:heading class="font-bold!">User Rating : 4.8 / 5.0</flux:heading>
                                         <span>⭐⭐⭐⭐⭐</span>
-                                    </flux:text>
+                                    </flux:text> --}}
 
                                 </div>
 
@@ -158,10 +164,10 @@
 
                                 <div class="w-full  text-center">
                                     <!-- Rating -->
-                                    <flux:text class="flex flex-col gap-1 font-bold text-center w-full justify-center">
+                                    {{-- <flux:text class="flex flex-col gap-1 font-bold text-center w-full justify-center">
                                         <flux:heading class="font-bold!">User Rating : 4.8 / 5.0</flux:heading>
                                         <span class="w-full">⭐⭐⭐⭐⭐</span>
-                                    </flux:text>
+                                    </flux:text> --}}
                                 </div>
 
                             @endauth
@@ -288,4 +294,24 @@
 
         </div>
     </div>
+
+    {{-- Modal for Sending the User a Message --}}
+
+    <flux:modal name="sendMessageModal" class="md:w-96">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Send Message</flux:heading>
+                <flux:text class="mt-2">Send a message to this user.</flux:text>
+            </div>
+            <form action="" wire:submit.prevent="sendMessage" class="space-y-4">
+                <flux:textarea label="Message" placeholder="Your message" wire:model="message" />
+                <div class="flex">
+                    <flux:spacer />
+                    <flux:button type="submit" variant="primary">Send Message</flux:button>
+                </div>
+
+            </form>
+
+        </div>
+    </flux:modal>
 </div>

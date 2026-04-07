@@ -71,7 +71,6 @@
                 </div>
             @else
                 <flux:text>KYC Verification Not Yet Submitted. User has not uploaded any KYC documents yet.</flux:text>
-                </flux:text>
             @endif
         </div>
     @endif

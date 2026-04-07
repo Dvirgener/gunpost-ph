@@ -140,4 +140,9 @@ class Post extends Model
     {
         return 'uuid';
     }
+
+    public function conversations()
+    {
+        return $this->hasMany(\App\Models\Conversation::class);
+    }
 }

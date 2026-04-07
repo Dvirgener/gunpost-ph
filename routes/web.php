@@ -51,7 +51,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::livewire('posts/create/post/{category}', 'pages::posts.create.post')->name('posts.create');
 
+    Route::livewire('conversations', 'pages::conversations.index')->name('conversations');
+
     Route::livewire('profile/{user}','pages::profile.index')->name('profile');
+    Route::livewire('profile/visit/{user}', 'pages::profile.visitor')->name('profile.visit');
+
+
 });
 
 // BELOW ARE EMAIL VERIFICATION ROUTES, DO NOT DELETE OR EDIT UNLESS YOU KNOW WHAT YOU ARE DOING. THESE ARE REQUIRED FOR THE EMAIL VERIFICATION SYSTEM TO WORK PROPERLY.

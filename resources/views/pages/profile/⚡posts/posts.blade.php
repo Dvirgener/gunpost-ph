@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="hidden md:block">
-                    @if ($profile->verification->kyc_status == 'pending' && !auth()->user()->isAdmin())
+                    @if (($profile->verification->kyc_status == 'pending' && !auth()->user()->isAdmin()) || !$profile->isMe())
                         <flux:button variant="primary" color="gray" disabled="true" class="cursor-pointer">
                             Add Post</flux:button>
                     @else
@@ -139,7 +139,7 @@
                                                 <flux:icon.chat-bubble-left-right />
                                             </a>
                                         </flux:tooltip>
-                                        {{-- <span>{{ $post->conversations->count() }}</span> --}}
+                                        <span>{{ $post->conversations->count() }}</span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <flux:tooltip content="Views">
@@ -149,25 +149,28 @@
                                     </div>
                                 </flux:table.cell>
                             @endif
-                            <flux:table.cell variant="strong">
-                                <div class="flex justify-end items-center gap-1">
+                            @if ($profile->isMe())
+                                <flux:table.cell variant="strong">
+                                    <div class="flex justify-end items-center gap-1">
 
-                                    @if ($post->status !== 'closed')
-                                        <flux:button
-                                            href="{{ route('posts.edit.category.' . $post->category, $post->uuid) }}"
-                                            variant="primary" color="cyan">
-                                            <flux:icon.pencil-square variant="micro" />
+                                        @if ($post->status !== 'closed')
+                                            <flux:button
+                                                href="{{ route('posts.edit.category.' . $post->category, $post->uuid) }}"
+                                                variant="primary" color="cyan">
+                                                <flux:icon.pencil-square variant="micro" />
+                                            </flux:button>
+                                        @endif
+
+                                        <flux:button variant="primary" color="red"
+                                            wire:click="deletePost('{{ $post->id }}')"
+                                            wire:confirm="Are you sure you want to delete this post?"
+                                            class="hover:cursor-pointer">
+                                            <flux:icon.trash variant="micro" />
                                         </flux:button>
-                                    @endif
+                                    </div>
+                                </flux:table.cell>
+                            @endif
 
-                                    <flux:button variant="primary" color="red"
-                                        wire:click="deletePost('{{ $post->id }}')"
-                                        wire:confirm="Are you sure you want to delete this post?"
-                                        class="hover:cursor-pointer">
-                                        <flux:icon.trash variant="micro" />
-                                    </flux:button>
-                                </div>
-                            </flux:table.cell>
                         </flux:table.row>
                         @empty
                             <flux:table.cell colspan="6" class="text-center">

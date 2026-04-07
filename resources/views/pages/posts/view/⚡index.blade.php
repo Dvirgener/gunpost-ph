@@ -10,6 +10,9 @@ use Livewire\Component;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Computed;
 use Flux\Flux;
+use Livewire\Attributes\Rule;
+use App\Models\Conversation;
+use App\Models\Message;
 
 new class extends Component {
     #[Locked]
@@ -76,6 +79,25 @@ new class extends Component {
             // Add cases for other categories as needed
         }
         $this->photos = $this->allPhotos();
+
+        $this->checkViewer();
+    }
+
+    private function checkViewer()
+    {
+        $identifier = auth()->check() ? auth()->id() : request()->ip();
+        // Increment view count
+        $alreadyViewed = \DB::table('views')->where('post_id', $this->post->id)->where('viewer_ip', $identifier)->exists();
+
+        if (!$alreadyViewed) {
+            // Log the page view
+            \DB::table('views')->insert([
+                'post_id' => $this->post->id,
+                'viewer_ip' => $identifier,
+                'viewer_user_agent' => request()->userAgent(),
+            ]);
+            $this->post->increment('views');
+        }
     }
 
     // THIS PART IS ALL ABOUT PHOTO MODAL
@@ -124,6 +146,60 @@ new class extends Component {
 
         return redirect(route('posts'))->with('success', 'Post deleted successfully.');
     }
+
+    // METHOD FOR SENDING INQUIRY MESSAGE TO POST OWNER
+
+    #[Rule(['required'])]
+    public string $inquiryMessage = '';
+
+    private function message(Conversation $convo)
+    {
+        Message::create([
+            'conversation_id' => $convo->id,
+            'sender_id' => auth()->user()->id,
+            'body' => $this->inquiryMessage,
+            'read_by' => [auth()->user()->id],
+        ]);
+    }
+
+    public function sendInquiry()
+    {
+        $this->validate();
+
+        if ($this->inquiryMessage === '') {
+            flux::toast('Message cannot be empty.', variant: 'danger');
+            return;
+        }
+
+        $convo = Conversation::where('type', 'post')
+            ->where('post_id', $this->post->id)
+            ->where('initiator_id', auth()->user()->id)
+            ->first();
+
+        if ($convo) {
+            $this->message($convo);
+            flux::toast('Message sent successfully.', variant: 'success');
+            Flux::modal('sendInquiry')->close();
+            return;
+        } else {
+            $con = Conversation::create([
+                'type' => 'post',
+                'post_id' => $this->post->id,
+                'initiator_id' => auth()->user()->id,
+            ]);
+            $con->participants()->sync([$this->post->user->id, auth()->user()->id]);
+
+            Message::create([
+                'conversation_id' => $con->id,
+                'sender_id' => auth()->user()->id,
+                'body' => $this->inquiryMessage,
+                'read_by' => [auth()->user()->id],
+            ]);
+            flux::toast('Message sent successfully.', variant: 'success');
+            Flux::modal('sendInquiry')->close();
+            return;
+        }
+    }
 };
 ?>
 
@@ -171,11 +247,15 @@ new class extends Component {
                             wire:confirm="Are you sure you want to delete this post?">
                             Delete
                         </flux:button>
+                    @else
+                        <flux:modal.trigger name="sendInquiry">
+                            <flux:button variant="outline" color="red" icon="chat-bubble-left">Send Inquiry</flux:button>
+                        </flux:modal.trigger>
+                        {{-- <flux:modal.trigger name="reportPost">
+                            <flux:button variant="primary" color="red" icon="flag">Report</flux:button>
+                        </flux:modal.trigger> --}}
                     @endif
                 @endauth
-
-
-
             </div>
         </div>
 
@@ -306,7 +386,10 @@ new class extends Component {
                             src="{{ $this->post->user->avatar_path ? url('storage/' . $this->post->user->avatar_path) : asset('blank_image.png') }}"
                             class="w-10 h-10" />
                         <div>
-                            <p class="font-medium dark:text-white/50">{{ $this->post->user->first_name }}</p>
+                            <a href="{{ route('profile.visit', $this->post->user->uuid) }}" class="hover:underline">
+                                <p class="font-medium dark:text-white/50">{{ $this->post->user->first_name }}</p>
+                            </a>
+
                             <p class="text-sm text-gray-600 dark:text-white/50">{{ $this->post->user->email }}</p>
                         </div>
                     </div>
@@ -363,5 +446,23 @@ new class extends Component {
     <livewire:pages::posts.view.photo-modal :photos="$this->photos" />
 
 
+    {{-- Modal for Sending the User a Message --}}
 
+    <flux:modal name="sendInquiry" class="md:w-96">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Make Inquiry</flux:heading>
+                <flux:text class="mt-2">Send a message to the Post Owner.</flux:text>
+            </div>
+            <form action="" wire:submit.prevent="sendInquiry" class="space-y-4">
+                <flux:textarea label="Message" placeholder="Your message" wire:model="inquiryMessage" />
+                <div class="flex">
+                    <flux:spacer />
+                    <flux:button type="submit" variant="primary">Send Message</flux:button>
+                </div>
+
+            </form>
+
+        </div>
+    </flux:modal>
 </div>
