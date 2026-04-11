@@ -58,8 +58,7 @@ class Conversation extends Model
     public function unreadCountFor($userId)
     {
         return $this->messages()
-            ->where('receiver_id', $userId)
-            ->whereNull('read_at')
+            ->whereJsonDoesntContain('read_by', $userId)
             ->count();
     }
 

@@ -47,9 +47,13 @@ new class extends Component {
                                 <p class="text-sm text-left text-white"> {{ $message->replyTo->body }}</p>
                             </div>
                         @endif
-                        <div class="flex gap-2">
+                        <div class="flex gap-2 w-150">
                             <div
                                 class="py-1 px-4 w-max rounded-md  {{ $replying ? 'bg-blue-400' : 'bg-neutral-600' }} flex flex-col gap-1 items-start">
+                                @if ($message->attachment_path)
+                                    <img src="{{ url($message->attachment_path) }}" alt="" class="w-max">
+                                @endif
+
                                 <p class="text-sm text-left text-white w-fit max-w-xs">{{ $message->body }}
                                 </p>
                                 <span
@@ -84,6 +88,9 @@ new class extends Component {
                 @endif
 
                 <div class="py-1 px-4  rounded-md text-white bg-purple-500 flex flex-col gap-1 items-end">
+                    @if ($message->attachment_path)
+                        <img src="{{ url($message->attachment_path) }}" alt="" class="p-4">
+                    @endif
                     <p class="text-sm text-start" dir="ltr">{{ $message->body }}</p>
                     <span
                         class="text-[10px] text-gray-300 text-end w-full">{{ $message->created_at->diffForHumans() }}</span>

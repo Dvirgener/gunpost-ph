@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\sendMessage;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Url;
@@ -14,58 +15,117 @@ new class extends Component
 {
     use WithPagination;
 
-    public $conversation;
 
     #[Url(as: 'search')]
-    public $search = '';
+    public $search = ''; // This is used for searching conversations by message content.
 
     #[Url(as: 'filterPost')]
-    public $filterPost = '';
+    public $filterPost = ''; // This is used for filtering conversations by post. It will be set to the post id when filtering by post.
 
-    public $filter = 'all';
+    public $filter = 'all'; // This is used for filtering conversations by read/unread status. It can be set to 'unread' to show only conversations with unread messages, 'archive' to show only archived conversations, or 'all' to show all conversations.
 
-    public $filterCategory = 'all';
+    public $filterCategory = 'all'; // This is used for filtering conversations by category. It can be set to 'admin' to show only admin conversations, 'post' to show only post-related conversations, or 'all' to show all conversations.
 
-    public function seeConversation($conversation)
-    {
-        $this->dispatch('open-convo', ['conversation' => $conversation]);
-        $this->dispatch('refreshThis');
+    public $selectedConversation; // This is used for storing the currently selected conversation. It will be set to the conversation object when a conversation is selected.
+
+
+
+    // Initiation Logic
+    public $id;
+
+    public function mount(){
+        $this->id = auth()->user()->id;
+        $this->admins = User::where('account_type','=', 'TFT_admin')->get();
     }
 
-    public function deleteConvo(Conversation $conversation)
+    public function getListeners()
     {
-        $conversation->participants()->detach();
-        $conversation->messages()->delete();
-        $conversation->delete();
-        $this->dispatch('refreshThis');
+        return [
+            "echo-private:ConversationUser." . $this->id . ",.new-message-event" => 'refreshConvoBox',
+        ];
     }
+    // Initiation Logic
 
-    public function refreshConvoBox(Conversation $conversation)
+
+    // ====================================================================================================================================================================>
+
+
+    // PRIVATE METHODS =========================================================================================================================================================>
+
+        private function markIncomingAsRead(): void
     {
-        $ids = $conversation->participants()->pluck('user_id')->toArray();
-        if (in_array(auth()->user()->id, $ids)) {
-            $this->conversations();
+        $unreadMessages = Message::where('conversation_id', '=', $this->selectedConversation->id)->whereJsonDoesntContain('read_by', auth()->user()->id)->get();
+
+        foreach($unreadMessages as $msg){
+            $msg->markAsRead(auth()->user()->id);
         }
     }
 
+    // PRIVATE METHODS =========================================================================================================================================================>
+
+    #[On('seeConversation')]
+    public function seeConversation(Conversation $conversation)
+    {
+        if($conversation == $this->selectedConversation){
+            $this->selectedConversation = null;
+            return;
+        }
+        $this->selectedConversation = $conversation;
+        $this->markIncomingAsRead();
+        // $this->refresh();
+    }
+
+    #[On('refreshConversations')]
+    public function refresh()
+    {
+        unset($this->conversations);
+        $this->selectedConversation = null;
+        $this->resetPage();
+    }
+
+    // This method is used to refresh the conversation box when a new message is received. It checks if the new message belongs to the currently selected conversation, and if so, it marks the incoming messages as read and refreshes the conversation list.
+
+    public function refreshConvoBox($event = null)
+    {
+
+        if($this->selectedConversation){
+            if($event['conversation_id'] == $this->selectedConversation->id){
+                $this->markIncomingAsRead();
+            }
+        }
+
+        unset($this->conversations);
+
+        $this->resetPage();
+    }
+
+
+    // SENDING MESSAGE TO ADMINS ================================================================>
+    public $admins;
+    public $chosenAdmin;
     public $adminMessage;
     public function sendAdminMessage()
     {
-        $adminIds = User::query()
-            ->where('classification', '=', 'TFT_admin')
-            ->pluck('id')
-            ->toArray();
-
         $this->validate((['adminMessage' => 'required']));
 
-        $con = Conversation::query()
-            ->where('type', '=', 'admin')
-            ->where('initiator_id', '=', auth()->user()->id)
-            ->firstOrCreate(['type' => 'admin', 'initiator_id' => auth()->user()->id]);
+        $existingCon = Conversation::query()
+                        ->where('type', '=', 'admin')
+                        ->where('initiator_id', '=', auth()->user()->id)
+                        ->first();
 
-        $con->participants()->sync([...$adminIds, auth()->user()->id]);
+        if($existingCon){
+            $con = $existingCon;
+        }else{
+            $con = Conversation::query()
+                ->where('type', '=', 'admin')
+                ->where('initiator_id', '=', auth()->user()->id)
+                ->firstOrCreate(['type' => 'admin', 'initiator_id' => auth()->user()->id]);
 
-        Message::create([
+            $con->participants()->sync([$this->chosenAdmin, auth()->user()->id]);
+        }
+
+
+        $message = Message::create([
             'conversation_id' => $con->id,
             'sender_id' => auth()->user()->id,
             'body' => $this->adminMessage,
@@ -80,7 +140,7 @@ new class extends Component
         $this->modal('sendAdminMessage')->close();
         $this->adminMessage = '';
 
-        // NewConversation::dispatch($con);
+        sendMessage::dispatch($message);
     }
 
     #[Computed]
@@ -88,10 +148,6 @@ new class extends Component
     {
 
         return Conversation::Query()
-            ->withCount([
-                'messages as unread_count' => fn($q) =>
-                    $q->whereJsonDoesntContain('read_by', auth()->user()->id)
-            ])
             ->whereHas('participants', function ($query) {
                 return $query->where('user_id', auth()->user()->id);
             })->when($this->filterPost, function ($query) {
@@ -117,4 +173,5 @@ new class extends Component
             ->orderBy('updated_at', 'desc')
             ->paginate(10);
     }
+
 };

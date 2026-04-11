@@ -1,7 +1,7 @@
-<div class="p-4 h-full overflow-visible relative">
+<div class="p-4 h-full min-h-0 flex flex-col">
     <x-virg.guest-callout />
 
-    <div class="flex justify-between">
+    <div class="flex justify-between shrink-0">
         <h1 class="font-bold text-2xl">POSTS</h1>
         @auth
             @if (auth()->user()->post_credits <= 0)
@@ -13,12 +13,9 @@
                 </flux:button>
             @endif
         @endauth
-
-
-
     </div>
 
-    <div class="my-5 space-y-3 bg-gray-100/30 dark:bg-none p-4 rounded-md shadow-md outline-1 outline-gray-300">
+    <div class="my-5 space-y-3 bg-gray-100/30 dark:bg-none p-4 rounded-md shadow-md outline-1 outline-gray-300 shrink-0">
         {{-- Category Filters --}}
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-8 justify-around">
             <x-virg.posts.category-buttons label="All" wire:click="filterByCategory('all')"
@@ -113,14 +110,14 @@
         </flux:accordion>
 
     </div>
-    <div class="">
-        <flux:pagination :paginator="$this->posts" />
-        <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5 p-2 h-max overflow-y-scroll">
-            @foreach ($this->posts as $post)
-                <x-virg.posts.post-card :post="$post" />
-            @endforeach
-        </div>
+
+    <flux:pagination :paginator="$this->posts" />
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5 p-2 flex-1 min-h-0 overflow-y-scroll">
+        @foreach ($this->posts as $post)
+            <x-virg.posts.post-card :post="$post" />
+        @endforeach
     </div>
+
 
 
 </div>

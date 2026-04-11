@@ -63,10 +63,17 @@ new class extends Component
             return;
 
         } else {
+
+            $type = 'direct';
+            if(auth()->user()->isAdmin()){
+                $type = 'admin';
+            }
+
             $con = Conversation::create([
-                'type' => 'direct',
+                'type' => $type,
                 'initiator_id' => auth()->user()->id,
             ]);
+
             $con->participants()->sync([$this->owner->id, auth()->user()->id]);
 
             Message::create([

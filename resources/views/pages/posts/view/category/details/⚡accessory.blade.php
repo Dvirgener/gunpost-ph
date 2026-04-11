@@ -15,7 +15,7 @@ new class extends Component {
 };
 ?>
 
-<div>
+<div class="flex-1 min-h-0">
     <div class="mt-8 bg-white dark:bg-stone-900 rounded-lg shadow dark:shadow-white/50 p-6">
 
         <flux:heading level="2" class="mb-6 text-black dark:text-white">Full Specifications</flux:heading>

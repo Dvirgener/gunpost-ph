@@ -1,10 +1,10 @@
-<div>
-    <div class="flex justify-between mb-3">
-        <h1 class="font-bold text-2xl">MESSAGES</h1>
+<div class="h-full min-h-0 flex flex-col">
+    <div class="mb-3 flex justify-between shrink-0">
+        <h1 class="text-2xl font-bold">MESSAGES</h1>
     </div>
-    <div class="w-full">
-        <div class="flex items-end justify-start gap-3 mb-3">
 
+    <div class="w-full shrink-0">
+        <div class="mb-3 flex items-end justify-start gap-3">
             <flux:input icon="magnifying-glass" placeholder="Search..." class="w-80!" label="Search messages"
                 wire:model.live="search" clearable />
 
@@ -14,18 +14,18 @@
                     <flux:select.option value="{{ $post->id }}">{{ $post->title }}</flux:select.option>
                 @endforeach
             </flux:select>
+
             @if (auth()->user()->account_type != 'TFT_admin')
                 <flux:modal.trigger name="sendAdminMessage">
-                    <flux:button icon="ticket" class="text-red-700! dark:text-red-500! hover:cursor-pointer">Message
-                        Admin
+                    <flux:button icon="ticket" class="text-red-700! dark:text-red-500! hover:cursor-pointer">
+                        Message Admin
                     </flux:button>
                 </flux:modal.trigger>
             @endif
-
         </div>
     </div>
-    <div class="flex gap-10 px-2 mb-4 border-b pb-4">
 
+    <div class="mb-4 flex gap-10 border-b px-2 pb-4 shrink-0">
         <flux:radio.group wire:model.live="filter" label="Conversation Filter" variant="pills">
             <flux:radio value="all" label="All" />
             <flux:radio value="unread" label="Unread" />
@@ -38,101 +38,62 @@
             <flux:radio value="direct" label="Direct Messages" />
             <flux:radio value="admin" label="Admin" />
         </flux:radio.group>
-
     </div>
-    <div class="flex gap-3">
-        <div class="w-1/2 px-3 py-2 rounded">
-            <flux:heading>
+
+    <div class="flex flex-1 min-h-0 gap-3">
+        <div class="w-1/3 min-h-0 rounded px-3 py-2 flex flex-col">
+            <flux:heading class="shrink-0">
                 Conversations
             </flux:heading>
-            <div class="h-150 overflow-y-scroll pe-3">
+
+            <div class="min-h-0 flex-1 overflow-y-auto px-3">
                 @forelse ($this->conversations as $convo)
-                    <div
-                        class="flex items-center mb-2 mt-2 pb-2 justify-start space-x-3 border-b border-gray-300 dark:border-gray-700">
-                        <button wire:click="deleteConvo('{{ $convo->id }}')"
-                            wire:confirm="Are you sure you want to delete this conversation?" class="">
-                            <flux:icon.trash color="gray" variant="micro"
-                                class="hover:cursor-pointer hover:scale-125 hover:shadow-lg hover:text-red-500 transition-all duration-300 ease-in-out" />
-                        </button>
-                        <div class="flex gap-4 py-2 items-end capitalizetext-sm  hover:cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-50/10 p-2 rounded-md transition-all duration-200 w-full relative shadow"
-                            wire:click="seeConversation('{{ $convo->id }}')">
-
-                            <div class="absolute top-1 right-1">
-                                @switch($convo->type)
-                                    @case('post')
-                                        <flux:badge size="sm" color="orange" class="px-5">Post</flux:badge>
-                                    @break
-
-                                    @case('direct')
-                                        <flux:badge size="sm" color="green" class="px-5">DM</flux:badge>
-                                    @break
-
-                                    @default
-                                @endswitch
-                            </div>
-
-
-
-
-
-                            <div class="flex flex-col gap-2">
-                                <div class="font-bold text-sm flex items-center gap-2">
-                                    @if ($convo->unread_count)
-                                        <span class="font-mono text-blue-400">
-                                            {{ '(' . $convo->unread_count . ')' }}
-                                        </span>
-                                    @endif
-                                    {{-- <div>
-                                        <span>
-                                            @switch($convo->type)
-                                                @case('post')
-                                                    {{ $convo->post->title }}
-                                                @break
-
-                                                @case('admin')
-                                                    @if (auth()->user()->classification == 'TFT_admin')
-                                                        {{ $convo->initiator->fullName() }}
-                                                    @else
-                                                        Admin
-                                                    @endif
-                                                @break
-
-                                                @default
-                                            @endswitch
-                                        </span>
-                                    </div> --}}
-                                </div>
-                                <div class="flex space-x-2 items-end">
-                                    <span
-                                        class="line-clamp-1 text-xs">{{ $convo->mainComponentMessages->first()->body }}</span>
-                                </div>
-                                <div class="flex -space-x-2">
-                                    @foreach ($convo->participants as $participant)
-                                        <flux:tooltip content="{{ $participant->first_name }}">
-                                            <img src="{{ url($participant->avatar_path ? 'storage/' . $participant->avatar_path : asset('/blank_image.png')) }}"
-                                                style="width:25px; height:25px" class=" rounded-full" alt="">
-                                        </flux:tooltip>
-                                    @endforeach
-                                </div>
-                            </div>
-
-                        </div>
-
-
+                    <livewire:pages::conversations.convo-card :convo="$convo" :key="'convo-card-' . $convo->id" />
+                @empty
+                    <div class="mt-10 text-center italic text-gray-500">
+                        -- No conversations found --
                     </div>
-
-
-
-
-                    @empty
-                        <div class="text-center text-gray-500 mt-10 italic">
-                            -- No conversations found --
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-            <div class="w-full h-155">
-                <livewire:pages::conversations.conversation />
+                @endforelse
             </div>
         </div>
+
+        <div class="flex-1 min-h-0 flex flex-col pt-5">
+            @if ($selectedConversation)
+                <livewire:pages::conversations.conversation :conversation="$selectedConversation" :key="'conversation-' . $selectedConversation->id" />
+            @endif
+        </div>
     </div>
+
+    {{-- Modal for Sending an Admin a Message --}}
+
+    <flux:modal name="sendAdminMessage" class="md:w-96">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Admin Message</flux:heading>
+                <flux:text class="mt-2">Send a message to the our Admin.</flux:text>
+            </div>
+            <form action="" wire:submit.prevent="sendAdminMessage" class="space-y-4">
+                <flux:select variant="listbox" placeholder="Select admin..." class="py-1!" wire:model="chosenAdmin">
+                    @foreach ($admins as $admin)
+                        <flux:select.option value="{{ $admin->id }}">
+                            <div class="flex items-center gap-2">
+                                <flux:avatar
+                                    src="{{ url($admin->avatar_path ? $admin->avatar_path : asset('blank_image.png')) }}" />
+                                <flux:text>{{ $admin->fullName() }}</flux:text>
+
+                            </div>
+                        </flux:select.option>
+                    @endforeach
+
+                </flux:select>
+                <flux:textarea label="Message" placeholder="Your message" wire:model="adminMessage" />
+                <div class="flex">
+                    <flux:spacer />
+                    <flux:button type="submit" variant="primary">Send Message</flux:button>
+                </div>
+
+            </form>
+
+        </div>
+    </flux:modal>
+</div>

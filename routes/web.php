@@ -4,9 +4,11 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('pages.home.index');
-})->name('home');
+// Route::get('/', function () {
+//     return view('pages');
+// })->name('home');
+
+Route::livewire('/', 'pages::home.home')->name('home');
 
 Route::livewire('posts', 'pages::posts.index')->name('posts');
 Route::livewire('help', 'pages::help.index')->name('help');

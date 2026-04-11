@@ -1,44 +1,52 @@
 <?php
 
+use App\Events\sendMessage;
 use Livewire\Component;
 use App\Models\Conversation;
 use App\Models\Message;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
+use Livewire\WithFileUploads;
 
 new class extends Component
 {
+    use WithFileUploads;
+
     public $conversation;
 
     #[Rule(['required'])]
     public $message;
+
+    #[Rule(['nullable', 'file', 'max:10240', 'mimes:jpg,jpeg,png,gif,pdf'])]
+    public $messageAttachment;
 
     public $isReply = false;
     public $replyMessageId;
 
     public $unreadCount;
 
-    #[On('open-convo')]
-    public function convo(Conversation $conversation){
+    public function getListeners()
+    {
 
+        return [
+            "echo-private:conversation.{$this->conversation->id},.new-message-event" => 'refThis',
+            'send-reply' => 'sendReply',
+        ];
+    }
+
+    public function mount($conversation){
         $this->conversation = $conversation;
         $this->conversation->load(['messages' => fn ($q) => $q->orderBy('created_at')]);
         $this->dispatch('message-added');
-        $this->markIncomingAsRead();
-
     }
 
-    private function markIncomingAsRead(): void
+    public function refThis($event = null)
     {
-        $unreadMessages = Message::where('conversation_id', '=', $this->conversation->id)->whereJsonDoesntContain('read_by', auth()->user()->id)->get();
-
-        foreach($unreadMessages as $msg){
-            $msg->markAsRead(auth()->user()->id);
-        }
+        $this->conversation->load(['messages' => fn ($q) => $q->orderBy('created_at')]);
+        $this->dispatch('message-added');
+        $this->dispatch('refreshThis');
     }
 
-
-    #[On('send-reply')]
     public function sendReply($id){
         $this->isReply = true;
         $this->replyMessageId = $id["id"];
@@ -63,6 +71,12 @@ new class extends Component
         }
         $message->save();
 
+        if($this->messageAttachment){
+            $this->validateOnly('messageAttachment');
+            $this->uploadAttachment($message);
+        }
+
+
         $this->message = '';
         $this->isReply = false;
         $this->replyMessageId = null;
@@ -77,5 +91,19 @@ new class extends Component
         $this->dispatch('message-added');
         $this->dispatch('refreshThis');
 
+
+        sendMessage::dispatch($message);
+
+    }
+
+    private function uploadAttachment(Message $message)
+    {
+        if ($this->messageAttachment) {
+            $path = $this->messageAttachment->store('conversations/attachments/' . $this->conversation->id, 'public');
+            $message->attachment_name = $this->messageAttachment->getClientOriginalName();
+            $message->attachment_type = $this->messageAttachment->getClientMimeType();
+            $message->attachment_path = $path;
+            $message->save();
+        }
     }
 };

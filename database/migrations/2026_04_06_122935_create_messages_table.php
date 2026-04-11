@@ -19,6 +19,9 @@ return new class extends Migration
             $table->boolean('is_reply')->default(false);
             $table->uuid('message_id')->nullable();
             $table->json('read_by')->nullable();
+            $table->string('attachment_name')->nullable();
+            $table->string('attachment_type')->nullable();
+            $table->text('attachment_path')->nullable();
             $table->timestamps();
         });
     }
