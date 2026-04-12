@@ -1,5 +1,5 @@
-<div class="flex items-start max-md:flex-col">
-    <div class="me-10 w-full pb-4 md:w-[220px]">
+<div class="flex-1 min-h-0 flex flex-col md:flex-row gap-2 overflow-y-scroll md:overflow-y-hidden">
+    <div class="me-10 pb-4 w-1/3">
         <flux:navlist aria-label="{{ __('Settings') }}">
             <flux:navlist.item :href="route('profile.edit')" wire:navigate>{{ __('Profile') }}</flux:navlist.item>
             <flux:navlist.item :href="route('user-password.edit')" wire:navigate>{{ __('Password') }}
@@ -23,12 +23,16 @@
 
     <flux:separator class="md:hidden" />
 
-    <div class="flex-1 self-stretch max-md:pt-6">
-        <flux:heading>{{ $heading ?? '' }}</flux:heading>
-        <flux:subheading>{{ $subheading ?? '' }}</flux:subheading>
+    <div class="w-full flex flex-col max-md:pt-6">
+        <div class="flex-1 min-h-0 md:overflow-y-scroll">
+            <flux:heading>{{ $heading ?? '' }}</flux:heading>
+            <flux:subheading>{{ $subheading ?? '' }}</flux:subheading>
 
-        <div class="mt-5 md:w-full h-200 ps-5 pe-10 py-5 overflow-auto">
-            {{ $slot }}
+            <div class="my-5 md:w-full h-200 ps-5 pe-10 py-5">
+                {{ $slot }}
+            </div>
         </div>
+
     </div>
+
 </div>

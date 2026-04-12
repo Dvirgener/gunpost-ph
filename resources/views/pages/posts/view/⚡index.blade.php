@@ -361,11 +361,11 @@ new class extends Component {
                         @default
                     @endswitch
 
-                    @if ($this->post->post_condition)
+                    @if ($this->post->condition)
                         <div class="flex justify-between">
-                            <span class="text-gray-600 dark:text-white">Listing Type:</span>
+                            <span class="text-gray-600 dark:text-white">Condition:</span>
                             <span
-                                class="font-medium dark:text-white/50">{{ ucfirst(str_replace('_', ' ', $this->post->post_condition)) }}</span>
+                                class="font-medium dark:text-white/50">{{ ucfirst(str_replace('_', ' ', $this->post->condition)) }}</span>
                         </div>
                     @endif
 

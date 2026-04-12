@@ -5,7 +5,7 @@
                 {{ $slot }}
             </div>
 
-            <div class="shrink-0">
+            <div class="shrink">
                 <x-virg.footer />
             </div>
         </div>

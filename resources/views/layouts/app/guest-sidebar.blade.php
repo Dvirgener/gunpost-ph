@@ -63,13 +63,13 @@
     </flux:sidebar>
 
 
-    {{-- <!-- Mobile User Menu -->
+    <!-- Mobile User Menu -->
     <flux:header class="lg:hidden">
         <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
         <flux:spacer />
 
-    </flux:header> --}}
+    </flux:header>
 
     {{ $slot }}
 

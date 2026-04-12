@@ -191,10 +191,14 @@ new class extends Component {
     }
 }; ?>
 
-<section class="w-full">
+<section class="w-full h-full flex flex-col gap-2">
+
+    <div>
     @include('partials.settings-heading')
 
     <flux:heading class="sr-only">{{ __('KYC Verification') }}</flux:heading>
+    </div>
+
 
     <x-pages::settings.layout :heading="__('KYC Verification')" :subheading="__('Submit your identity documents for review')">
 

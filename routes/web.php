@@ -4,10 +4,6 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('pages');
-// })->name('home');
-
 Route::livewire('/', 'pages::home.home')->name('home');
 
 Route::livewire('posts', 'pages::posts.index')->name('posts');
@@ -54,6 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('posts/create/post/{category}', 'pages::posts.create.post')->name('posts.create');
 
     Route::livewire('conversations', 'pages::conversations.index')->name('conversations');
+    Route::livewire('conversations/mobile/{conversation}', 'pages::conversations.mobile-conversation')->name('mobile.conversation');
 
     Route::livewire('profile/{user}','pages::profile.index')->name('profile');
     Route::livewire('profile/visit/{user}', 'pages::profile.visitor')->name('profile.visit');

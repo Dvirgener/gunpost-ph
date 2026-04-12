@@ -10,6 +10,7 @@ use Flux\Flux;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\user\User;
+use Jenssegers\Agent\Agent;
 
 new class extends Component
 {
@@ -28,15 +29,18 @@ new class extends Component
 
     public $selectedConversation; // This is used for storing the currently selected conversation. It will be set to the conversation object when a conversation is selected.
 
-
-
     // Initiation Logic
     public $id;
 
+    public $isMobile;
+
     public function mount(){
+
         $this->id = auth()->user()->id;
         $this->admins = User::where('account_type','=', 'TFT_admin')->get();
+        $this->isMobile = $this->getIsMobileProperty();
     }
+
 
     public function getListeners()
     {
@@ -61,6 +65,11 @@ new class extends Component
         }
     }
 
+    private function getIsMobileProperty()
+    {
+        return (new Agent())->isMobile();
+    }
+
     // PRIVATE METHODS =========================================================================================================================================================>
 
     #[On('seeConversation')]
@@ -78,8 +87,8 @@ new class extends Component
     #[On('refreshConversations')]
     public function refresh()
     {
-        unset($this->conversations);
         $this->selectedConversation = null;
+        unset($this->conversations);
         $this->resetPage();
     }
 

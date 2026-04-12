@@ -1,14 +1,19 @@
-<div class="">
+<div class="flex flex-col h-full">
     <div class="mx-auto max-w-7xl p-4">
         <h1 class="font-bold text-2xl">ORDERS</h1>
 
+
+
+    </div>
+    <div class="flex-1 h-min-0 overflow-y-scroll px-2 pb-5">
         <form action="" wire:submit="placeOrder">
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-2 my-10 w-full">
 
                 <div class="w-full flex justify-center md:justify-start">
                     <flux:radio.group label="Packages" variant="cards"
-                        class="grid grid-cols-2 md:flex md:flex-col w-70! md:w-full! " wire:model.live="selectedPackage">
+                        class="grid grid-cols-2 md:flex md:flex-col w-70! md:w-full! "
+                        wire:model.live="selectedPackage">
                         @foreach ($packages as $package)
                             <flux:radio value="{{ $package['name'] }}" label="{{ $package['name'] }}"
                                 description="{{ $package['description'] }}" class="w-full!" />
@@ -57,62 +62,64 @@
             </div>
 
         </form>
-    </div>
-    <div class="my-5 px-8">
-        <p class="font-semibold text-sm text-red-500 text-center underline ">For Ads more than 50, please Contact our
-            administrators...</p>
-    </div>
+        <div class="my-5 px-8">
+            <p class="font-semibold text-sm text-red-500 text-center underline ">For Ads more than 50, please Contact
+                our
+                administrators...</p>
+        </div>
 
-    <div>
         <div>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Order History</h2>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">You can view all your orders here.</p>
+            <div>
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Order History</h2>
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">You can view all your orders here.</p>
+            </div>
+            <div class="mb-3">
+                <flux:pagination :paginator="$this->orders" />
+            </div>
+            <flux:table>
+                <flux:table.columns>
+                    <flux:table.column>Package ID</flux:table.column>
+                    <flux:table.column>Package</flux:table.column>
+                    <flux:table.column>Quantity</flux:table.column>
+                    <flux:table.column>Total Credits</flux:table.column>
+                    <flux:table.column>Date Placed</flux:table.column>
+                    <flux:table.column>Status</flux:table.column>
+                    <flux:table.column>Amount</flux:table.column>
+                </flux:table.columns>
+
+                <flux:table.rows>
+                    @foreach ($this->orders as $order)
+                        <flux:table.row>
+                            <flux:table.cell variant="strong">{{ $order->ticket_id }}</flux:table.cell>
+                            <flux:table.cell variant="strong">{{ $order->package }}</flux:table.cell>
+                            <flux:table.cell>{{ $order->quantity }}</flux:table.cell>
+                            <flux:table.cell>
+                                {{ $order->credits }}
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                <x-virg.admin.virg-date :date="$order->created_at" />
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                @switch($order->status)
+                                    @case('pending')
+                                        <flux:badge color="yellow" size="sm">Pending</flux:badge>
+                                    @break
+
+                                    @case('paid')
+                                        <flux:badge color="green" size="sm">Paid</flux:badge>
+                                    @break
+                                @endswitch
+                            </flux:table.cell>
+                            <flux:table.cell variant="strong">
+                                <x-virg.admin.virg-amount :amount="$order->amount" />
+                            </flux:table.cell>
+                        </flux:table.row>
+                    @endforeach
+
+
+                </flux:table.rows>
+            </flux:table>
         </div>
-        <div class="mb-3">
-            <flux:pagination :paginator="$this->orders" />
-        </div>
-        <flux:table>
-            <flux:table.columns>
-                <flux:table.column>Package ID</flux:table.column>
-                <flux:table.column>Package</flux:table.column>
-                <flux:table.column>Quantity</flux:table.column>
-                <flux:table.column>Total Credits</flux:table.column>
-                <flux:table.column>Date Placed</flux:table.column>
-                <flux:table.column>Status</flux:table.column>
-                <flux:table.column>Amount</flux:table.column>
-            </flux:table.columns>
-
-            <flux:table.rows>
-                @foreach ($this->orders as $order)
-                    <flux:table.row>
-                        <flux:table.cell variant="strong">{{ $order->ticket_id }}</flux:table.cell>
-                        <flux:table.cell variant="strong">{{ $order->package }}</flux:table.cell>
-                        <flux:table.cell>{{ $order->quantity }}</flux:table.cell>
-                        <flux:table.cell>
-                            {{ $order->credits }}
-                        </flux:table.cell>
-                        <flux:table.cell>
-                            <x-virg.admin.virg-date :date="$order->created_at" />
-                        </flux:table.cell>
-                        <flux:table.cell>
-                            @switch($order->status)
-                                @case('pending')
-                                    <flux:badge color="yellow" size="sm">Pending</flux:badge>
-                                @break
-
-                                @case('paid')
-                                    <flux:badge color="green" size="sm">Paid</flux:badge>
-                                @break
-                            @endswitch
-                        </flux:table.cell>
-                        <flux:table.cell variant="strong">
-                            <x-virg.admin.virg-amount :amount="$order->amount" />
-                        </flux:table.cell>
-                    </flux:table.row>
-                @endforeach
-
-
-            </flux:table.rows>
-        </flux:table>
     </div>
+
 </div>

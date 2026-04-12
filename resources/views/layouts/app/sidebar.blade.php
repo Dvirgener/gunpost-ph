@@ -23,10 +23,13 @@
 
         <flux:sidebar.nav>
             <flux:sidebar.group :heading="__('')" class="grid gap-1">
-                <flux:sidebar.item icon="home" :href="route('home')" :current="request()->routeIs('home')"
-                    wire:navigate>
-                    {{ __('Home') }}
-                </flux:sidebar.item>
+                @guest
+                    <flux:sidebar.item icon="home" :href="route('home')" :current="request()->routeIs('home')"
+                        wire:navigate>
+                        {{ __('Home') }}
+                    </flux:sidebar.item>
+                @endguest
+
                 <flux:sidebar.item icon="signpost" :href="route('posts')" :current="request()->routeIs('posts')"
                     wire:navigate>
                     {{ __('Posts') }}

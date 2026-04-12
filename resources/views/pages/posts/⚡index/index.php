@@ -5,6 +5,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\posts\Post;
 use Livewire\Attributes\Url;
+use Jenssegers\Agent\Agent;
 
 new class extends Component
 {
@@ -33,6 +34,13 @@ new class extends Component
     {
         $this->postTypeFilter = $type;
         $this->resetPage(); // Reset pagination to the first page when filtering
+    }
+
+    public $isMobile;
+
+    private function getIsMobileProperty()
+    {
+        return (new Agent())->isMobile();
     }
 
     // Location Filter:
@@ -71,7 +79,7 @@ new class extends Component
         $this->regions = json_decode(file_get_contents(base_path('data/regions.json')), true);
         $this->provinces = json_decode(file_get_contents(base_path('data/provinces.json')), true);
         $this->cities = json_decode(file_get_contents(base_path('data/cities.json')), true);
-
+        $this->isMobile = $this->getIsMobileProperty();
     }
 
 

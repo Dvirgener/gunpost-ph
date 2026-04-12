@@ -2,6 +2,7 @@
 
 use Livewire\Component;
 use App\Models\Conversation;
+use Jenssegers\Agent\Agent;
 
 new class extends Component {
     public function getListeners()
@@ -12,10 +13,12 @@ new class extends Component {
     }
 
     public $convo;
+    public $isMobile;
 
     public function mount($convo)
     {
         $this->convo = $convo;
+        $this->isMobile = $this->getIsMobileProperty();
     }
 
     public function refreshConvoBox()
@@ -23,9 +26,13 @@ new class extends Component {
         $this->convo->load(['messages' => fn($q) => $q->orderBy('created_at')]);
     }
 
-    public function seeConversation($conversation)
+    public function seeConversation(Conversation $conversation)
     {
-        $this->dispatch('seeConversation', ['conversation' => $conversation]);
+        if ($this->isMobile) {
+            return redirect(route('mobile.conversation', ['conversation' => $conversation]));
+        } else {
+            $this->dispatch('seeConversation', ['conversation' => $conversation]);
+        }
     }
 
     public function deleteConvo(Conversation $conversation)
@@ -37,6 +44,11 @@ new class extends Component {
         }
 
         $this->dispatch('refreshConversations');
+    }
+
+    private function getIsMobileProperty()
+    {
+        return new Agent()->isMobile();
     }
 };
 ?>

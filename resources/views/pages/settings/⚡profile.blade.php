@@ -442,287 +442,296 @@ new class extends Component {
     }
 }; ?>
 
-<section class="w-full">
-    @include('partials.settings-heading')
+<section class="w-full h-full flex flex-col">
 
-    <flux:heading class="sr-only">{{ __('Profile Settings') }}</flux:heading>
+    <div class="shrink-0">
+        @include('partials.settings-heading')
+    </div>
+    <div class="shrink-0">
+        <flux:heading class="sr-only">{{ __('Profile Settings') }}</flux:heading>
+    </div>
 
-    <x-pages::settings.layout :heading="__('Profile')" :subheading="__('Update your details based on account type')">
+        <x-pages::settings.layout :heading="__('Profile')" :subheading="__('Update your details based on account type')">
 
-        {{-- This is the form for setting upload --}}
-        <form wire:submit="updateProfileInformation" enctype="multipart/form-data" class="my-6 w-full space-y-8">
+            {{-- This is the form for setting upload --}}
+            <form wire:submit="updateProfileInformation" enctype="multipart/form-data" class="my-6 w-full space-y-8">
 
-            {{-- Account type (display only) --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <flux:input wire:model="account_type" :label="__('Account Type')" type="text" disabled />
-            </div>
+                {{-- Account type (display only) --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <flux:input wire:model="account_type" :label="__('Account Type')" type="text" disabled />
+                </div>
 
-            <div class="col-span-3 flex gap-6 pt-0 items-center">
-                <!-- Picture -->
-                <flux:input wire:model="picture" :label="__('Update Profile Picture')" type="file" autofocus
-                    accept=".jpg,.jpeg,.png" class="" />
+                <div class="col-span-3 flex flex-col md:flex-row gap-6 pt-0 items-center">
+                    <!-- Picture -->
+                    <flux:input wire:model="picture" :label="__('Update Profile Picture')" type="file" autofocus
+                        accept=".jpg,.jpeg,.png" class="" />
 
-                @if ($picture)
-                    <img src="{{ $picture->temporaryUrl() }}" alt="" class="w-32 h-32 rounded-md object-cover">
-                @endif
-
-                {{-- Checking if user picture exist --}}
-                @if (Auth::user()->avatar_path)
-                    <img src="{{ url('storage/' . Auth::user()->avatar_path) }}" alt=""
-                        class="w-32 h-32 rounded-md object-cover">
-                @else
-                    <img src="{{ asset('/blank_image.png') }}" alt="" class="w-32 h-32 rounded-md object-cover">
-                @endif
-
-            </div>
-
-            {{-- Core user details --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <flux:input wire:model="first_name" :label="__('First Name')" type="text" required
-                    autocomplete="given-name" />
-                <flux:input wire:model="last_name" :label="__('Last Name')" type="text" required
-                    autocomplete="family-name" />
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
-                <flux:input wire:model="phone" :label="__('Phone')" type="text" autocomplete="tel" />
-            </div>
-
-            {{-- Email verification --}}
-            @if ($this->hasUnverifiedEmail)
-                <div>
-                    <flux:text class="mt-2">
-                        {{ __('Your email address is unverified.') }}
-
-                        <flux:link class="text-sm cursor-pointer" wire:click.prevent="resendVerificationNotification">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </flux:link>
-                    </flux:text>
-
-                    @if (session('status') === 'verification-link-sent')
-                        <flux:text class="mt-2 font-medium !dark:text-green-400 !text-green-600">
-                            {{ __('A new verification link has been sent to your email address.') }}
-                        </flux:text>
+                    @if ($picture)
+                        <img src="{{ $picture->temporaryUrl() }}" alt="" class="w-32 h-32 rounded-md object-cover">
                     @endif
+
+                    {{-- Checking if user picture exist --}}
+                    @if (Auth::user()->avatar_path)
+                        <img src="{{ url('storage/' . Auth::user()->avatar_path) }}" alt=""
+                            class="w-32 h-32 rounded-md object-cover">
+                    @else
+                        <img src="{{ asset('/blank_image.png') }}" alt="" class="w-32 h-32 rounded-md object-cover">
+                    @endif
+
                 </div>
-            @endif
 
-            {{-- PERSONAL PROFILE --}}
-            @if ($this->isPersonalAccount)
-                <div class="space-y-6">
-                    <flux:heading size="lg">{{ __('Personal Profile') }}</flux:heading>
+                {{-- Core user details --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <flux:input wire:model="first_name" :label="__('First Name')" type="text" required
+                        autocomplete="given-name" />
+                    <flux:input wire:model="last_name" :label="__('Last Name')" type="text" required
+                        autocomplete="family-name" />
+                </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <flux:input wire:model="personal.date_of_birth" :label="__('Date of Birth')" type="date" />
-                        <flux:input wire:model="personal.gender" :label="__('Gender')" type="text"
-                            placeholder="Male / Female / Prefer not to say" />
-                    </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
+                    <flux:input wire:model="phone" :label="__('Phone')" type="text" autocomplete="tel" />
+                </div>
 
+                {{-- Email verification --}}
+                @if ($this->hasUnverifiedEmail)
                     <div>
-                        <flux:textarea wire:model="personal.bio" :label="__('Bio')" rows="4" />
+                        <flux:text class="mt-2">
+                            {{ __('Your email address is unverified.') }}
+
+                            <flux:link class="text-sm cursor-pointer" wire:click.prevent="resendVerificationNotification">
+                                {{ __('Click here to re-send the verification email.') }}
+                            </flux:link>
+                        </flux:text>
+
+                        @if (session('status') === 'verification-link-sent')
+                            <flux:text class="mt-2 font-medium !dark:text-green-400 !text-green-600">
+                                {{ __('A new verification link has been sent to your email address.') }}
+                            </flux:text>
+                        @endif
                     </div>
+                @endif
 
-                    <flux:heading size="md">{{ __('Address') }}</flux:heading>
+                {{-- PERSONAL PROFILE --}}
+                @if ($this->isPersonalAccount)
+                    <div class="space-y-6">
+                        <flux:heading size="lg">{{ __('Personal Profile') }}</flux:heading>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <flux:input wire:model="personal.address_line_1" :label="__('Address Line 1')" type="text" />
-                        <flux:input wire:model="personal.address_line_2" :label="__('Address Line 2')"
-                            type="text" />
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <flux:input wire:model="personal.date_of_birth" :label="__('Date of Birth')" type="date" />
+                            <flux:input wire:model="personal.gender" :label="__('Gender')" type="text"
+                                placeholder="Male / Female / Prefer not to say" />
+                        </div>
+
+                        <div>
+                            <flux:textarea wire:model="personal.bio" :label="__('Bio')" rows="4" />
+                        </div>
+
+                        <flux:heading size="md">{{ __('Address') }}</flux:heading>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <flux:input wire:model="personal.address_line_1" :label="__('Address Line 1')" type="text" />
+                            <flux:input wire:model="personal.address_line_2" :label="__('Address Line 2')"
+                                type="text" />
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                            <flux:input wire:model="personal.country" :label="__('Country')" type="text" />
+
+                            <flux:select wire:model.live="region" placeholder="Choose Region..." label="Region">
+                                @foreach ($regions as $region)
+                                    <flux:select.option value="{{ $region['key'] }}">{{ $region['name'] }}
+                                    </flux:select.option>
+                                @endforeach
+                            </flux:select>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                            <flux:select wire:model.live="province" placeholder="Choose Province..." label="Province"
+                                class="">
+                                @foreach ($this->filteredProvinces as $province)
+                                    <flux:select.option value="{{ $province['key'] }}">{{ $province['name'] }}
+                                    </flux:select.option>
+                                @endforeach
+                            </flux:select>
+
+                            <flux:select wire:model="city" placeholder="Choose a City..." label="City">
+                                @foreach ($this->filteredCities as $city)
+                                    <flux:select.option value="{{ $city['name'] }}">{{ $city['name'] }}
+                                    </flux:select.option>
+                                @endforeach
+                            </flux:select>
+
+                        </div>
                     </div>
+                @endif
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {{-- CORPORATE PROFILE --}}
+                @if ($this->isCorporateAccount)
+                    <div class="space-y-6">
+                        <flux:heading size="lg">{{ __('Corporate Profile') }}</flux:heading>
 
-                        <flux:input wire:model="personal.country" :label="__('Country')" type="text" />
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {{-- users.company_name --}}
+                            <flux:input wire:model="company_name" :label="__('Company Name (Account)')" type="text"
+                                required />
 
-                        <flux:select wire:model.live="region" placeholder="Choose Region..." label="Region">
-                            @foreach ($regions as $region)
-                                <flux:select.option value="{{ $region['key'] }}">{{ $region['name'] }}
-                                </flux:select.option>
-                            @endforeach
-                        </flux:select>
-                    </div>
+                            {{-- corporate_profiles.company_name --}}
+                            <flux:input wire:model="corporate.company_name" :label="__('Company Name (Business Profile)')"
+                                type="text" required />
+                        </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <flux:input wire:model="corporate.business_type" :label="__('Business Type')" type="text"
+                                placeholder="Gun store / Dealer / Distributor / etc" />
+                            <flux:input wire:model="corporate.website" :label="__('Website')" type="url"
+                                placeholder="https://..." />
+                        </div>
 
-                        <flux:select wire:model.live="province" placeholder="Choose Province..." label="Province"
-                            class="">
-                            @foreach ($this->filteredProvinces as $province)
-                                <flux:select.option value="{{ $province['key'] }}">{{ $province['name'] }}
-                                </flux:select.option>
-                            @endforeach
-                        </flux:select>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <flux:input wire:model="corporate.business_email" :label="__('Business Email')"
+                                type="email" />
+                            <flux:input wire:model="corporate.business_phone" :label="__('Business Phone')"
+                                type="text" />
+                        </div>
 
-                        <flux:select wire:model="city" placeholder="Choose a City..." label="City">
-                            @foreach ($this->filteredCities as $city)
-                                <flux:select.option value="{{ $city['name'] }}">{{ $city['name'] }}
-                                </flux:select.option>
-                            @endforeach
-                        </flux:select>
+                        <flux:heading size="md">{{ __('Business Address') }}</flux:heading>
 
-                    </div>
-                </div>
-            @endif
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <flux:input wire:model="corporate.address_line_1" :label="__('Address Line 1')"
+                                type="text" />
+                            <flux:input wire:model="corporate.address_line_2" :label="__('Address Line 2')"
+                                type="text" />
+                        </div>
 
-            {{-- CORPORATE PROFILE --}}
-            @if ($this->isCorporateAccount)
-                <div class="space-y-6">
-                    <flux:heading size="lg">{{ __('Corporate Profile') }}</flux:heading>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {{-- users.company_name --}}
-                        <flux:input wire:model="company_name" :label="__('Company Name (Account)')" type="text"
-                            required />
+                            <flux:input wire:model="personal.country" :label="__('Country')" type="text" />
 
-                        {{-- corporate_profiles.company_name --}}
-                        <flux:input wire:model="corporate.company_name" :label="__('Company Name (Business Profile)')"
-                            type="text" required />
-                    </div>
+                            <flux:select wire:model.live="region" placeholder="Choose Region..." label="Region">
+                                @foreach ($regions as $region)
+                                    <flux:select.option value="{{ $region['key'] }}">{{ $region['name'] }}
+                                    </flux:select.option>
+                                @endforeach
+                            </flux:select>
+                        </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <flux:input wire:model="corporate.business_type" :label="__('Business Type')" type="text"
-                            placeholder="Gun store / Dealer / Distributor / etc" />
-                        <flux:input wire:model="corporate.website" :label="__('Website')" type="url"
-                            placeholder="https://..." />
-                    </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <flux:input wire:model="corporate.business_email" :label="__('Business Email')"
-                            type="email" />
-                        <flux:input wire:model="corporate.business_phone" :label="__('Business Phone')"
-                            type="text" />
-                    </div>
+                            <flux:select wire:model.live="province" placeholder="Choose Province..." label="Province"
+                                class="">
+                                @foreach ($this->filteredProvinces as $province)
+                                    <flux:select.option value="{{ $province['key'] }}">{{ $province['name'] }}
+                                    </flux:select.option>
+                                @endforeach
+                            </flux:select>
 
-                    <flux:heading size="md">{{ __('Business Address') }}</flux:heading>
+                            <flux:select wire:model="city" placeholder="Choose a City..." label="City">
+                                @foreach ($this->filteredCities as $city)
+                                    <flux:select.option value="{{ $city['name'] }}">{{ $city['name'] }}
+                                    </flux:select.option>
+                                @endforeach
+                            </flux:select>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <flux:input wire:model="corporate.address_line_1" :label="__('Address Line 1')"
-                            type="text" />
-                        <flux:input wire:model="corporate.address_line_2" :label="__('Address Line 2')"
-                            type="text" />
-                    </div>
+                        </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {{-- Document paths (optional / display only for now) --}}
+                        <div class="w-max space-y-5">
+                            <flux:heading size="md">{{ __('Business Documents') }}</flux:heading>
 
-                        <flux:input wire:model="personal.country" :label="__('Country')" type="text" />
+                            <div class="flex flex-col gap-5 items-start">
 
-                        <flux:select wire:model.live="region" placeholder="Choose Region..." label="Region">
-                            @foreach ($regions as $region)
-                                <flux:select.option value="{{ $region['key'] }}">{{ $region['name'] }}
-                                </flux:select.option>
-                            @endforeach
-                        </flux:select>
-                    </div>
+                                <flux:input wire:model="logo" :label="__('Corporate Logo')" type="file" autofocus
+                                    accept=".jpg,.jpeg,.png" class="" />
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                @if ($corporate['logo_path'])
+                                    <div class="relative">
+                                        <img src="{{ url('storage/' . $corporate['logo_path']) }}" alt=""
+                                            class="w-full h-50 rounded-md object-cover">
 
-                        <flux:select wire:model.live="province" placeholder="Choose Province..." label="Province"
-                            class="">
-                            @foreach ($this->filteredProvinces as $province)
-                                <flux:select.option value="{{ $province['key'] }}">{{ $province['name'] }}
-                                </flux:select.option>
-                            @endforeach
-                        </flux:select>
-
-                        <flux:select wire:model="city" placeholder="Choose a City..." label="City">
-                            @foreach ($this->filteredCities as $city)
-                                <flux:select.option value="{{ $city['name'] }}">{{ $city['name'] }}
-                                </flux:select.option>
-                            @endforeach
-                        </flux:select>
-
-                    </div>
-
-                    {{-- Document paths (optional / display only for now) --}}
-                    <div class="w-max space-y-5">
-                        <flux:heading size="md">{{ __('Business Documents') }}</flux:heading>
-
-                        <div class="flex flex-col gap-5 items-start">
-
-                            <flux:input wire:model="logo" :label="__('Corporate Logo')" type="file" autofocus
-                                accept=".jpg,.jpeg,.png" class="" />
-
-                            @if ($corporate['logo_path'])
-                                <div class="relative">
-                                    <img src="{{ url('storage/' . $corporate['logo_path']) }}" alt=""
+                                        <button wire:click="deletePicture('logo_path')" type="button"
+                                            class="absolute top-1 right-1  text-white rounded-full w-6 h-6 flex items-center justify-center">
+                                            <flux:icon name="x-circle"
+                                                class="w-6 h-6 text-red-500 hover:cursor-pointer" />
+                                        </button>
+                                    </div>
+                                @else
+                                    <img src="{{ asset('/nd_available.png') }}" alt=""
                                         class="w-full h-50 rounded-md object-cover">
+                                @endif
+                            </div>
+                            <flux:separator />
+                            <div class="flex flex-col gap-5 items-start">
+                                <flux:input wire:model="dti_sec_reg" :label="__('DTI/SEC Registration')" type="file"
+                                    autofocus accept=".jpg,.jpeg,.png" class="" />
 
-                                    <button wire:click="deletePicture('logo_path')" type="button"
-                                        class="absolute top-1 right-1  text-white rounded-full w-6 h-6 flex items-center justify-center">
-                                        <flux:icon name="x-circle"
-                                            class="w-6 h-6 text-red-500 hover:cursor-pointer" />
-                                    </button>
-                                </div>
-                            @else
-                                <img src="{{ asset('/nd_available.png') }}" alt=""
-                                    class="w-full h-50 rounded-md object-cover">
-                            @endif
-                        </div>
-                        <flux:separator />
-                        <div class="flex flex-col gap-5 items-start">
-                            <flux:input wire:model="dti_sec_reg" :label="__('DTI/SEC Registration')" type="file"
-                                autofocus accept=".jpg,.jpeg,.png" class="" />
+                                @if ($corporate['dti_sec_reg_path'])
+                                    <div class="relative">
+                                        <img src="{{ url('storage/' . $corporate['dti_sec_reg_path']) }}" alt=""
+                                            class="w-full h-50 rounded-md object-cover">
 
-                            @if ($corporate['dti_sec_reg_path'])
-                                <div class="relative">
-                                    <img src="{{ url('storage/' . $corporate['dti_sec_reg_path']) }}" alt=""
+                                        <button wire:click="deletePicture('dti_sec_reg_path')" type="button"
+                                            class="absolute top-1 right-1  text-white rounded-full w-6 h-6 flex items-center justify-center">
+                                            <flux:icon name="x-circle"
+                                                class="w-6 h-6 text-red-500 hover:cursor-pointer" />
+                                        </button>
+                                    </div>
+                                @else
+                                    <img src="{{ asset('/nd_available.png') }}" alt=""
                                         class="w-full h-50 rounded-md object-cover">
+                                @endif
+                            </div>
+                            <flux:separator />
+                            <div class="flex flex-col gap-5 items-start">
+                                <flux:input wire:model="business_permit" :label="__('Business Permit')" type="file"
+                                    autofocus accept=".jpg,.jpeg,.png" class="" />
 
-                                    <button wire:click="deletePicture('dti_sec_reg_path')" type="button"
-                                        class="absolute top-1 right-1  text-white rounded-full w-6 h-6 flex items-center justify-center">
-                                        <flux:icon name="x-circle"
-                                            class="w-6 h-6 text-red-500 hover:cursor-pointer" />
-                                    </button>
-                                </div>
-                            @else
-                                <img src="{{ asset('/nd_available.png') }}" alt=""
-                                    class="w-full h-50 rounded-md object-cover">
-                            @endif
+                                @if ($corporate['business_permit_path'])
+                                    <div class="relative">
+                                        <img src="{{ url('storage/' . $corporate['business_permit_path']) }}"
+                                            alt="" class="w-full h-50 rounded-md object-cover">
+
+                                        <button wire:click="deletePicture('business_permit_path')" type="button"
+                                            class="absolute top-1 right-1  text-white rounded-full w-6 h-6 flex items-center justify-center">
+                                            <flux:icon name="x-circle"
+                                                class="w-6 h-6 text-red-500 hover:cursor-pointer" />
+                                        </button>
+                                    </div>
+                                @else
+                                    <img src="{{ asset('/nd_available.png') }}" alt=""
+                                        class="w-full h-50 rounded-md object-cover">
+                                @endif
+                            </div>
+
                         </div>
-                        <flux:separator />
-                        <div class="flex flex-col gap-5 items-start">
-                            <flux:input wire:model="business_permit" :label="__('Business Permit')" type="file"
-                                autofocus accept=".jpg,.jpeg,.png" class="" />
 
-                            @if ($corporate['business_permit_path'])
-                                <div class="relative">
-                                    <img src="{{ url('storage/' . $corporate['business_permit_path']) }}"
-                                        alt="" class="w-full h-50 rounded-md object-cover">
-
-                                    <button wire:click="deletePicture('business_permit_path')" type="button"
-                                        class="absolute top-1 right-1  text-white rounded-full w-6 h-6 flex items-center justify-center">
-                                        <flux:icon name="x-circle"
-                                            class="w-6 h-6 text-red-500 hover:cursor-pointer" />
-                                    </button>
-                                </div>
-                            @else
-                                <img src="{{ asset('/nd_available.png') }}" alt=""
-                                    class="w-full h-50 rounded-md object-cover">
-                            @endif
-                        </div>
 
                     </div>
+                @endif
 
+                {{-- Save --}}
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center justify-end">
+                        <flux:button variant="primary" type="submit" class="w-full" data-test="update-profile-button">
+                            {{ __('Save') }}
+                        </flux:button>
+                    </div>
 
+                    <x-action-message class="me-3" on="profile-updated">
+                        {{ __('Saved.') }}
+                    </x-action-message>
                 </div>
+            </form>
+
+            @if ($this->showDeleteUser)
+                <livewire:pages::settings.delete-user-form />
             @endif
+        </x-pages::settings.layout>
 
-            {{-- Save --}}
-            <div class="flex items-center gap-4">
-                <div class="flex items-center justify-end">
-                    <flux:button variant="primary" type="submit" class="w-full" data-test="update-profile-button">
-                        {{ __('Save') }}
-                    </flux:button>
-                </div>
 
-                <x-action-message class="me-3" on="profile-updated">
-                    {{ __('Saved.') }}
-                </x-action-message>
-            </div>
-        </form>
 
-        @if ($this->showDeleteUser)
-            <livewire:pages::settings.delete-user-form />
-        @endif
-    </x-pages::settings.layout>
+
+
 </section>
