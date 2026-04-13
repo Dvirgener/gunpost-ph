@@ -82,7 +82,7 @@ new class extends Component {
         @else
             <div class="flex flex-col justify-end items-end ps-13 w-full">
                 @if ($message->is_reply)
-                    <div class="relative py-1 px-4 bg-neutral-500 opacity-50 p-3 w-full  rounded-md">
+                    <div class="relative py-1 px-4 bg-neutral-500 opacity-50 p-3  rounded-md">
                         <p class="text-sm text-left text-white"> {{ $message->replyTo->body }}</p>
                     </div>
                 @endif

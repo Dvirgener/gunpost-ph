@@ -41,9 +41,11 @@
     </div>
 
     @if ($isMobile)
-        <div class="min-h-0 flex-1 overflow-y-auto px-3">
+        <div class="min-h-0 flex-1 overflow-y-auto px-3 pt-5">
             @forelse ($this->conversations as $convo)
-                <livewire:pages::conversations.convo-card :convo="$convo" :key="'convo-card-' . $convo->id" />
+                    <div class="mb-3 rounded-md bg-gray-200  outline outline-gray-300 hover:outline-gray-500  {{ $this->selectedConversation == $convo ? 'bg-gray-400 dark:bg-white/30' : 'bg-gray-200 dark:bg-zinc-700' }}">
+                        <livewire:pages::conversations.convo-card :convo="$convo" :selectedConvo="$selectedConversation" :key="'convo-card-' . $convo->id" />
+                    </div>
             @empty
                 <div class="mt-10 text-center italic text-gray-500">
                     -- No conversations found --
@@ -52,14 +54,17 @@
         </div>
     @else
         <div class="flex flex-1 min-h-0 gap-3">
-            <div class="w-1/3 min-h-0 rounded px-3 py-2 flex flex-col">
+            <div class="w-1/3 min-h-0 rounded px-1 py-2 flex flex-col ">
                 <flux:heading class="shrink-0">
                     Conversations
                 </flux:heading>
 
-                <div class="min-h-0 flex-1 overflow-y-auto px-3">
+                <div class="min-h-0 flex-1 overflow-y-auto px-3 py-4">
                     @forelse ($this->conversations as $convo)
-                        <livewire:pages::conversations.convo-card :convo="$convo" :key="'convo-card-' . $convo->id" />
+                    <div class="mb-3 rounded-md bg-gray-200  outline outline-gray-300 hover:outline-gray-500  {{ $this->selectedConversation == $convo ? 'bg-gray-400 dark:bg-white/30' : 'bg-gray-200 dark:bg-zinc-700' }}">
+                        <livewire:pages::conversations.convo-card :convo="$convo" :selectedConvo="$selectedConversation" :key="'convo-card-' . $convo->id" />
+                    </div>
+
                     @empty
                         <div class="mt-10 text-center italic text-gray-500">
                             -- No conversations found --
@@ -67,6 +72,10 @@
                     @endforelse
                 </div>
             </div>
+
+            <flux:separator vertical />
+
+
 
             <div class="flex-1 min-h-0 flex flex-col pt-5">
                 @if ($selectedConversation)

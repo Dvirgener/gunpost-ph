@@ -13,11 +13,13 @@ new class extends Component {
     }
 
     public $convo;
+    public $selectedConvo;
     public $isMobile;
 
-    public function mount($convo)
+    public function mount($convo, $selectedConvo = null)
     {
         $this->convo = $convo;
+        $this->selectedConvo = $selectedConvo;
         $this->isMobile = $this->getIsMobileProperty();
     }
 
@@ -28,11 +30,27 @@ new class extends Component {
 
     public function seeConversation(Conversation $conversation)
     {
+        if($this->selectedConvo == $conversation){
+            $this->selectedConvo = null;
+        }else{
+            $this->selectedConvo = $conversation;
+        }
+
+
         if ($this->isMobile) {
             return redirect(route('mobile.conversation', ['conversation' => $conversation]));
         } else {
             $this->dispatch('seeConversation', ['conversation' => $conversation]);
         }
+    }
+
+    private function checkCon(){
+        if($this->selectedConvo == $conversation){
+            $this->selectedConvo = null;
+        }else{
+            $this->selectedConvo = $conversation;
+        }
+
     }
 
     public function deleteConvo(Conversation $conversation)
@@ -54,9 +72,9 @@ new class extends Component {
 ?>
 
 <div
-    class="flex items-center mb-3 mt-3 pb-2 justify-start space-x-3 border-b border-gray-300 dark:border-gray-700 relative">
+    class="flex items-center justify-start space-x-3 relative">
     <div
-        class="flex justify-between  gap-4 items-center capitalizetext-sm  hover:cursor-pointer px-2 py-1 rounded-md w-full relative shadow hover:outline outline-1 outline-gray-500 hover:outline-gray-300">
+        class="flex justify-between  gap-4 items-center capitalizetext-sm  hover:cursor-pointer px-2 py-1 rounded-md w-full relative">
 
 
         <div class="flex flex-col gap-2 w-full " wire:click="seeConversation('{{ $convo->id }}')">
@@ -64,11 +82,12 @@ new class extends Component {
             <div class="flex gap-2">
                 <div class="font-bold text-sm flex items-center gap-2">
                     @if ($convo->unreadCountFor(auth()->user()->id) > 0)
-                        <span class=" rounded-full px-3 py-1 text-[12px] bg-blue-400 absolute -top-3 -right-2">
+                        <span class=" rounded-full px-3 py-1 text-[12px] bg-blue-400 absolute -top-2 -right-2">
                             {{ $convo->unreadCountFor(auth()->user()->id) }}
                         </span>
                     @endif
                 </div>
+
                 <div class="">
                     @switch($convo->type)
                         @case('post')
