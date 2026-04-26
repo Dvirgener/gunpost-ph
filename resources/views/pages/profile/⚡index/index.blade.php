@@ -1,4 +1,4 @@
-<div class="p-4 flex flex-col  h-full bg-red-500">
+<div class="p-4 flex flex-col  h-full bg-red-300">
     <div class="flex-1 min-h-0 overflow-y-scroll px-2">
         <div class="my-2 px-4">
             @if (Auth::user()->verification->kyc_status == 'pending' && !auth()->user()->isAdmin())
