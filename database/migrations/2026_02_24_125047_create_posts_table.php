@@ -51,12 +51,7 @@ return new class extends Migration
             $table->string('location')->nullable();
 
             // Moderation & Status
-            $table->enum('status', [
-                'pending',
-                'approved',
-                'rejected',
-                'expired',
-            ])->default('pending');
+            $table->string('status')->default('pending');
 
             $table->timestamp('approved_at')->nullable();
             $table->foreignId('approved_by')

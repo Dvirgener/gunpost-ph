@@ -8,6 +8,7 @@ use App\Models\posts\categories\Ammunition;
 use App\Models\posts\categories\Gun;
 use App\Models\posts\categories\Other;
 use App\Models\posts\Post;
+use App\Models\user\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -15,11 +16,11 @@ class PostFactory extends Factory
 {
     protected $model = Post::class;
 
-    private const CATEGORIES = ['gun', 'ammunition', 'airsoft', 'accessory', 'other'];
+    private const CATEGORIES = ['gun', 'ammunition', 'airsoft',  'accessory', 'others'];
 
     private const LISTING_TYPES = ['buy', 'sell'];
 
-    private const STATUSES = ['pending', 'approved', 'rejected', 'expired'];
+    private const STATUSES = ['pending', 'approved', 'expired', 'archived'];
 
     private function picsum(string $seed, int $w = 1200, int $h = 800): string
     {
@@ -62,7 +63,7 @@ class PostFactory extends Factory
 
         return array_merge([
             'uuid' => (string) Str::uuid(),
-            'user_id' => 1,
+            'user_id' => User::factory(),
             'category' => $category,
             'listing_type' => $listingType,
 
@@ -80,7 +81,7 @@ class PostFactory extends Factory
 
             'status' => $status,
             'approved_at' => $status === 'approved' ? now()->subDays($this->faker->numberBetween(0, 20)) : null,
-            'approved_by' => $status === 'approved' ? 1 : null,
+            'approved_by' => $status === 'approved' ? User::factory() : null,
             'rejection_reason' => $status === 'rejected' ? $this->faker->sentence(10) : null,
 
             'is_featured' => $this->faker->boolean(10),

@@ -19,14 +19,20 @@
         @endif
 
 
-        <div class="h-35 space-y-2 py-2">
+        <div class="h-35 space-y-2 py-2 flex flex-col justify-between">
 
-            <div>
+            <div class="flex justify-between gap-2">
                 @if ($post->listing_type == 'buy')
                     <flux:badge size="sm" color="violet" class="px-2!">{{ $post->listing_type }}</flux:badge>
                 @else
                     <flux:badge size="sm" color="green" class="px-2!">{{ $post->listing_type }}</flux:badge>
                 @endif
+
+                <a href="{{ route('profile.visit',['user' => $post->user]) }}">
+                    <flux:tooltip content="{{'Visit '. $post->user->first_name . ' Profile' }}">
+                        <flux:avatar size="xs" src="{{url($post->user->avatar_path ? $post->user->avatar_path : asset('blank_image.png'))}}" />
+                    </flux:tooltip>
+                </a>
 
             </div>
             <p class="text-xs line-clamp-3 text-wrap text-ellipsis">{{ $post->description }}</p>
@@ -35,10 +41,6 @@
                 <span class="font-bold">Price: </span>
                 <span>{{ 'P' . number_format((float) $post->price, 2, '.', ',') }}</span>
             </div>
-
-            <p class="text-gray-600 dark:text-white text-xs dark:hover:text-purple-700 hover:cursor-pointer">Posted by
-                {{ $post->user->first_name }}</p>
-
 
         </div>
     </div>

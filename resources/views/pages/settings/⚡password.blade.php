@@ -39,13 +39,15 @@ new class extends Component {
     }
 }; ?>
 
-<section class="w-full">
-    @include('partials.settings-heading')
+<section class="w-full h-full flex flex-col gap-2">
+    <div class="shrink-0">
+        @include('partials.settings-heading')
 
-    <flux:heading class="sr-only">{{ __('Password Settings') }}</flux:heading>
+        <flux:heading class="sr-only">{{ __('Password Settings') }}</flux:heading>
+    </div>
 
     <x-pages::settings.layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">
-        <form method="POST" wire:submit="updatePassword" class="mt-6 space-y-6">
+        <form method="POST" wire:submit="updatePassword" class="my-6 space-y-6">
             <flux:input
                 wire:model="current_password"
                 :label="__('Current password')"

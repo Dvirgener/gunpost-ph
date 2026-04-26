@@ -2,12 +2,15 @@
 
 namespace App\Models\user;
 
+use App\Models\posts\Post;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use App\Models\Conversation;
+use App\Models\Message;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -91,11 +94,36 @@ class User extends Authenticatable implements MustVerifyEmail
             ->implode('');
     }
 
+    public function fullName(): string
+    {
+
+        return $this->first_name . ' ' . $this->last_name;
+
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->account_type === 'TFT_admin' && $this->status === 'immune';
+    }
+
+    public function isMe(){
+        return auth()->check() && auth()->user()->id === $this->id;
+    }
+
+    public function posts(){
+        return $this->hasMany(Post::class);
+    }
+
     /*
     |-------------------------------------------------------------------------------=-------------------
     | Relationships
     |---------------------------------------------------------------------------------------------------
     */
+
+        public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class);
+    }
 
     public function personalProfile()
     {
@@ -119,4 +147,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return \Database\Factories\UserFactory::new();
     }
+
+
+
+
 }

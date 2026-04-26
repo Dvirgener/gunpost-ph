@@ -78,7 +78,7 @@ new class extends Component {
         /** @var User $user */
         $user = Auth::user()->load('verification');
 
-        if (! $this->canEdit) {
+        if (!$this->canEdit) {
             Flux::toast(variant: 'warning', text: 'Your KYC is already approved and can no longer be edited.');
             return;
         }
@@ -89,17 +89,14 @@ new class extends Component {
 
             // Require files if not yet uploaded
             'government_id_front' => [$this->government_id_front_path ? 'nullable' : 'required', 'image', 'max:4096'],
-            'government_id_back'  => [$this->government_id_back_path ? 'nullable' : 'required', 'image', 'max:4096'],
-            'selfie_with_id'      => [$this->selfie_with_id_path ? 'nullable' : 'required', 'image', 'max:4096'],
+            'government_id_back' => [$this->government_id_back_path ? 'nullable' : 'required', 'image', 'max:4096'],
+            'selfie_with_id' => [$this->selfie_with_id_path ? 'nullable' : 'required', 'image', 'max:4096'],
         ];
 
         $validated = $this->validate($rules);
 
         // Ensure record exists
-        $verification = $user->verification()->firstOrCreate(
-            ['user_id' => $user->id],
-            ['kyc_status' => 'pending']
-        );
+        $verification = $user->verification()->firstOrCreate(['user_id' => $user->id], ['kyc_status' => 'pending']);
 
         // Upload new files (and delete old if replaced)
         if ($this->government_id_front) {
@@ -156,24 +153,20 @@ new class extends Component {
         /** @var User $user */
         $user = Auth::user()->load('verification');
 
-        if (! $this->canEdit) {
+        if (!$this->canEdit) {
             Flux::toast(variant: 'warning', text: 'Approved KYC files can no longer be removed.');
             return;
         }
 
-        $allowed = [
-            'government_id_front_path',
-            'government_id_back_path',
-            'selfie_with_id_path',
-        ];
+        $allowed = ['government_id_front_path', 'government_id_back_path', 'selfie_with_id_path'];
 
-        if (! in_array($field, $allowed, true)) {
+        if (!in_array($field, $allowed, true)) {
             return;
         }
 
         $verification = $user->verification;
 
-        if (! $verification) {
+        if (!$verification) {
             return;
         }
 
@@ -182,10 +175,7 @@ new class extends Component {
         if ($old) {
             Storage::disk('public')->delete($old);
             // IMPORTANT: update via relationship/builder to guarantee DB update
-            $user->verification()->updateOrCreate(
-                ['user_id' => $user->id],
-                [$field => null]
-            );
+            $user->verification()->updateOrCreate(['user_id' => $user->id], [$field => null]);
 
             // refresh UI
             $this->{$field} = null;
@@ -201,10 +191,14 @@ new class extends Component {
     }
 }; ?>
 
-<section class="w-full">
+<section class="w-full h-full flex flex-col gap-2">
+
+    <div>
     @include('partials.settings-heading')
 
     <flux:heading class="sr-only">{{ __('KYC Verification') }}</flux:heading>
+    </div>
+
 
     <x-pages::settings.layout :heading="__('KYC Verification')" :subheading="__('Submit your identity documents for review')">
 
@@ -213,32 +207,34 @@ new class extends Component {
             <flux:heading size="md">{{ __('Why KYC is required before posting') }}</flux:heading>
 
             <flux:text class="text-sm opacity-90">
-                {{ __("GunPost PH requires identity verification (KYC) before allowing users to publish listings to help prevent fraud, impersonation, and unlawful transactions, and to support safe, accountable marketplace operations. This process also helps us comply with applicable Philippine regulations and platform risk controls by ensuring we can verify who is posting listings, respond to law-enforcement or regulator requests when legally required, and enforce bans against repeat offenders.") }}
+                {{ __('GunPost PH requires identity verification (KYC) before allowing users to publish listings to help prevent fraud, impersonation, and unlawful transactions, and to support safe, accountable marketplace operations. This process also helps us comply with applicable Philippine regulations and platform risk controls by ensuring we can verify who is posting listings, respond to law-enforcement or regulator requests when legally required, and enforce bans against repeat offenders.') }}
             </flux:text>
 
             <flux:text class="text-sm opacity-90">
-                {{ __("Your documents are used only for verification and internal compliance. We may restrict posting privileges until your KYC status is approved.") }}
+                {{ __('Your documents are used only for verification and internal compliance. We may restrict posting privileges until your KYC status is approved.') }}
             </flux:text>
 
             <div class="flex items-center gap-3">
-                <flux:badge color="{{ auth()->user()->verification->kyc_status == 'approved' ? 'green' : (auth()->user()->verification->kyc_status == 'rejected' ? 'red' : 'blue') }}" size="xs" class="ms-2">
+                <flux:badge
+                    color="{{ auth()->user()->verification->kyc_status == 'verified' ? 'green' : (auth()->user()->verification->kyc_status == 'rejected' ? 'red' : 'blue') }}"
+                    size="xs" class="ms-2">
                     {{ strtoupper(auth()->user()->verification->kyc_status) }}
                 </flux:badge>
 
-                @if($submitted_at)
+                @if ($submitted_at)
                     <flux:text class="text-sm opacity-75">
                         {{ __('Submitted:') }} {{ $submitted_at }}
                     </flux:text>
                 @endif
 
-                @if($reviewed_at)
+                @if ($reviewed_at)
                     <flux:text class="text-sm opacity-75">
                         {{ __('Reviewed:') }} {{ $reviewed_at }}
                     </flux:text>
                 @endif
             </div>
 
-            @if($kyc_status === 'rejected' && $kyc_notes)
+            @if ($kyc_status === 'rejected' && $kyc_notes)
                 <div class="rounded-md border p-3">
                     <flux:text class="text-sm">
                         <span class="font-medium">{{ __('Reviewer Notes:') }}</span>
@@ -251,23 +247,11 @@ new class extends Component {
         <form wire:submit="submitKyc" enctype="multipart/form-data" class="my-6 w-full space-y-8">
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <flux:input
-                    wire:model="government_id_type"
-                    :label="__('Government ID Type')"
-                    type="text"
-                    placeholder="e.g., Driver’s License, Passport, UMID"
-                    :disabled="!$this->canEdit"
-                    required
-                />
+                <flux:input wire:model="government_id_type" :label="__('Government ID Type')" type="text"
+                    placeholder="e.g., Driver’s License, Passport, UMID" :disabled="!$this->canEdit" required />
 
-                <flux:input
-                    wire:model="government_id_number"
-                    :label="__('Government ID Number')"
-                    type="text"
-                    placeholder="Enter your ID number"
-                    :disabled="!$this->canEdit"
-                    required
-                />
+                <flux:input wire:model="government_id_number" :label="__('Government ID Number')" type="text"
+                    placeholder="Enter your ID number" :disabled="!$this->canEdit" required />
             </div>
 
             <flux:separator />
@@ -280,22 +264,19 @@ new class extends Component {
 
                 {{-- Government ID Front --}}
                 <div class="space-y-3">
-                    <flux:input
-                        wire:model="government_id_front"
-                        :label="__('Government ID (Front)')"
-                        type="file"
-                        accept=".jpg,.jpeg,.png"
-                        :disabled="!$this->canEdit"
-                    />
+                    <flux:input wire:model="government_id_front" :label="__('Government ID (Front)')" type="file"
+                        accept=".jpg,.jpeg,.png" :disabled="!$this->canEdit" />
 
                     @if ($government_id_front)
-                        <img src="{{ $government_id_front->temporaryUrl() }}" class="w-full max-w-md rounded-md object-cover" alt="">
+                        <img src="{{ $government_id_front->temporaryUrl() }}"
+                            class="w-full max-w-md rounded-md object-cover" alt="">
                     @endif
 
                     @if ($government_id_front_path)
                         <div class="relative w-full max-w-md">
-                            <img src="{{ url('storage/' . $government_id_front_path) }}" class="w-full rounded-md object-cover" alt="">
-                            @if($this->canEdit)
+                            <img src="{{ url('storage/' . $government_id_front_path) }}"
+                                class="w-full rounded-md object-cover" alt="">
+                            @if ($this->canEdit)
                                 <button wire:click="deleteKycFile('government_id_front_path')" type="button"
                                     class="absolute top-2 right-2">
                                     <flux:icon name="x-circle" class="w-7 h-7 text-red-500 hover:cursor-pointer" />
@@ -309,22 +290,19 @@ new class extends Component {
 
                 {{-- Government ID Back --}}
                 <div class="space-y-3">
-                    <flux:input
-                        wire:model="government_id_back"
-                        :label="__('Government ID (Back)')"
-                        type="file"
-                        accept=".jpg,.jpeg,.png"
-                        :disabled="!$this->canEdit"
-                    />
+                    <flux:input wire:model="government_id_back" :label="__('Government ID (Back)')" type="file"
+                        accept=".jpg,.jpeg,.png" :disabled="!$this->canEdit" />
 
                     @if ($government_id_back)
-                        <img src="{{ $government_id_back->temporaryUrl() }}" class="w-full max-w-md rounded-md object-cover" alt="">
+                        <img src="{{ $government_id_back->temporaryUrl() }}"
+                            class="w-full max-w-md rounded-md object-cover" alt="">
                     @endif
 
                     @if ($government_id_back_path)
                         <div class="relative w-full max-w-md">
-                            <img src="{{ url('storage/' . $government_id_back_path) }}" class="w-full rounded-md object-cover" alt="">
-                            @if($this->canEdit)
+                            <img src="{{ url('storage/' . $government_id_back_path) }}"
+                                class="w-full rounded-md object-cover" alt="">
+                            @if ($this->canEdit)
                                 <button wire:click="deleteKycFile('government_id_back_path')" type="button"
                                     class="absolute top-2 right-2">
                                     <flux:icon name="x-circle" class="w-7 h-7 text-red-500 hover:cursor-pointer" />
@@ -338,22 +316,19 @@ new class extends Component {
 
                 {{-- Selfie with ID --}}
                 <div class="space-y-3">
-                    <flux:input
-                        wire:model="selfie_with_id"
-                        :label="__('Selfie Holding Your ID')"
-                        type="file"
-                        accept=".jpg,.jpeg,.png"
-                        :disabled="!$this->canEdit"
-                    />
+                    <flux:input wire:model="selfie_with_id" :label="__('Selfie Holding Your ID')" type="file"
+                        accept=".jpg,.jpeg,.png" :disabled="!$this->canEdit" />
 
                     @if ($selfie_with_id)
-                        <img src="{{ $selfie_with_id->temporaryUrl() }}" class="w-full max-w-md rounded-md object-cover" alt="">
+                        <img src="{{ $selfie_with_id->temporaryUrl() }}"
+                            class="w-full max-w-md rounded-md object-cover" alt="">
                     @endif
 
                     @if ($selfie_with_id_path)
                         <div class="relative w-full max-w-md">
-                            <img src="{{ url('storage/' . $selfie_with_id_path) }}" class="w-full rounded-md object-cover" alt="">
-                            @if($this->canEdit)
+                            <img src="{{ url('storage/' . $selfie_with_id_path) }}"
+                                class="w-full rounded-md object-cover" alt="">
+                            @if ($this->canEdit)
                                 <button wire:click="deleteKycFile('selfie_with_id_path')" type="button"
                                     class="absolute top-2 right-2">
                                     <flux:icon name="x-circle" class="w-7 h-7 text-red-500 hover:cursor-pointer" />
@@ -365,12 +340,7 @@ new class extends Component {
             </div>
 
             <div class="flex items-center gap-4">
-                <flux:button
-                    variant="primary"
-                    type="submit"
-                    class="w-full md:w-auto"
-                    :disabled="!$this->canEdit"
-                >
+                <flux:button variant="primary" type="submit" class="w-full md:w-auto" :disabled="!$this->canEdit">
                     {{ $kyc_status === 'rejected' ? __('Re-submit KYC') : __('Submit KYC') }}
                 </flux:button>
 
@@ -379,7 +349,7 @@ new class extends Component {
                 </x-action-message>
             </div>
 
-            @if(! $this->canEdit)
+            @if (!$this->canEdit)
                 <flux:text class="text-sm opacity-70">
                     {{ __('Your KYC is approved. Editing is locked. Contact support if you need changes.') }}
                 </flux:text>

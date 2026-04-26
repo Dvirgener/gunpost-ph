@@ -4,16 +4,22 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('pages.home.index');
-})->name('home');
+Route::livewire('/', 'pages::home.home')->name('home');
 
+Route::livewire('posts', 'pages::posts.index')->name('posts');
 Route::livewire('help', 'pages::help.index')->name('help');
+Route::livewire('posts/{post}/view/{category}', 'pages::posts.view.index')->name('posts.view.category.index');
 
 // These Routes are for Administrators use only.
 Route::middleware(['auth', 'is_admin', 'verified'])->group(function () {
 
     Route::livewire('dashboard', 'pages::admin.dashboard.index')->name('dashboard');
+    Route::livewire('dashboard/users', 'pages::admin.dashboard.users')->name('admin.users');
+    Route::livewire('dashboard/posts', 'pages::admin.dashboard.posts')->name('admin.posts');
+    Route::livewire('dashboard/orders', 'pages::admin.dashboard.orders.orders')->name('admin.orders');
+    Route::livewire('dashboard/tickets', 'pages::admin.dashboard.tickets.tickets')->name('admin.tickets');
+
+    Route::livewire('profile/admin/{user}', 'pages::profile.index')->name('admin.user.profile');
 
 });
 
@@ -21,10 +27,9 @@ Route::middleware(['auth', 'is_admin', 'verified'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::livewire('posts', 'pages::posts.index')->name('posts');
     Route::livewire('posts/create', 'pages::posts.create.index')->name('posts.create.index');
 
-
+    Route::livewire('orders', 'pages::orders.index')->name('order');
 
     // routes for Gun CRUD operations. These will be used for creating, editing, and viewing gun posts. The {category} parameter will be used to determine which category of post is being created, edited, or viewed. The {post} parameter will be used to determine which post is being edited or viewed.
     Route::livewire('posts/create/gun', 'pages::posts.create.category.gun')->name('posts.create.category.gun');
@@ -42,9 +47,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('posts/create/others', 'pages::posts.create.category.others')->name('posts.create.category.others');
     Route::livewire('posts/{post}/edit/others', 'pages::posts.edit.category.others')->name('posts.edit.category.others');
 
-    Route::livewire('posts/{post}/view/{category}', 'pages::posts.view.index')->name('posts.view.category.index');
-
     Route::livewire('posts/create/post/{category}', 'pages::posts.create.post')->name('posts.create');
+
+    Route::livewire('conversations', 'pages::conversations.index')->name('conversations');
+    Route::livewire('conversations/mobile/{conversation}', 'pages::conversations.mobile-conversation')->name('mobile.conversation');
+
+    Route::livewire('profile/{user}','pages::profile.index')->name('profile');
+    Route::livewire('profile/visit/{user}', 'pages::profile.visitor')->name('profile.visit');
+
 
 });
 

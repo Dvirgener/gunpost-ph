@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('password');
             $table->bigInteger('post_credits')->default(0);
             $table->string('avatar_path')->nullable();
-            $table->string('status', 30)->default('active');
+            $table->string('status', 30)->default('pending');
             $table->boolean('terms_accepted')->default(false);
             $table->softDeletes();
             $table->rememberToken();

@@ -18,19 +18,6 @@ class CreateNewUser implements CreatesNewUsers
      *
      * @param  array<string, string>  $input
      */
-    // public function create(array $input): User
-    // {
-    //     Validator::make($input, [
-    //         ...$this->profileRules(),
-    //         'password' => $this->passwordRules(),
-    //     ])->validate();
-
-    //     return User::create([
-    //         'name' => $input['name'],
-    //         'email' => $input['email'],
-    //         'password' => $input['password'],
-    //     ]);
-    // }
 
     public function create(array $input): User
     {
@@ -68,6 +55,12 @@ class CreateNewUser implements CreatesNewUsers
             'terms_accepted'=> $validated['terms_accepted'],
             'password'     => Hash::make($validated['password']), // IMPORTANT
         ]);
+
+        if($user->account_type === 'personal') {
+            $user->personalProfile()->create([]);
+        } else {
+            $user->corporateProfile()->create([]);
+        }
 
         $user->verification()->create([
             'kyc_status' => 'pending',
