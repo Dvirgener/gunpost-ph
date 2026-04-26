@@ -14,7 +14,7 @@ new class extends Component
 {
     use WithFileUploads;
 
-    public $conversationId ;
+    public $conversationId = null ;
 
     #[Rule(['required'])]
     public $message = '';
@@ -29,17 +29,19 @@ new class extends Component
 
     public function getListeners()
     {
-        if (! $this->conversationId) {
-            return [
-                'send-reply' => 'sendReply',
-            ];
-        }
+        // if (! $this->conversationId) {
+        //     return [
+        //         'send-reply' => 'sendReply',
+        //     ];
+        // }
+
 
         return [
             "echo-private:conversation.{$this->conversationId},.new-message-event" => 'refThis',
             'send-reply' => 'sendReply',
         ];
     }
+
 
     public function mount(Conversation $conversation)
     {
@@ -64,6 +66,7 @@ new class extends Component
     public function refThis($event = null)
     {
         unset($this->conversation);
+
         $this->dispatch('message-added');
         $this->dispatch('refreshThis');
     }

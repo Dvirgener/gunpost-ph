@@ -77,10 +77,27 @@
 
 
 
-            <div class="flex-1 min-h-0 flex flex-col pt-5">
+            {{-- <div class="flex-1 min-h-0 flex flex-col pt-5">
                 @if ($selectedConversation)
-                    <livewire:pages::conversations.conversation :conversation="$selectedConversation" :key="'conversation-' . $selectedConversation->id" lazy />
+                    <livewire:pages::conversations.conversation :conversation="$selectedConversation->id" :key="'conversation-' . $selectedConversation->id" />
                 @endif
+            </div> --}}
+
+            <div class="flex-1 min-h-0 flex flex-col pt-5">
+
+                <div wire:loading wire:target="seeConversation" class="p-6 text-center text-gray-500">
+                    Loading conversation...
+                </div>
+
+                <div wire:loading.remove wire:target="seeConversation" class="min-h-0 flex-1">
+                    @if ($selectedConversation)
+                        <livewire:pages::conversations.conversation
+                            :conversation="$selectedConversation->id"
+                            :key="'conversation-' . $selectedConversation->id"
+                        />
+                    @endif
+                </div>
+
             </div>
         </div>
     @endif
