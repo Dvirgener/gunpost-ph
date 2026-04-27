@@ -66,7 +66,7 @@ new class extends Component {
 
     private function getIsMobileProperty()
     {
-        return new Agent()->isMobile();
+        return (new Agent())->isMobile();
     }
 };
 ?>
